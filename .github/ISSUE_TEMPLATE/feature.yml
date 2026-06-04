@@ -1,0 +1,20 @@
+name: Feature
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Files/Folders
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests
+    validations:
+      required: true

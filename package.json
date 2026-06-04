@@ -1,0 +1,19 @@
+{
+  "name": "rainbowcode",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @rbc/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "security:audit": "pnpm audit --audit-level moderate"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "prettier": "latest",
+    "eslint": "latest",
+    "vitest": "latest"
+  }
+}

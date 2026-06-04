@@ -1,0 +1,14 @@
+{
+  "name": "@rbc/cli",
+  "version": "0.0.0",
+  "type": "module",
+  "bin": { "rbc": "./dist/index.js" },
+  "scripts": {
+    "build": "tsc",
+    "lint": "echo cli-lint-placeholder",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": { "typescript": "latest", "vitest": "latest" }
+}
