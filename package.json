@@ -10,8 +10,15 @@
     "typecheck": "pnpm -r typecheck",
     "security:audit": "pnpm audit --audit-level moderate"
   },
+  "pnpm": {
+    "overrides": {
+      "postcss": ">=8.5.10"
+    }
+  },
   "devDependencies": {
+    "@types/node": "latest",
     "typescript": "latest",
+    "typescript-eslint": "latest",
     "prettier": "latest",
     "eslint": "latest",
     "vitest": "latest"
