@@ -56,6 +56,26 @@ describe("useCanvasStore", () => {
     }
   });
 
+  it("resizes a node", () => {
+  useCanvasStore.getState().addRectangle();
+
+  const nodeId = useCanvasStore.getState().nodes[0]?.id;
+
+  expect(nodeId).toBeDefined();
+
+  if (nodeId !== undefined) {
+    useCanvasStore.getState().resizeNode(nodeId, {
+      width: 320,
+      height: 180,
+    });
+
+    const node = useCanvasStore.getState().nodes[0];
+
+    expect(node?.width).toBe(320);
+    expect(node?.height).toBe(180);
+  }
+});
+
   it("deletes selected node", () => {
     useCanvasStore.getState().addRectangle();
 

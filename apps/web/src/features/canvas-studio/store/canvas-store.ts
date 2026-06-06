@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
+import { resizeCanvasNode } from "@/features/canvas-studio/utils/canvas-node-utils";
 
 type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
@@ -9,7 +10,14 @@ type CanvasStoreState = {
   readonly addRectangle: () => void;
   readonly addText: () => void;
   readonly selectNode: (nodeId: string | null) => void;
-  readonly moveNode: (nodeId: string, position: { readonly x: number; readonly y: number }) => void;
+  readonly moveNode: (
+    nodeId: string,
+    position: { readonly x: number; readonly y: number },
+  ) => void;
+  readonly resizeNode: (
+    nodeId: string,
+    size: { readonly width: number; readonly height: number },
+  ) => void;
   readonly deleteSelectedNode: () => void;
   readonly resetCanvas: () => void;
 };
@@ -73,6 +81,14 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
               y: position.y,
             }
           : node,
+      ),
+    }));
+  },
+
+  resizeNode: (nodeId, size) => {
+    set((state) => ({
+      nodes: state.nodes.map((node) =>
+        node.id === nodeId ? resizeCanvasNode(node, size) : node,
       ),
     }));
   },
