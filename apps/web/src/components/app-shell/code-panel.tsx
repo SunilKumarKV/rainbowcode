@@ -1,9 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { exportBadgeComponent } from "@/features/component-studio/exporters/export-badge-component";
 import { exportButtonComponent } from "@/features/component-studio/exporters/export-button-component";
 import { exportCardComponent } from "@/features/component-studio/exporters/export-card-component";
 import { exportInputComponent } from "@/features/component-studio/exporters/export-input-component";
+import { generateBadgeCode } from "@/features/component-studio/generators/badge-generator";
 import { generateButtonCode } from "@/features/component-studio/generators/button-generator";
 import { generateCardCode } from "@/features/component-studio/generators/card-generator";
 import { generateInputCode } from "@/features/component-studio/generators/input-generator";
@@ -24,13 +26,18 @@ export function CodePanel() {
   const inputDefinition = useComponentStudioStore(
     (state) => state.inputDefinition,
   );
+  const badgeDefinition = useComponentStudioStore(
+    (state) => state.badgeDefinition,
+  );
 
   const generatedCode =
     selectedComponent === "button"
       ? generateButtonCode(buttonDefinition)
       : selectedComponent === "card"
         ? generateCardCode(cardDefinition)
-        : generateInputCode(inputDefinition);
+        : selectedComponent === "input"
+          ? generateInputCode(inputDefinition)
+          : generateBadgeCode(badgeDefinition);
 
   async function copyCode(): Promise<void> {
     await navigator.clipboard.writeText(generatedCode);
@@ -55,9 +62,18 @@ export function CodePanel() {
       return;
     }
 
+    if (selectedComponent === "input") {
+      downloadFile(
+        "rainbow-input.tsx",
+        exportInputComponent(inputDefinition),
+        "text/typescript",
+      );
+      return;
+    }
+
     downloadFile(
-      "rainbow-input.tsx",
-      exportInputComponent(inputDefinition),
+      "rainbow-badge.tsx",
+      exportBadgeComponent(badgeDefinition),
       "text/typescript",
     );
   }

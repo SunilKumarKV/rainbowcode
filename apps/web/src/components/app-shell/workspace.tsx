@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeDemo } from "@/components/theme-demo/theme-demo";
+import { BadgePreview } from "@/features/component-studio/components/badge-preview";
 import { ButtonPreview } from "@/features/component-studio/components/button-preview";
 import { CardPreview } from "@/features/component-studio/components/card-preview";
 import { InputPreview } from "@/features/component-studio/components/input-preview";
@@ -19,7 +20,11 @@ function ComponentPreviewSurface() {
     return <CardPreview />;
   }
 
-  return <InputPreview />;
+  if (selectedComponent === "input") {
+    return <InputPreview />;
+  }
+
+  return <BadgePreview />;
 }
 
 export function Workspace() {

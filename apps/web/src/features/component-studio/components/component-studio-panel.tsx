@@ -1,5 +1,6 @@
 "use client";
 
+import { BadgeControls } from "@/features/component-studio/components/badge-controls";
 import { ButtonControls } from "@/features/component-studio/components/button-controls";
 import { CardControls } from "@/features/component-studio/components/card-controls";
 import { ComponentTypeSwitcher } from "@/features/component-studio/components/component-type-switcher";
@@ -30,6 +31,7 @@ export function ComponentStudioPanel() {
       {selectedComponent === "button" ? <ButtonControls /> : null}
       {selectedComponent === "card" ? <CardControls /> : null}
       {selectedComponent === "input" ? <InputControls /> : null}
+      {selectedComponent === "badge" ? <BadgeControls /> : null}
     </div>
   );
 }
