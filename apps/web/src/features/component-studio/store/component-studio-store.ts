@@ -1,10 +1,12 @@
 "use client";
 
 import { create } from "zustand";
+import { defaultBadgeDefinition } from "@/features/component-studio/registry/badge-definition";
 import { defaultButtonDefinition } from "@/features/component-studio/registry/button-definition";
 import { defaultCardDefinition } from "@/features/component-studio/registry/card-definition";
 import { defaultInputDefinition } from "@/features/component-studio/registry/input-definition";
 import type {
+  BadgeDefinition,
   ButtonDefinition,
   CardDefinition,
   ComponentType,
@@ -16,13 +18,16 @@ type ComponentStudioState = {
   readonly buttonDefinition: ButtonDefinition;
   readonly cardDefinition: CardDefinition;
   readonly inputDefinition: InputDefinition;
+  readonly badgeDefinition: BadgeDefinition;
   readonly setSelectedComponent: (component: ComponentType) => void;
   readonly updateButton: (definition: Partial<ButtonDefinition>) => void;
   readonly updateCard: (definition: Partial<CardDefinition>) => void;
   readonly updateInput: (definition: Partial<InputDefinition>) => void;
+  readonly updateBadge: (definition: Partial<BadgeDefinition>) => void;
   readonly resetButton: () => void;
   readonly resetCard: () => void;
   readonly resetInput: () => void;
+  readonly resetBadge: () => void;
 };
 
 export const useComponentStudioStore = create<ComponentStudioState>((set) => ({
@@ -30,6 +35,7 @@ export const useComponentStudioStore = create<ComponentStudioState>((set) => ({
   buttonDefinition: defaultButtonDefinition,
   cardDefinition: defaultCardDefinition,
   inputDefinition: defaultInputDefinition,
+  badgeDefinition: defaultBadgeDefinition,
 
   setSelectedComponent: (component) => {
     set({ selectedComponent: component });
@@ -65,6 +71,16 @@ export const useComponentStudioStore = create<ComponentStudioState>((set) => ({
     }));
   },
 
+  updateBadge: (definition) => {
+    set((state) => ({
+      badgeDefinition: {
+        ...state.badgeDefinition,
+        ...definition,
+        type: "badge",
+      },
+    }));
+  },
+
   resetButton: () => {
     set({ buttonDefinition: defaultButtonDefinition });
   },
@@ -75,5 +91,9 @@ export const useComponentStudioStore = create<ComponentStudioState>((set) => ({
 
   resetInput: () => {
     set({ inputDefinition: defaultInputDefinition });
+  },
+
+  resetBadge: () => {
+    set({ badgeDefinition: defaultBadgeDefinition });
   },
 }));

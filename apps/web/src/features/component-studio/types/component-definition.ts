@@ -1,4 +1,4 @@
-export type ComponentType = "button" | "card" | "input";
+export type ComponentType = "button" | "card" | "input" | "badge";
 
 export type ButtonVariant = "primary" | "secondary" | "outline";
 
@@ -45,7 +45,22 @@ export type InputDefinition = {
   readonly disabled: boolean;
 };
 
+export type BadgeVariant = "primary" | "secondary" | "success" | "warning" | "destructive" | "outline";
+
+export type BadgeSize = "sm" | "md" | "lg";
+
+export type BadgeRadius = "sm" | "md" | "lg" | "xl";
+
+export type BadgeDefinition = {
+  readonly type: "badge";
+  readonly label: string;
+  readonly variant: BadgeVariant;
+  readonly size: BadgeSize;
+  readonly radius: BadgeRadius;
+};
+
 export type ComponentDefinition =
   | ButtonDefinition
   | CardDefinition
-  | InputDefinition;
+  | InputDefinition
+  | BadgeDefinition;
