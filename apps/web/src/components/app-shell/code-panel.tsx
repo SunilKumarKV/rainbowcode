@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { exportBadgeComponent } from "@/features/component-studio/exporters/export-badge-component";
 import { exportButtonComponent } from "@/features/component-studio/exporters/export-button-component";
 import { exportCardComponent } from "@/features/component-studio/exporters/export-card-component";
+import { exportComponentBundle } from "@/features/component-studio/exporters/export-component-bundle";
 import { exportComponentIndex } from "@/features/component-studio/exporters/export-component-index";
 import { exportInputComponent } from "@/features/component-studio/exporters/export-input-component";
 import { generateBadgeCode } from "@/features/component-studio/generators/badge-generator";
@@ -86,6 +87,19 @@ export function CodePanel() {
     downloadFile("index.ts", exportComponentIndex(), "text/typescript");
   }
 
+  function exportAllComponents(): void {
+    const files = exportComponentBundle({
+      buttonDefinition,
+      cardDefinition,
+      inputDefinition,
+      badgeDefinition,
+    });
+
+    for (const file of files) {
+      downloadFile(file.filename, file.content, file.mimeType);
+    }
+  }
+
   return (
     <section
       aria-label="Generated code panel"
@@ -110,6 +124,9 @@ export function CodePanel() {
           </Button>
           <Button variant="secondary" onClick={exportIndex}>
             Export Index
+          </Button>
+          <Button variant="secondary" onClick={exportAllComponents}>
+            Export All
           </Button>
           <Button variant="ghost" onClick={toggleCodePanel}>
             {isCodePanelOpen ? "Hide" : "Show"}
