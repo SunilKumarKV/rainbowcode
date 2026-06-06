@@ -1,5 +1,6 @@
 "use client";
 
+import { CanvasLayersPanel } from "@/features/canvas-studio/components/canvas-layers-panel";
 import { CanvasStage } from "@/features/canvas-studio/components/canvas-stage";
 import { CanvasToolbar } from "@/features/canvas-studio/components/canvas-toolbar";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
@@ -23,7 +24,10 @@ export function CanvasStudioPanel() {
         </span>
       </div>
 
-      <CanvasStage />
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
+        <CanvasStage />
+        <CanvasLayersPanel />
+      </div>
     </section>
   );
 }
