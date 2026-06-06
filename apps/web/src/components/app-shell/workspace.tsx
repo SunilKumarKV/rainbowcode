@@ -3,6 +3,7 @@
 import { ThemeDemo } from "@/components/theme-demo/theme-demo";
 import { ButtonPreview } from "@/features/component-studio/components/button-preview";
 import { CardPreview } from "@/features/component-studio/components/card-preview";
+import { InputPreview } from "@/features/component-studio/components/input-preview";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 
 function ComponentPreviewSurface() {
@@ -10,7 +11,15 @@ function ComponentPreviewSurface() {
     (state) => state.selectedComponent,
   );
 
-  return selectedComponent === "button" ? <ButtonPreview /> : <CardPreview />;
+  if (selectedComponent === "button") {
+    return <ButtonPreview />;
+  }
+
+  if (selectedComponent === "card") {
+    return <CardPreview />;
+  }
+
+  return <InputPreview />;
 }
 
 export function Workspace() {
