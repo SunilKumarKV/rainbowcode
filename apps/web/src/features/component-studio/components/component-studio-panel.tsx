@@ -3,6 +3,7 @@
 import { ButtonControls } from "@/features/component-studio/components/button-controls";
 import { CardControls } from "@/features/component-studio/components/card-controls";
 import { ComponentTypeSwitcher } from "@/features/component-studio/components/component-type-switcher";
+import { InputControls } from "@/features/component-studio/components/input-controls";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 
 export function ComponentStudioPanel() {
@@ -26,7 +27,9 @@ export function ComponentStudioPanel() {
 
       <ComponentTypeSwitcher />
 
-      {selectedComponent === "button" ? <ButtonControls /> : <CardControls />}
+      {selectedComponent === "button" ? <ButtonControls /> : null}
+      {selectedComponent === "card" ? <CardControls /> : null}
+      {selectedComponent === "input" ? <InputControls /> : null}
     </div>
   );
 }

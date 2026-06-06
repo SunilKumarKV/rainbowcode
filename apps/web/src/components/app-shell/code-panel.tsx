@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { exportButtonComponent } from "@/features/component-studio/exporters/export-button-component";
 import { exportCardComponent } from "@/features/component-studio/exporters/export-card-component";
+import { exportInputComponent } from "@/features/component-studio/exporters/export-input-component";
 import { generateButtonCode } from "@/features/component-studio/generators/button-generator";
 import { generateCardCode } from "@/features/component-studio/generators/card-generator";
+import { generateInputCode } from "@/features/component-studio/generators/input-generator";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 import { downloadFile } from "@/features/theme-engine/exporters/download-file";
 import { useAppShellStore } from "@/stores/app-shell-store";
@@ -19,11 +21,16 @@ export function CodePanel() {
     (state) => state.buttonDefinition,
   );
   const cardDefinition = useComponentStudioStore((state) => state.cardDefinition);
+  const inputDefinition = useComponentStudioStore(
+    (state) => state.inputDefinition,
+  );
 
   const generatedCode =
     selectedComponent === "button"
       ? generateButtonCode(buttonDefinition)
-      : generateCardCode(cardDefinition);
+      : selectedComponent === "card"
+        ? generateCardCode(cardDefinition)
+        : generateInputCode(inputDefinition);
 
   async function copyCode(): Promise<void> {
     await navigator.clipboard.writeText(generatedCode);
@@ -39,9 +46,18 @@ export function CodePanel() {
       return;
     }
 
+    if (selectedComponent === "card") {
+      downloadFile(
+        "rainbow-card.tsx",
+        exportCardComponent(cardDefinition),
+        "text/typescript",
+      );
+      return;
+    }
+
     downloadFile(
-      "rainbow-card.tsx",
-      exportCardComponent(cardDefinition),
+      "rainbow-input.tsx",
+      exportInputComponent(inputDefinition),
       "text/typescript",
     );
   }
