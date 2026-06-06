@@ -3,10 +3,15 @@
 import { create } from "zustand";
 import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
 import { resizeCanvasNode } from "@/features/canvas-studio/utils/canvas-node-utils";
+import {
+  decreaseCanvasZoom,
+  increaseCanvasZoom,
+} from "@/features/canvas-studio/utils/canvas-zoom";
 
 type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
   readonly selectedNodeId: string | null;
+  readonly zoom: number;
   readonly addRectangle: () => void;
   readonly addText: () => void;
   readonly selectNode: (nodeId: string | null) => void;
@@ -18,6 +23,9 @@ type CanvasStoreState = {
     nodeId: string,
     size: { readonly width: number; readonly height: number },
   ) => void;
+  readonly zoomIn: () => void;
+  readonly zoomOut: () => void;
+  readonly resetZoom: () => void;
   readonly deleteSelectedNode: () => void;
   readonly resetCanvas: () => void;
 };
@@ -29,6 +37,7 @@ function createNodeId(prefix: string): string {
 export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
   selectedNodeId: null,
+  zoom: 1,
 
   addRectangle: () => {
     const node: CanvasNode = {
@@ -93,6 +102,22 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     }));
   },
 
+  zoomIn: () => {
+    set((state) => ({
+      zoom: increaseCanvasZoom(state.zoom),
+    }));
+  },
+
+  zoomOut: () => {
+    set((state) => ({
+      zoom: decreaseCanvasZoom(state.zoom),
+    }));
+  },
+
+  resetZoom: () => {
+    set({ zoom: 1 });
+  },
+
   deleteSelectedNode: () => {
     set((state) => {
       if (state.selectedNodeId === null) {
@@ -110,6 +135,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     set({
       nodes: [],
       selectedNodeId: null,
+      zoom: 1,
     });
   },
 }));
