@@ -1,4 +1,4 @@
-export type ComponentType = "button";
+export type ComponentType = "button" | "card";
 
 export type ButtonVariant = "primary" | "secondary" | "outline";
 
@@ -14,4 +14,18 @@ export type ButtonDefinition = {
   readonly radius: ButtonRadius;
 };
 
-export type ComponentDefinition = ButtonDefinition;
+export type CardVariant = "simple" | "feature" | "pricing";
+
+export type CardRadius = "sm" | "md" | "lg" | "xl";
+
+export type CardDefinition = {
+  readonly type: "card";
+  readonly title: string;
+  readonly description: string;
+  readonly variant: CardVariant;
+  readonly radius: CardRadius;
+  readonly showAction: boolean;
+  readonly actionLabel: string;
+};
+
+export type ComponentDefinition = ButtonDefinition | CardDefinition;
