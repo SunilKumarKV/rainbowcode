@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { downloadFile } from "@/features/theme-engine/exporters/download-file";
+import { exportButtonComponent } from "@/features/component-studio/exporters/export-button-component";
 import { generateButtonCode } from "@/features/component-studio/generators/button-generator";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 import { useAppShellStore } from "@/stores/app-shell-store";
@@ -16,6 +18,14 @@ export function CodePanel() {
 
   async function copyCode(): Promise<void> {
     await navigator.clipboard.writeText(generatedCode);
+  }
+
+  function exportComponent(): void {
+    downloadFile(
+      "rainbow-button.tsx",
+      exportButtonComponent(buttonDefinition),
+      "text/typescript",
+    );
   }
 
   return (
@@ -35,7 +45,9 @@ export function CodePanel() {
           <Button variant="secondary" onClick={copyCode}>
             Copy
           </Button>
-          <Button variant="secondary">Export</Button>
+          <Button variant="secondary" onClick={exportComponent}>
+            Export
+          </Button>
           <Button variant="ghost" onClick={toggleCodePanel}>
             {isCodePanelOpen ? "Hide" : "Show"}
           </Button>
