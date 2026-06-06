@@ -1,4 +1,5 @@
 import { ThemeDemo } from "@/components/theme-demo/theme-demo";
+import { ButtonPreview } from "@/features/component-studio/components/button-preview";
 
 export function Workspace() {
   return (
@@ -19,7 +20,7 @@ export function Workspace() {
 
           <div className="flex gap-2 text-xs text-slate-500">
             <span className="rounded-full border border-slate-200 px-3 py-1 dark:border-slate-700">
-              1440 × 900
+              Component Studio
             </span>
             <span className="rounded-full border border-slate-200 px-3 py-1 dark:border-slate-700">
               Live Preview
@@ -27,8 +28,14 @@ export function Workspace() {
           </div>
         </div>
 
-        <div className="grid min-h-[500px] place-items-center rounded-3xl border border-dashed border-slate-300 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:32px_32px] p-6 dark:border-slate-700 dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]">
-          <ThemeDemo />
+        <div className="grid min-h-[500px] gap-6 rounded-3xl border border-dashed border-slate-300 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:32px_32px] p-6 dark:border-slate-700 dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] xl:grid-cols-2">
+          <div className="grid place-items-center">
+            <ButtonPreview />
+          </div>
+
+          <div className="grid place-items-center">
+            <ThemeDemo />
+          </div>
         </div>
       </section>
     </main>
