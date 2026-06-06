@@ -5,7 +5,6 @@ import { exportJsonTheme } from "@/features/theme-engine/exporters/export-json";
 import { exportTailwindTheme } from "@/features/theme-engine/exporters/export-tailwind";
 import { downloadFile } from "@/features/theme-engine/exporters/download-file";
 import { useThemeStore } from "@/features/theme-engine/store/theme-store";
-import { ThemeExportPanel } from "@/features/theme-studio/components/theme-export-panel";
 
 export function ThemeExportPanel() {
   const theme = useThemeStore((state) => state.theme);
