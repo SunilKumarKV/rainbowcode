@@ -1,4 +1,4 @@
-export type ComponentType = "button" | "card";
+export type ComponentType = "button" | "card" | "input";
 
 export type ButtonVariant = "primary" | "secondary" | "outline";
 
@@ -28,4 +28,24 @@ export type CardDefinition = {
   readonly actionLabel: string;
 };
 
-export type ComponentDefinition = ButtonDefinition | CardDefinition;
+export type InputVariant = "default" | "filled" | "outline";
+
+export type InputSize = "sm" | "md" | "lg";
+
+export type InputRadius = "sm" | "md" | "lg" | "xl";
+
+export type InputDefinition = {
+  readonly type: "input";
+  readonly label: string;
+  readonly placeholder: string;
+  readonly helperText: string;
+  readonly variant: InputVariant;
+  readonly size: InputSize;
+  readonly radius: InputRadius;
+  readonly disabled: boolean;
+};
+
+export type ComponentDefinition =
+  | ButtonDefinition
+  | CardDefinition
+  | InputDefinition;
