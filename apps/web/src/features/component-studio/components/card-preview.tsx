@@ -16,6 +16,21 @@ export function CardPreview() {
     (state) => state.cardDefinition,
   );
 
+  const title =
+    cardDefinition.title.trim().length > 0
+      ? cardDefinition.title
+      : "Card title";
+
+  const description =
+    cardDefinition.description.trim().length > 0
+      ? cardDefinition.description
+      : "Card description will appear here.";
+
+  const actionLabel =
+    cardDefinition.actionLabel.trim().length > 0
+      ? cardDefinition.actionLabel
+      : "Action";
+
   return (
     <article
       aria-label="Card component preview"
@@ -25,10 +40,10 @@ export function CardPreview() {
         Card Preview
       </p>
 
-      <h3 className="mt-3 text-xl font-bold">{cardDefinition.title}</h3>
+      <h3 className="mt-3 text-xl font-bold">{title}</h3>
 
       <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-        {cardDefinition.description}
+        {description}
       </p>
 
       {cardDefinition.showAction ? (
@@ -36,7 +51,7 @@ export function CardPreview() {
           type="button"
           className="mt-6 inline-flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
         >
-          {cardDefinition.actionLabel}
+          {actionLabel}
         </button>
       ) : null}
     </article>

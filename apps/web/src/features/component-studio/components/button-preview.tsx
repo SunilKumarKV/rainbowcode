@@ -22,9 +22,14 @@ export function ButtonPreview() {
     (state) => state.buttonDefinition,
   );
 
+  const previewLabel =
+    buttonDefinition.label.trim().length > 0
+      ? buttonDefinition.label
+      : "Button Label";
+
   return (
     <section
-      aria-label="Component preview"
+      aria-label="Button component preview"
       className="w-full max-w-xl rounded-[var(--radius-xl)] border border-slate-200 bg-white p-8 text-center shadow-xl dark:border-slate-800 dark:bg-slate-950"
     >
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -44,7 +49,7 @@ export function ButtonPreview() {
           type="button"
           className={`inline-flex items-center justify-center rounded-[var(--radius-${buttonDefinition.radius})] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${sizeClassMap[buttonDefinition.size]} ${variantClassMap[buttonDefinition.variant]}`}
         >
-          {buttonDefinition.label}
+          {previewLabel}
         </button>
       </div>
     </section>

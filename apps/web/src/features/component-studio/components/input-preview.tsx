@@ -22,6 +22,21 @@ export function InputPreview() {
     (state) => state.inputDefinition,
   );
 
+  const label =
+    inputDefinition.label.trim().length > 0
+      ? inputDefinition.label
+      : "Input label";
+
+  const placeholder =
+    inputDefinition.placeholder.trim().length > 0
+      ? inputDefinition.placeholder
+      : "Placeholder text";
+
+  const helperText =
+    inputDefinition.helperText.trim().length > 0
+      ? inputDefinition.helperText
+      : "Helper text appears here.";
+
   return (
     <section
       aria-label="Input component preview"
@@ -33,18 +48,18 @@ export function InputPreview() {
 
       <label className="mt-6 block">
         <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-          {inputDefinition.label}
+          {label}
         </span>
 
         <input
           type="text"
-          placeholder={inputDefinition.placeholder}
+          placeholder={placeholder}
           disabled={inputDefinition.disabled}
           className={`mt-2 w-full rounded-[var(--radius-${inputDefinition.radius})] outline-none transition focus:ring-2 focus:ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60 ${inputSizeClassMap[inputDefinition.size]} ${inputVariantClassMap[inputDefinition.variant]}`}
         />
 
         <span className="mt-2 block text-xs text-slate-500">
-          {inputDefinition.helperText}
+          {helperText}
         </span>
       </label>
     </section>
