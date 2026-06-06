@@ -1,8 +1,15 @@
 "use client";
 
 import { ButtonControls } from "@/features/component-studio/components/button-controls";
+import { CardControls } from "@/features/component-studio/components/card-controls";
+import { ComponentTypeSwitcher } from "@/features/component-studio/components/component-type-switcher";
+import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 
 export function ComponentStudioPanel() {
+  const selectedComponent = useComponentStudioStore(
+    (state) => state.selectedComponent,
+  );
+
   return (
     <div className="space-y-4">
       <section className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
@@ -10,14 +17,16 @@ export function ComponentStudioPanel() {
           Component Studio
         </p>
         <h3 className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
-          Button Builder
+          Visual Component Builder
         </h3>
         <p className="mt-1 text-xs leading-5 text-slate-500">
-          Build a reusable React button powered by theme tokens.
+          Build reusable React components powered by theme tokens.
         </p>
       </section>
 
-      <ButtonControls />
+      <ComponentTypeSwitcher />
+
+      {selectedComponent === "button" ? <ButtonControls /> : <CardControls />}
     </div>
   );
 }

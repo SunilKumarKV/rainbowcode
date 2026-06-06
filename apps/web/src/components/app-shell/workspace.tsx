@@ -1,5 +1,17 @@
+"use client";
+
 import { ThemeDemo } from "@/components/theme-demo/theme-demo";
 import { ButtonPreview } from "@/features/component-studio/components/button-preview";
+import { CardPreview } from "@/features/component-studio/components/card-preview";
+import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
+
+function ComponentPreviewSurface() {
+  const selectedComponent = useComponentStudioStore(
+    (state) => state.selectedComponent,
+  );
+
+  return selectedComponent === "button" ? <ButtonPreview /> : <CardPreview />;
+}
 
 export function Workspace() {
   return (
@@ -30,7 +42,7 @@ export function Workspace() {
 
         <div className="grid min-h-[500px] gap-6 rounded-3xl border border-dashed border-slate-300 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:32px_32px] p-6 dark:border-slate-700 dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] xl:grid-cols-2">
           <div className="grid place-items-center">
-            <ButtonPreview />
+            <ComponentPreviewSurface />
           </div>
 
           <div className="grid place-items-center">
