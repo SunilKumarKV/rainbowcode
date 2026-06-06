@@ -3,6 +3,7 @@
 import { CanvasLayersPanel } from "@/features/canvas-studio/components/canvas-layers-panel";
 import { CanvasStage } from "@/features/canvas-studio/components/canvas-stage";
 import { CanvasToolbar } from "@/features/canvas-studio/components/canvas-toolbar";
+import { generateCanvasCode } from "@/features/canvas-studio/generators/canvas-code-generator";
 import { useCanvasKeyboardShortcuts } from "@/features/canvas-studio/hooks/use-canvas-keyboard-shortcuts";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 
@@ -12,6 +13,12 @@ export function CanvasStudioPanel() {
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeId = useCanvasStore((state) => state.selectedNodeId);
   const zoom = useCanvasStore((state) => state.zoom);
+
+  const generatedCanvasCode = generateCanvasCode(nodes);
+
+  async function copyCanvasCode(): Promise<void> {
+    await navigator.clipboard.writeText(generatedCanvasCode);
+  }
 
   return (
     <section
@@ -57,6 +64,32 @@ export function CanvasStudioPanel() {
         <CanvasStage />
         <CanvasLayersPanel />
       </div>
+
+      <section
+        aria-label="Generated canvas code"
+        className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 text-white dark:border-slate-800"
+      >
+        <div className="flex items-center justify-between gap-3 border-b border-slate-800 px-4 py-3">
+          <div>
+            <h3 className="text-sm font-semibold">Generated Canvas Code</h3>
+            <p className="text-xs text-slate-400">
+              React JSX generated from canvas nodes.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={copyCanvasCode}
+            className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+          >
+            Copy Canvas Code
+          </button>
+        </div>
+
+        <pre className="max-h-72 overflow-auto p-4 text-sm leading-6 text-slate-100">
+          <code>{generatedCanvasCode}</code>
+        </pre>
+      </section>
     </section>
   );
 }
