@@ -1,5 +1,6 @@
 "use client";
 
+import { buttonPresets } from "@/features/component-studio/presets/button-presets";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 import type {
   ButtonRadius,
@@ -37,6 +38,30 @@ export function ButtonControls() {
         >
           Reset
         </button>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-slate-200 p-3 dark:border-slate-800">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+          Presets
+        </p>
+
+        <div className="mt-3 grid gap-2">
+          {buttonPresets.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => updateButton(preset.definition)}
+              className="rounded-xl border border-slate-200 p-3 text-left transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:hover:bg-slate-900"
+            >
+              <span className="block text-sm font-semibold text-slate-900 dark:text-white">
+                {preset.name}
+              </span>
+              <span className="mt-1 block text-xs leading-5 text-slate-500">
+                {preset.description}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mt-4 space-y-4">
