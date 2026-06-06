@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { exportBadgeComponent } from "@/features/component-studio/exporters/export-badge-component";
 import { exportButtonComponent } from "@/features/component-studio/exporters/export-button-component";
 import { exportCardComponent } from "@/features/component-studio/exporters/export-card-component";
+import { exportComponentIndex } from "@/features/component-studio/exporters/export-component-index";
 import { exportInputComponent } from "@/features/component-studio/exporters/export-input-component";
 import { generateBadgeCode } from "@/features/component-studio/generators/badge-generator";
 import { generateButtonCode } from "@/features/component-studio/generators/button-generator";
@@ -81,6 +82,10 @@ export function CodePanel() {
     );
   }
 
+  function exportIndex(): void {
+    downloadFile("index.ts", exportComponentIndex(), "text/typescript");
+  }
+
   return (
     <section
       aria-label="Generated code panel"
@@ -102,6 +107,9 @@ export function CodePanel() {
           </Button>
           <Button variant="secondary" onClick={exportComponent}>
             Export
+          </Button>
+          <Button variant="secondary" onClick={exportIndex}>
+            Export Index
           </Button>
           <Button variant="ghost" onClick={toggleCodePanel}>
             {isCodePanelOpen ? "Hide" : "Show"}
