@@ -1,2 +1,6 @@
 #!/usr/bin/env node
-console.log('RainbowCode CLI: commands planned -> init, add, theme, export');
+export function getCliBanner(): string {
+  return 'RainbowCode CLI: commands planned -> init, add, theme, export';
+}
+
+console.log(getCliBanner());
