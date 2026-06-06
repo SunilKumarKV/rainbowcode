@@ -1,5 +1,6 @@
 "use client";
 
+import { ComponentStudioPanel } from "@/features/component-studio/components/component-studio-panel";
 import { ThemeStudioPanel } from "@/features/theme-studio/components/theme-studio-panel";
 
 export function PropertiesPanel() {
@@ -10,14 +11,17 @@ export function PropertiesPanel() {
     >
       <div className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Theme Studio
+          Studios
         </p>
         <h2 className="mt-1 text-lg font-bold text-slate-950 dark:text-white">
           Properties
         </h2>
       </div>
 
-      <ThemeStudioPanel />
+      <div className="space-y-4">
+        <ComponentStudioPanel />
+        <ThemeStudioPanel />
+      </div>
     </aside>
   );
 }
