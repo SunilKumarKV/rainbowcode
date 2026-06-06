@@ -1,0 +1,99 @@
+"use client";
+
+import { create } from "zustand";
+import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
+
+type CanvasStoreState = {
+  readonly nodes: readonly CanvasNode[];
+  readonly selectedNodeId: string | null;
+  readonly addRectangle: () => void;
+  readonly addText: () => void;
+  readonly selectNode: (nodeId: string | null) => void;
+  readonly moveNode: (nodeId: string, position: { readonly x: number; readonly y: number }) => void;
+  readonly deleteSelectedNode: () => void;
+  readonly resetCanvas: () => void;
+};
+
+function createNodeId(prefix: string): string {
+  return `${prefix}-${crypto.randomUUID()}`;
+}
+
+export const useCanvasStore = create<CanvasStoreState>((set) => ({
+  nodes: [],
+  selectedNodeId: null,
+
+  addRectangle: () => {
+    const node: CanvasNode = {
+      id: createNodeId("rectangle"),
+      type: "rectangle",
+      x: 120,
+      y: 120,
+      width: 180,
+      height: 110,
+      fill: "var(--color-primary)",
+      radius: 16,
+    };
+
+    set((state) => ({
+      nodes: [...state.nodes, node],
+      selectedNodeId: node.id,
+    }));
+  },
+
+  addText: () => {
+    const node: CanvasNode = {
+      id: createNodeId("text"),
+      type: "text",
+      x: 160,
+      y: 180,
+      width: 220,
+      height: 48,
+      text: "RainbowCode",
+      fontSize: 24,
+      fill: "var(--color-foreground)",
+    };
+
+    set((state) => ({
+      nodes: [...state.nodes, node],
+      selectedNodeId: node.id,
+    }));
+  },
+
+  selectNode: (nodeId) => {
+    set({ selectedNodeId: nodeId });
+  },
+
+  moveNode: (nodeId, position) => {
+    set((state) => ({
+      nodes: state.nodes.map((node) =>
+        node.id === nodeId
+          ? {
+              ...node,
+              x: position.x,
+              y: position.y,
+            }
+          : node,
+      ),
+    }));
+  },
+
+  deleteSelectedNode: () => {
+    set((state) => {
+      if (state.selectedNodeId === null) {
+        return state;
+      }
+
+      return {
+        nodes: state.nodes.filter((node) => node.id !== state.selectedNodeId),
+        selectedNodeId: null,
+      };
+    });
+  },
+
+  resetCanvas: () => {
+    set({
+      nodes: [],
+      selectedNodeId: null,
+    });
+  },
+}));
