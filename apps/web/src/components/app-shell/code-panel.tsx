@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { exportButtonComponent } from "@/features/component-studio/exporters/export-button-component";
+import { exportCardComponent } from "@/features/component-studio/exporters/export-card-component";
 import { generateButtonCode } from "@/features/component-studio/generators/button-generator";
 import { generateCardCode } from "@/features/component-studio/generators/card-generator";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
@@ -38,7 +39,11 @@ export function CodePanel() {
       return;
     }
 
-    downloadFile("rainbow-card.tsx", generatedCode, "text/typescript");
+    downloadFile(
+      "rainbow-card.tsx",
+      exportCardComponent(cardDefinition),
+      "text/typescript",
+    );
   }
 
   return (
