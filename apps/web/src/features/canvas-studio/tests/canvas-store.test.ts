@@ -76,6 +76,19 @@ describe("useCanvasStore", () => {
   }
 });
 
+it("updates zoom controls", () => {
+  expect(useCanvasStore.getState().zoom).toBe(1);
+
+  useCanvasStore.getState().zoomIn();
+  expect(useCanvasStore.getState().zoom).toBe(1.1);
+
+  useCanvasStore.getState().zoomOut();
+  expect(useCanvasStore.getState().zoom).toBe(1);
+
+  useCanvasStore.getState().resetZoom();
+  expect(useCanvasStore.getState().zoom).toBe(1);
+});
+
   it("deletes selected node", () => {
     useCanvasStore.getState().addRectangle();
 

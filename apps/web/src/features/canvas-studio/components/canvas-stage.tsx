@@ -14,6 +14,7 @@ export function CanvasStage() {
   const selectNode = useCanvasStore((state) => state.selectNode);
   const moveNode = useCanvasStore((state) => state.moveNode);
   const resizeNode = useCanvasStore((state) => state.resizeNode);
+  const zoom = useCanvasStore((state) => state.zoom);
 
   const nodeRefs = useRef<Map<string, Konva.Node>>(new Map());
   const transformerRef = useRef<Konva.Transformer | null>(null);
@@ -46,8 +47,10 @@ export function CanvasStage() {
   return (
     <div className="overflow-auto rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900">
       <Stage
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
+        width={CANVAS_WIDTH * zoom}
+        height={CANVAS_HEIGHT * zoom}
+        scaleX={zoom}
+        scaleY={zoom}
         className="rounded-2xl bg-white shadow-sm dark:bg-slate-950"
         onMouseDown={(event) => {
           if (event.target === event.target.getStage()) {

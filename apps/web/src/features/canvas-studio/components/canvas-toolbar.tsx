@@ -8,6 +8,10 @@ export function CanvasToolbar() {
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
   const selectedNodeId = useCanvasStore((state) => state.selectedNodeId);
+  const zoom = useCanvasStore((state) => state.zoom);
+  const zoomIn = useCanvasStore((state) => state.zoomIn);
+  const zoomOut = useCanvasStore((state) => state.zoomOut);
+  const resetZoom = useCanvasStore((state) => state.resetZoom);
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
@@ -16,7 +20,7 @@ export function CanvasToolbar() {
           Canvas Studio
         </p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Draw, select, move, and delete visual nodes.
+          Draw, select, move, resize, and zoom visual nodes.
         </p>
       </div>
 
@@ -36,6 +40,34 @@ export function CanvasToolbar() {
         >
           Add Text
         </button>
+
+        <div className="flex items-center gap-1 rounded-xl border border-slate-200 px-2 dark:border-slate-800">
+          <button
+            type="button"
+            onClick={zoomOut}
+            aria-label="Zoom out"
+            className="px-2 py-2 text-sm font-medium text-slate-700 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-200"
+          >
+            −
+          </button>
+
+          <button
+            type="button"
+            onClick={resetZoom}
+            className="min-w-14 px-2 py-2 text-xs font-semibold text-slate-600 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-300"
+          >
+            {Math.round(zoom * 100)}%
+          </button>
+
+          <button
+            type="button"
+            onClick={zoomIn}
+            aria-label="Zoom in"
+            className="px-2 py-2 text-sm font-medium text-slate-700 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-200"
+          >
+            +
+          </button>
+        </div>
 
         <button
           type="button"
