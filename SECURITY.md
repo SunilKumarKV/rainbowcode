@@ -2,29 +2,20 @@
 
 ## Supported Versions
 
-Only the latest main branch is supported.
+Use this section to tell people about which versions of your project are
+currently being supported with security updates.
 
-## Reporting
+| Version | Supported          |
+| ------- | ------------------ |
+| 5.1.x   | :white_check_mark: |
+| 5.0.x   | :x:                |
+| 4.0.x   | :white_check_mark: |
+| < 4.0   | :x:                |
 
-Do not open public issues for vulnerabilities.
-Report security issues privately.
+## Reporting a Vulnerability
 
-## Security Requirements
+Use this section to tell people how to report a vulnerability.
 
-- TypeScript strict mode
-- Input validation with Zod
-- Authentication with Auth.js
-- Prisma ORM
-- CodeQL enabled
-- Dependabot enabled
-- Secret scanning enabled
-- CSP headers
-- Rate limiting
-- Audit logging
-
-## Release Gate
-
-No production release without:
-- CI passing
-- Security checks passing
-- QA sign-off
+Tell them where to go, how often they can expect to get an update on a
+reported vulnerability, what to expect if the vulnerability is accepted or
+declined, etc.
