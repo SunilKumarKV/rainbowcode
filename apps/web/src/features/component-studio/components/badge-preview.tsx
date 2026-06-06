@@ -23,6 +23,9 @@ export function BadgePreview() {
     (state) => state.badgeDefinition,
   );
 
+  const previewLabel =
+    badgeDefinition.label.trim().length > 0 ? badgeDefinition.label : "Badge";
+
   return (
     <section
       aria-label="Badge component preview"
@@ -44,7 +47,7 @@ export function BadgePreview() {
         <span
           className={`inline-flex items-center rounded-[var(--radius-${badgeDefinition.radius})] font-semibold ${badgeSizeClassMap[badgeDefinition.size]} ${badgeVariantClassMap[badgeDefinition.variant]}`}
         >
-          {badgeDefinition.label}
+          {previewLabel}
         </span>
       </div>
     </section>

@@ -10,6 +10,7 @@ import { generateButtonCode } from "@/features/component-studio/generators/butto
 import { generateCardCode } from "@/features/component-studio/generators/card-generator";
 import { generateInputCode } from "@/features/component-studio/generators/input-generator";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
+import { getComponentMetadata } from "@/features/component-studio/utils/component-labels";
 import { downloadFile } from "@/features/theme-engine/exporters/download-file";
 import { useAppShellStore } from "@/stores/app-shell-store";
 
@@ -30,6 +31,8 @@ export function CodePanel() {
     (state) => state.badgeDefinition,
   );
 
+  const metadata = getComponentMetadata(selectedComponent);
+
   const generatedCode =
     selectedComponent === "button"
       ? generateButtonCode(buttonDefinition)
@@ -46,7 +49,7 @@ export function CodePanel() {
   function exportComponent(): void {
     if (selectedComponent === "button") {
       downloadFile(
-        "rainbow-button.tsx",
+        metadata.exportFilename,
         exportButtonComponent(buttonDefinition),
         "text/typescript",
       );
@@ -55,7 +58,7 @@ export function CodePanel() {
 
     if (selectedComponent === "card") {
       downloadFile(
-        "rainbow-card.tsx",
+        metadata.exportFilename,
         exportCardComponent(cardDefinition),
         "text/typescript",
       );
@@ -64,7 +67,7 @@ export function CodePanel() {
 
     if (selectedComponent === "input") {
       downloadFile(
-        "rainbow-input.tsx",
+        metadata.exportFilename,
         exportInputComponent(inputDefinition),
         "text/typescript",
       );
@@ -72,7 +75,7 @@ export function CodePanel() {
     }
 
     downloadFile(
-      "rainbow-badge.tsx",
+      metadata.exportFilename,
       exportBadgeComponent(badgeDefinition),
       "text/typescript",
     );
@@ -85,9 +88,11 @@ export function CodePanel() {
     >
       <div className="flex h-12 items-center justify-between gap-3 px-4">
         <div>
-          <h2 className="text-sm font-semibold">Generated Code</h2>
+          <h2 className="text-sm font-semibold">
+            Generated {metadata.label} Code
+          </h2>
           <p className="hidden text-xs text-slate-400 sm:block">
-            React + Tailwind output preview
+            Export filename: {metadata.exportFilename}
           </p>
         </div>
 

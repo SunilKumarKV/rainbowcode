@@ -6,6 +6,7 @@ import { ButtonPreview } from "@/features/component-studio/components/button-pre
 import { CardPreview } from "@/features/component-studio/components/card-preview";
 import { InputPreview } from "@/features/component-studio/components/input-preview";
 import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
+import { getComponentMetadata } from "@/features/component-studio/utils/component-labels";
 
 function ComponentPreviewSurface() {
   const selectedComponent = useComponentStudioStore(
@@ -28,6 +29,11 @@ function ComponentPreviewSurface() {
 }
 
 export function Workspace() {
+  const selectedComponent = useComponentStudioStore(
+    (state) => state.selectedComponent,
+  );
+  const metadata = getComponentMetadata(selectedComponent);
+
   return (
     <main className="min-h-full bg-slate-100 p-4 dark:bg-slate-950 md:p-6">
       <section
@@ -37,16 +43,19 @@ export function Workspace() {
         <div className="mb-4 flex flex-col justify-between gap-3 border-b border-slate-200 pb-4 dark:border-slate-800 md:flex-row md:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Canvas
+              Component Studio
             </p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
-              RainbowCode Workspace
+              {metadata.label} Builder
             </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              {metadata.description}
+            </p>
           </div>
 
           <div className="flex gap-2 text-xs text-slate-500">
             <span className="rounded-full border border-slate-200 px-3 py-1 dark:border-slate-700">
-              Component Studio
+              {metadata.label}
             </span>
             <span className="rounded-full border border-slate-200 px-3 py-1 dark:border-slate-700">
               Live Preview
