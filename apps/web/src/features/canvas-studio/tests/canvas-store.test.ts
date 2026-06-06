@@ -89,6 +89,30 @@ it("updates zoom controls", () => {
   expect(useCanvasStore.getState().zoom).toBe(1);
 });
 
+it("updates a selected node properties", () => {
+  useCanvasStore.getState().addRectangle();
+
+  const nodeId = useCanvasStore.getState().nodes[0]?.id;
+
+  expect(nodeId).toBeDefined();
+
+  if (nodeId !== undefined) {
+    useCanvasStore.getState().updateNode(nodeId, {
+      x: 50,
+      y: 60,
+      width: 300,
+      height: 180,
+    });
+
+    const node = useCanvasStore.getState().nodes[0];
+
+    expect(node?.x).toBe(50);
+    expect(node?.y).toBe(60);
+    expect(node?.width).toBe(300);
+    expect(node?.height).toBe(180);
+  }
+});
+
   it("deletes selected node", () => {
     useCanvasStore.getState().addRectangle();
 

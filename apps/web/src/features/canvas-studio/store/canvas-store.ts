@@ -8,6 +8,17 @@ import {
   increaseCanvasZoom,
 } from "@/features/canvas-studio/utils/canvas-zoom";
 
+type CanvasNodeUpdate = Partial<{
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly fill: string;
+  readonly radius: number;
+  readonly text: string;
+  readonly fontSize: number;
+}>;
+
 type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
   readonly selectedNodeId: string | null;
@@ -23,6 +34,7 @@ type CanvasStoreState = {
     nodeId: string,
     size: { readonly width: number; readonly height: number },
   ) => void;
+  readonly updateNode: (nodeId: string, update: CanvasNodeUpdate) => void;
   readonly zoomIn: () => void;
   readonly zoomOut: () => void;
   readonly resetZoom: () => void;
@@ -98,6 +110,21 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     set((state) => ({
       nodes: state.nodes.map((node) =>
         node.id === nodeId ? resizeCanvasNode(node, size) : node,
+      ),
+    }));
+  },
+
+  updateNode: (nodeId, update) => {
+    set((state) => ({
+      nodes: state.nodes.map((node) =>
+        node.id === nodeId
+          ? ({
+              ...node,
+              ...update,
+              id: node.id,
+              type: node.type,
+            } as CanvasNode)
+          : node,
       ),
     }));
   },

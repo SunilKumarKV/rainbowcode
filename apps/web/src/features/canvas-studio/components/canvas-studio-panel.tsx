@@ -1,6 +1,7 @@
 "use client";
 
 import { CanvasLayersPanel } from "@/features/canvas-studio/components/canvas-layers-panel";
+import { CanvasPropertiesPanel } from "@/features/canvas-studio/components/canvas-properties-panel";
 import { CanvasStage } from "@/features/canvas-studio/components/canvas-stage";
 import { CanvasToolbar } from "@/features/canvas-studio/components/canvas-toolbar";
 import { exportCanvasComponent } from "@/features/canvas-studio/exporters/export-canvas-component";
@@ -47,32 +48,17 @@ export function CanvasStudioPanel() {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
-        Shortcuts:{" "}
-        <kbd className="rounded border border-slate-200 px-1.5 py-0.5 dark:border-slate-700">
-          Delete
-        </kbd>{" "}
-        remove selected,{" "}
-        <kbd className="rounded border border-slate-200 px-1.5 py-0.5 dark:border-slate-700">
-          Esc
-        </kbd>{" "}
-        clear selection,{" "}
-        <kbd className="rounded border border-slate-200 px-1.5 py-0.5 dark:border-slate-700">
-          Cmd/Ctrl + +
-        </kbd>{" "}
-        zoom in,{" "}
-        <kbd className="rounded border border-slate-200 px-1.5 py-0.5 dark:border-slate-700">
-          Cmd/Ctrl + -
-        </kbd>{" "}
-        zoom out,{" "}
-        <kbd className="rounded border border-slate-200 px-1.5 py-0.5 dark:border-slate-700">
-          Cmd/Ctrl + 0
-        </kbd>{" "}
-        reset zoom.
+        Shortcuts: Delete remove selected, Esc clear selection, Cmd/Ctrl + +
+        zoom in, Cmd/Ctrl + - zoom out, Cmd/Ctrl + 0 reset zoom.
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
         <CanvasStage />
-        <CanvasLayersPanel />
+
+        <div className="space-y-4">
+          <CanvasLayersPanel />
+          <CanvasPropertiesPanel />
+        </div>
       </div>
 
       <section
