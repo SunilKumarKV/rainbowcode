@@ -1,0 +1,76 @@
+"use client";
+
+import { useEffect } from "react";
+import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import { getCanvasShortcutAction } from "@/features/canvas-studio/utils/canvas-shortcuts";
+
+function isEditableTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  const tagName = target.tagName.toLowerCase();
+
+  return (
+    tagName === "input" ||
+    tagName === "textarea" ||
+    tagName === "select" ||
+    target.isContentEditable
+  );
+}
+
+export function useCanvasKeyboardShortcuts(): void {
+  const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
+  const selectNode = useCanvasStore((state) => state.selectNode);
+  const zoomIn = useCanvasStore((state) => state.zoomIn);
+  const zoomOut = useCanvasStore((state) => state.zoomOut);
+  const resetZoom = useCanvasStore((state) => state.resetZoom);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (isEditableTarget(event.target)) {
+        return;
+      }
+
+      const action = getCanvasShortcutAction({
+        key: event.key,
+        metaKey: event.metaKey,
+        ctrlKey: event.ctrlKey,
+      });
+
+      if (action === "none") {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (action === "delete-selected") {
+        deleteSelectedNode();
+        return;
+      }
+
+      if (action === "clear-selection") {
+        selectNode(null);
+        return;
+      }
+
+      if (action === "zoom-in") {
+        zoomIn();
+        return;
+      }
+
+      if (action === "zoom-out") {
+        zoomOut();
+        return;
+      }
+
+      resetZoom();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [deleteSelectedNode, resetZoom, selectNode, zoomIn, zoomOut]);
+}
