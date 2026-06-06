@@ -10,6 +10,7 @@ const componentTypes: readonly {
   { label: "Button", value: "button" },
   { label: "Card", value: "card" },
   { label: "Input", value: "input" },
+  { label: "Badge", value: "badge" },
 ];
 
 export function ComponentTypeSwitcher() {
