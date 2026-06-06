@@ -1,11 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Topbar } from "@/components/app-shell/topbar";
-import { Sidebar } from "@/components/app-shell/sidebar";
-import { Workspace } from "@/components/app-shell/workspace";
-import { PropertiesPanel } from "@/components/app-shell/properties-panel";
 import { CodePanel } from "@/components/app-shell/code-panel";
+import { PropertiesPanel } from "@/components/app-shell/properties-panel";
+import { Sidebar } from "@/components/app-shell/sidebar";
+import { Topbar } from "@/components/app-shell/topbar";
+import { Workspace } from "@/components/app-shell/workspace";
 
 type AppShellProps = {
   readonly children?: ReactNode;
@@ -13,18 +13,22 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-slate-100 text-slate-950 dark:bg-slate-950 dark:text-white">
       <Topbar />
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         <Sidebar />
 
         <div className="flex min-w-0 flex-1 flex-col">
-          {children ?? <Workspace />}
+          <div className="min-h-0 flex flex-1 overflow-hidden">
+            <div className="min-w-0 flex-1 overflow-auto">
+              {children ?? <Workspace />}
+            </div>
+            <PropertiesPanel />
+          </div>
+
           <CodePanel />
         </div>
-
-        <PropertiesPanel />
       </div>
     </div>
   );

@@ -1,18 +1,43 @@
 export function Workspace() {
   return (
-    <main className="min-h-0 flex-1 overflow-auto bg-white p-6 dark:bg-slate-950">
+    <main className="min-h-full bg-slate-100 p-4 dark:bg-slate-950 md:p-6">
       <section
         aria-label="Main editing workspace"
-        className="flex min-h-[520px] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-900"
+        className="min-h-[620px] rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-6"
       >
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-950 dark:text-white">
-            RainbowCode Workspace
-          </h1>
-          <p className="mt-2 max-w-md text-sm text-slate-600 dark:text-slate-400">
-            This canvas region will power visual editing for logos, themes,
-            components, pages, and design systems.
-          </p>
+        <div className="mb-4 flex flex-col justify-between gap-3 border-b border-slate-200 pb-4 dark:border-slate-800 md:flex-row md:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Canvas
+            </p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
+              RainbowCode Workspace
+            </h1>
+          </div>
+
+          <div className="flex gap-2 text-xs text-slate-500">
+            <span className="rounded-full border border-slate-200 px-3 py-1 dark:border-slate-700">
+              1440 × 900
+            </span>
+            <span className="rounded-full border border-slate-200 px-3 py-1 dark:border-slate-700">
+              Live Preview
+            </span>
+          </div>
+        </div>
+
+        <div className="grid min-h-[500px] place-items-center rounded-3xl border border-dashed border-slate-300 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:32px_32px] dark:border-slate-700 dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]">
+          <div className="max-w-md rounded-3xl border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
+            <div className="mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-slate-950 text-xl text-white dark:bg-white dark:text-slate-950">
+              ✦
+            </div>
+            <h2 className="text-xl font-bold text-slate-950 dark:text-white">
+              Visual design-to-code starts here
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              This workspace will power drawing, component editing, theme
+              preview, and production-ready code generation.
+            </p>
+          </div>
         </div>
       </section>
     </main>
