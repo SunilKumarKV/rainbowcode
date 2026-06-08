@@ -5,13 +5,18 @@ import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 export function CanvasToolbar() {
   const addRectangle = useCanvasStore((state) => state.addRectangle);
   const addText = useCanvasStore((state) => state.addText);
+  const duplicateSelectedNodes = useCanvasStore(
+    (state) => state.duplicateSelectedNodes,
+  );
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
-  const selectedNodeId = useCanvasStore((state) => state.selectedNodeId);
+  const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
   const zoom = useCanvasStore((state) => state.zoom);
   const zoomIn = useCanvasStore((state) => state.zoomIn);
   const zoomOut = useCanvasStore((state) => state.zoomOut);
   const resetZoom = useCanvasStore((state) => state.resetZoom);
+
+  const hasSelection = selectedNodeIds.length > 0;
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
@@ -20,7 +25,7 @@ export function CanvasToolbar() {
           Canvas Studio
         </p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Draw, select, move, resize, and zoom visual nodes.
+          Draw, select, move, resize, duplicate, and zoom visual nodes.
         </p>
       </div>
 
@@ -39,6 +44,15 @@ export function CanvasToolbar() {
           className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
         >
           Add Text
+        </button>
+
+        <button
+          type="button"
+          onClick={duplicateSelectedNodes}
+          disabled={!hasSelection}
+          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+        >
+          Duplicate
         </button>
 
         <div className="flex items-center gap-1 rounded-xl border border-slate-200 px-2 dark:border-slate-800">
@@ -72,7 +86,7 @@ export function CanvasToolbar() {
         <button
           type="button"
           onClick={deleteSelectedNode}
-          disabled={selectedNodeId === null}
+          disabled={!hasSelection}
           className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
         >
           Delete

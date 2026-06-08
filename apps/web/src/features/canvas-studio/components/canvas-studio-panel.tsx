@@ -14,7 +14,7 @@ export function CanvasStudioPanel() {
   useCanvasKeyboardShortcuts();
 
   const nodes = useCanvasStore((state) => state.nodes);
-  const selectedNodeId = useCanvasStore((state) => state.selectedNodeId);
+  const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
   const zoom = useCanvasStore((state) => state.zoom);
 
   const generatedCanvasCode = generateCanvasCode(nodes);
@@ -40,16 +40,14 @@ export function CanvasStudioPanel() {
 
       <div className="grid gap-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-400 md:grid-cols-3">
         <span>Nodes: {nodes.length}</span>
-        <span>
-          Selected:{" "}
-          {selectedNodeId === null ? "None" : selectedNodeId.split("-")[0]}
-        </span>
+        <span>Selected: {selectedNodeIds.length}</span>
         <span>Zoom: {Math.round(zoom * 100)}%</span>
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
-        Shortcuts: Delete remove selected, Esc clear selection, Cmd/Ctrl + +
-        zoom in, Cmd/Ctrl + - zoom out, Cmd/Ctrl + 0 reset zoom.
+        Shortcuts: Delete remove selected, Cmd/Ctrl + D duplicate selected, Esc
+        clear selection, Cmd/Ctrl + Click multi-select, Cmd/Ctrl + + zoom in,
+        Cmd/Ctrl + - zoom out, Cmd/Ctrl + 0 reset zoom.
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">

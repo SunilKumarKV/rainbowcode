@@ -1,5 +1,6 @@
 export type CanvasShortcutAction =
   | "delete-selected"
+  | "duplicate-selected"
   | "clear-selection"
   | "zoom-in"
   | "zoom-out"
@@ -31,6 +32,10 @@ export function getCanvasShortcutAction(
 
   if (!isModifierPressed(input)) {
     return "none";
+  }
+
+  if (key === "d") {
+    return "duplicate-selected";
   }
 
   if (key === "0") {
