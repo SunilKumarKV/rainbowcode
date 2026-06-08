@@ -9,6 +9,9 @@ export function CanvasToolbar() {
     (state) => state.duplicateSelectedNodes,
   );
   const groupSelectedNodes = useCanvasStore((state) => state.groupSelectedNodes);
+  const ungroupSelectedNodes = useCanvasStore(
+    (state) => state.ungroupSelectedNodes,
+  );
   const bringSelectedForward = useCanvasStore(
     (state) => state.bringSelectedForward,
   );
@@ -17,6 +20,7 @@ export function CanvasToolbar() {
   );
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
+  const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
   const zoom = useCanvasStore((state) => state.zoom);
   const zoomIn = useCanvasStore((state) => state.zoomIn);
@@ -25,6 +29,9 @@ export function CanvasToolbar() {
 
   const hasSelection = selectedNodeIds.length > 0;
   const canGroup = selectedNodeIds.length > 1;
+  const canUngroup = nodes.some(
+    (node) => node.type === "group" && selectedNodeIds.includes(node.id),
+  );
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
@@ -33,8 +40,8 @@ export function CanvasToolbar() {
           Canvas Studio
         </p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Draw, select, move, resize, duplicate, group, reorder, and zoom visual
-          nodes.
+          Draw, select, move, resize, duplicate, group, ungroup, reorder, and
+          zoom visual nodes.
         </p>
       </div>
 
@@ -71,6 +78,15 @@ export function CanvasToolbar() {
           className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
         >
           Group
+        </button>
+
+        <button
+          type="button"
+          onClick={ungroupSelectedNodes}
+          disabled={!canUngroup}
+          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+        >
+          Ungroup
         </button>
 
         <button
