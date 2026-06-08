@@ -88,6 +88,39 @@ describe("useCanvasStore", () => {
   }
 });
 
+it("ungroups selected group node", () => {
+  useCanvasStore.getState().addRectangle();
+  useCanvasStore.getState().addText();
+
+  const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+  const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+  expect(firstNodeId).toBeDefined();
+  expect(secondNodeId).toBeDefined();
+
+  if (firstNodeId !== undefined && secondNodeId !== undefined) {
+    useCanvasStore.getState().selectNode(firstNodeId);
+    useCanvasStore.getState().selectNode(secondNodeId, true);
+    useCanvasStore.getState().groupSelectedNodes();
+
+    const groupNode = useCanvasStore
+      .getState()
+      .nodes.find((node) => node.type === "group");
+
+    expect(groupNode).toBeDefined();
+
+    if (groupNode !== undefined) {
+      useCanvasStore.getState().selectNode(groupNode.id);
+      useCanvasStore.getState().ungroupSelectedNodes();
+
+      const state = useCanvasStore.getState();
+
+      expect(state.nodes.some((node) => node.id === groupNode.id)).toBe(false);
+      expect(state.selectedNodeIds).toEqual([firstNodeId, secondNodeId]);
+    }
+  }
+});
+
   it("toggles node out of multi-selection", () => {
     useCanvasStore.getState().addRectangle();
     useCanvasStore.getState().addText();

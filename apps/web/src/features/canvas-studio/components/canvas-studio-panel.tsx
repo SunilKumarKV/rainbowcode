@@ -47,7 +47,7 @@ export function CanvasStudioPanel() {
       <div className="rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
         Shortcuts: Delete remove selected, Cmd/Ctrl + D duplicate selected, Esc
         clear selection, Cmd/Ctrl + Click multi-select. Group requires two or
-        more selected nodes.
+        more selected nodes. Ungroup requires a selected group.
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">

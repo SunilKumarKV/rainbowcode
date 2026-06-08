@@ -38,6 +38,7 @@ type CanvasStoreState = {
   readonly updateNode: (nodeId: string, update: CanvasNodeUpdate) => void;
   readonly duplicateSelectedNodes: () => void;
   readonly groupSelectedNodes: () => void;
+  readonly ungroupSelectedNodes: () => void;
   readonly bringSelectedForward: () => void;
   readonly sendSelectedBackward: () => void;
   readonly bringSelectedToFront: () => void;
@@ -315,6 +316,30 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       return {
         nodes: [...state.nodes, groupNode],
         selectedNodeIds: [groupNode.id],
+      };
+    });
+  },
+
+  ungroupSelectedNodes: () => {
+    set((state) => {
+      const selectedGroups = state.nodes.filter(
+        (node) =>
+          node.type === "group" && state.selectedNodeIds.includes(node.id),
+      );
+
+      if (selectedGroups.length === 0) {
+        return state;
+      }
+
+      const childNodeIds = selectedGroups.flatMap((group) =>
+        group.type === "group" ? [...group.childNodeIds] : [],
+      );
+
+      return {
+        nodes: state.nodes.filter(
+          (node) => !selectedGroups.some((group) => group.id === node.id),
+        ),
+        selectedNodeIds: childNodeIds,
       };
     });
   },
