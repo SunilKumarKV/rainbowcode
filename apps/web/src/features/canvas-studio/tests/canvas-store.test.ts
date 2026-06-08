@@ -61,6 +61,33 @@ describe("useCanvasStore", () => {
     }
   });
 
+  it("groups multiple selected nodes", () => {
+  useCanvasStore.getState().addRectangle();
+  useCanvasStore.getState().addText();
+
+  const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+  const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+  expect(firstNodeId).toBeDefined();
+  expect(secondNodeId).toBeDefined();
+
+  if (firstNodeId !== undefined && secondNodeId !== undefined) {
+    useCanvasStore.getState().selectNode(firstNodeId);
+    useCanvasStore.getState().selectNode(secondNodeId, true);
+    useCanvasStore.getState().groupSelectedNodes();
+
+    const state = useCanvasStore.getState();
+    const groupNode = state.nodes.find((node) => node.type === "group");
+
+    expect(groupNode).toBeDefined();
+
+    if (groupNode?.type === "group") {
+      expect(groupNode.childNodeIds).toEqual([firstNodeId, secondNodeId]);
+      expect(state.selectedNodeIds).toEqual([groupNode.id]);
+    }
+  }
+});
+
   it("toggles node out of multi-selection", () => {
     useCanvasStore.getState().addRectangle();
     useCanvasStore.getState().addText();

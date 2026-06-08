@@ -37,6 +37,7 @@ type CanvasStoreState = {
   ) => void;
   readonly updateNode: (nodeId: string, update: CanvasNodeUpdate) => void;
   readonly duplicateSelectedNodes: () => void;
+  readonly groupSelectedNodes: () => void;
   readonly bringSelectedForward: () => void;
   readonly sendSelectedBackward: () => void;
   readonly bringSelectedToFront: () => void;
@@ -53,11 +54,40 @@ function createNodeId(prefix: string): string {
 }
 
 function duplicateCanvasNode(node: CanvasNode): CanvasNode {
+  if (node.type === "group") {
+    return {
+      ...node,
+      id: createNodeId("group"),
+      x: node.x + 24,
+      y: node.y + 24,
+      childNodeIds: [...node.childNodeIds],
+    };
+  }
+
   return {
     ...node,
     id: createNodeId(node.type),
     x: node.x + 24,
     y: node.y + 24,
+  };
+}
+
+function getGroupBounds(nodes: readonly CanvasNode[]): {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+} {
+  const minX = Math.min(...nodes.map((node) => node.x));
+  const minY = Math.min(...nodes.map((node) => node.y));
+  const maxX = Math.max(...nodes.map((node) => node.x + node.width));
+  const maxY = Math.max(...nodes.map((node) => node.y + node.height));
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
   };
 }
 
@@ -252,6 +282,39 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       return {
         nodes: [...state.nodes, ...duplicatedNodes],
         selectedNodeIds: duplicatedNodes.map((node) => node.id),
+      };
+    });
+  },
+
+  groupSelectedNodes: () => {
+    set((state) => {
+      if (state.selectedNodeIds.length < 2) {
+        return state;
+      }
+
+      const selectedNodes = state.nodes.filter((node) =>
+        state.selectedNodeIds.includes(node.id),
+      );
+
+      if (selectedNodes.length < 2) {
+        return state;
+      }
+
+      const bounds = getGroupBounds(selectedNodes);
+
+      const groupNode: CanvasNode = {
+        id: createNodeId("group"),
+        type: "group",
+        x: bounds.x,
+        y: bounds.y,
+        width: bounds.width,
+        height: bounds.height,
+        childNodeIds: selectedNodes.map((node) => node.id),
+      };
+
+      return {
+        nodes: [...state.nodes, groupNode],
+        selectedNodeIds: [groupNode.id],
       };
     });
   },
