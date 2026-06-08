@@ -21,7 +21,10 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 export function useCanvasKeyboardShortcuts(): void {
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
-  const selectNode = useCanvasStore((state) => state.selectNode);
+  const duplicateSelectedNodes = useCanvasStore(
+    (state) => state.duplicateSelectedNodes,
+  );
+  const clearSelection = useCanvasStore((state) => state.clearSelection);
   const zoomIn = useCanvasStore((state) => state.zoomIn);
   const zoomOut = useCanvasStore((state) => state.zoomOut);
   const resetZoom = useCanvasStore((state) => state.resetZoom);
@@ -49,8 +52,13 @@ export function useCanvasKeyboardShortcuts(): void {
         return;
       }
 
+      if (action === "duplicate-selected") {
+        duplicateSelectedNodes();
+        return;
+      }
+
       if (action === "clear-selection") {
-        selectNode(null);
+        clearSelection();
         return;
       }
 
@@ -72,5 +80,12 @@ export function useCanvasKeyboardShortcuts(): void {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [deleteSelectedNode, resetZoom, selectNode, zoomIn, zoomOut]);
+  }, [
+    clearSelection,
+    deleteSelectedNode,
+    duplicateSelectedNodes,
+    resetZoom,
+    zoomIn,
+    zoomOut,
+  ]);
 }

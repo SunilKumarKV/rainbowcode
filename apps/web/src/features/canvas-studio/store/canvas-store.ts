@@ -21,11 +21,12 @@ type CanvasNodeUpdate = Partial<{
 
 type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
-  readonly selectedNodeId: string | null;
+  readonly selectedNodeIds: readonly string[];
   readonly zoom: number;
   readonly addRectangle: () => void;
   readonly addText: () => void;
-  readonly selectNode: (nodeId: string | null) => void;
+  readonly selectNode: (nodeId: string, additive?: boolean) => void;
+  readonly clearSelection: () => void;
   readonly moveNode: (
     nodeId: string,
     position: { readonly x: number; readonly y: number },
@@ -35,6 +36,7 @@ type CanvasStoreState = {
     size: { readonly width: number; readonly height: number },
   ) => void;
   readonly updateNode: (nodeId: string, update: CanvasNodeUpdate) => void;
+  readonly duplicateSelectedNodes: () => void;
   readonly zoomIn: () => void;
   readonly zoomOut: () => void;
   readonly resetZoom: () => void;
@@ -46,9 +48,29 @@ function createNodeId(prefix: string): string {
   return `${prefix}-${crypto.randomUUID()}`;
 }
 
+function duplicateCanvasNode(node: CanvasNode): CanvasNode {
+  const nextId = createNodeId(node.type);
+
+  if (node.type === "rectangle") {
+    return {
+      ...node,
+      id: nextId,
+      x: node.x + 24,
+      y: node.y + 24,
+    };
+  }
+
+  return {
+    ...node,
+    id: nextId,
+    x: node.x + 24,
+    y: node.y + 24,
+  };
+}
+
 export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
-  selectedNodeId: null,
+  selectedNodeIds: [],
   zoom: 1,
 
   addRectangle: () => {
@@ -65,7 +87,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
 
     set((state) => ({
       nodes: [...state.nodes, node],
-      selectedNodeId: node.id,
+      selectedNodeIds: [node.id],
     }));
   },
 
@@ -84,12 +106,32 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
 
     set((state) => ({
       nodes: [...state.nodes, node],
-      selectedNodeId: node.id,
+      selectedNodeIds: [node.id],
     }));
   },
 
-  selectNode: (nodeId) => {
-    set({ selectedNodeId: nodeId });
+  selectNode: (nodeId, additive = false) => {
+    set((state) => {
+      if (!additive) {
+        return {
+          selectedNodeIds: [nodeId],
+        };
+      }
+
+      const alreadySelected = state.selectedNodeIds.includes(nodeId);
+
+      return {
+        selectedNodeIds: alreadySelected
+          ? state.selectedNodeIds.filter((id) => id !== nodeId)
+          : [...state.selectedNodeIds, nodeId],
+      };
+    });
+  },
+
+  clearSelection: () => {
+    set({
+      selectedNodeIds: [],
+    });
   },
 
   moveNode: (nodeId, position) => {
@@ -129,6 +171,27 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     }));
   },
 
+  duplicateSelectedNodes: () => {
+    set((state) => {
+      if (state.selectedNodeIds.length === 0) {
+        return state;
+      }
+
+      const selectedNodes = state.nodes.filter((node) =>
+        state.selectedNodeIds.includes(node.id),
+      );
+
+      const duplicatedNodes = selectedNodes.map((node) =>
+        duplicateCanvasNode(node),
+      );
+
+      return {
+        nodes: [...state.nodes, ...duplicatedNodes],
+        selectedNodeIds: duplicatedNodes.map((node) => node.id),
+      };
+    });
+  },
+
   zoomIn: () => {
     set((state) => ({
       zoom: increaseCanvasZoom(state.zoom),
@@ -146,22 +209,18 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   },
 
   deleteSelectedNode: () => {
-    set((state) => {
-      if (state.selectedNodeId === null) {
-        return state;
-      }
-
-      return {
-        nodes: state.nodes.filter((node) => node.id !== state.selectedNodeId),
-        selectedNodeId: null,
-      };
-    });
+    set((state) => ({
+      nodes: state.nodes.filter(
+        (node) => !state.selectedNodeIds.includes(node.id),
+      ),
+      selectedNodeIds: [],
+    }));
   },
 
   resetCanvas: () => {
     set({
       nodes: [],
-      selectedNodeId: null,
+      selectedNodeIds: [],
       zoom: 1,
     });
   },

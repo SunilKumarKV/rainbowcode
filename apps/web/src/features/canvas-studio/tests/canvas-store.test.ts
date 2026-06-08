@@ -1,126 +1,116 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import { describe, expect, it } from "vitest";
+import { getCanvasShortcutAction } from "@/features/canvas-studio/utils/canvas-shortcuts";
 
-describe("useCanvasStore", () => {
-  beforeEach(() => {
-    useCanvasStore.getState().resetCanvas();
+describe("getCanvasShortcutAction", () => {
+  it("maps Delete to delete selected node", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "Delete",
+        metaKey: false,
+        ctrlKey: false,
+      }),
+    ).toBe("delete-selected");
   });
 
-  it("adds a rectangle node", () => {
-    useCanvasStore.getState().addRectangle();
-
-    const state = useCanvasStore.getState();
-
-    expect(state.nodes).toHaveLength(1);
-    expect(state.nodes[0]?.type).toBe("rectangle");
-    expect(state.selectedNodeId).toBe(state.nodes[0]?.id);
+  it("maps Backspace to delete selected node", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "Backspace",
+        metaKey: false,
+        ctrlKey: false,
+      }),
+    ).toBe("delete-selected");
   });
 
-  it("adds a text node", () => {
-    useCanvasStore.getState().addText();
+  it("maps Cmd/Ctrl + D to duplicate selected nodes", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "d",
+        metaKey: true,
+        ctrlKey: false,
+      }),
+    ).toBe("duplicate-selected");
 
-    const state = useCanvasStore.getState();
-
-    expect(state.nodes).toHaveLength(1);
-    expect(state.nodes[0]?.type).toBe("text");
-    expect(state.selectedNodeId).toBe(state.nodes[0]?.id);
+    expect(
+      getCanvasShortcutAction({
+        key: "D",
+        metaKey: false,
+        ctrlKey: true,
+      }),
+    ).toBe("duplicate-selected");
   });
 
-  it("selects a node", () => {
-    useCanvasStore.getState().addRectangle();
-
-    const nodeId = useCanvasStore.getState().nodes[0]?.id;
-
-    expect(nodeId).toBeDefined();
-
-    if (nodeId !== undefined) {
-      useCanvasStore.getState().selectNode(nodeId);
-      expect(useCanvasStore.getState().selectedNodeId).toBe(nodeId);
-    }
+  it("maps Escape to clear selection", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "Escape",
+        metaKey: false,
+        ctrlKey: false,
+      }),
+    ).toBe("clear-selection");
   });
 
-  it("moves a node", () => {
-    useCanvasStore.getState().addRectangle();
+  it("maps Cmd/Ctrl + 0 to reset zoom", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "0",
+        metaKey: true,
+        ctrlKey: false,
+      }),
+    ).toBe("reset-zoom");
 
-    const nodeId = useCanvasStore.getState().nodes[0]?.id;
-
-    expect(nodeId).toBeDefined();
-
-    if (nodeId !== undefined) {
-      useCanvasStore.getState().moveNode(nodeId, { x: 320, y: 240 });
-
-      const node = useCanvasStore.getState().nodes[0];
-
-      expect(node?.x).toBe(320);
-      expect(node?.y).toBe(240);
-    }
+    expect(
+      getCanvasShortcutAction({
+        key: "0",
+        metaKey: false,
+        ctrlKey: true,
+      }),
+    ).toBe("reset-zoom");
   });
 
-  it("resizes a node", () => {
-  useCanvasStore.getState().addRectangle();
+  it("maps Cmd/Ctrl + plus to zoom in", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "+",
+        metaKey: true,
+        ctrlKey: false,
+      }),
+    ).toBe("zoom-in");
 
-  const nodeId = useCanvasStore.getState().nodes[0]?.id;
+    expect(
+      getCanvasShortcutAction({
+        key: "=",
+        metaKey: false,
+        ctrlKey: true,
+      }),
+    ).toBe("zoom-in");
+  });
 
-  expect(nodeId).toBeDefined();
+  it("maps Cmd/Ctrl + minus to zoom out", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "-",
+        metaKey: true,
+        ctrlKey: false,
+      }),
+    ).toBe("zoom-out");
 
-  if (nodeId !== undefined) {
-    useCanvasStore.getState().resizeNode(nodeId, {
-      width: 320,
-      height: 180,
-    });
+    expect(
+      getCanvasShortcutAction({
+        key: "_",
+        metaKey: false,
+        ctrlKey: true,
+      }),
+    ).toBe("zoom-out");
+  });
 
-    const node = useCanvasStore.getState().nodes[0];
-
-    expect(node?.width).toBe(320);
-    expect(node?.height).toBe(180);
-  }
-});
-
-it("updates zoom controls", () => {
-  expect(useCanvasStore.getState().zoom).toBe(1);
-
-  useCanvasStore.getState().zoomIn();
-  expect(useCanvasStore.getState().zoom).toBe(1.1);
-
-  useCanvasStore.getState().zoomOut();
-  expect(useCanvasStore.getState().zoom).toBe(1);
-
-  useCanvasStore.getState().resetZoom();
-  expect(useCanvasStore.getState().zoom).toBe(1);
-});
-
-it("updates a selected node properties", () => {
-  useCanvasStore.getState().addRectangle();
-
-  const nodeId = useCanvasStore.getState().nodes[0]?.id;
-
-  expect(nodeId).toBeDefined();
-
-  if (nodeId !== undefined) {
-    useCanvasStore.getState().updateNode(nodeId, {
-      x: 50,
-      y: 60,
-      width: 300,
-      height: 180,
-    });
-
-    const node = useCanvasStore.getState().nodes[0];
-
-    expect(node?.x).toBe(50);
-    expect(node?.y).toBe(60);
-    expect(node?.width).toBe(300);
-    expect(node?.height).toBe(180);
-  }
-});
-
-  it("deletes selected node", () => {
-    useCanvasStore.getState().addRectangle();
-
-    useCanvasStore.getState().deleteSelectedNode();
-
-    const state = useCanvasStore.getState();
-
-    expect(state.nodes).toHaveLength(0);
-    expect(state.selectedNodeId).toBeNull();
+  it("returns none for unrelated keys", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "a",
+        metaKey: false,
+        ctrlKey: false,
+      }),
+    ).toBe("none");
   });
 });

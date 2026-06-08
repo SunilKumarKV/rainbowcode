@@ -22,6 +22,24 @@ describe("getCanvasShortcutAction", () => {
     ).toBe("delete-selected");
   });
 
+  it("maps Cmd/Ctrl + D to duplicate selected nodes", () => {
+    expect(
+      getCanvasShortcutAction({
+        key: "d",
+        metaKey: true,
+        ctrlKey: false,
+      }),
+    ).toBe("duplicate-selected");
+
+    expect(
+      getCanvasShortcutAction({
+        key: "D",
+        metaKey: false,
+        ctrlKey: true,
+      }),
+    ).toBe("duplicate-selected");
+  });
+
   it("maps Escape to clear selection", () => {
     expect(
       getCanvasShortcutAction({
