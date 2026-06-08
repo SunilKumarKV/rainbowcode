@@ -1,7 +1,7 @@
 "use client";
 
-import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
 
 function toNumber(value: string): number {
   const parsed = Number.parseFloat(value);
@@ -142,12 +142,34 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
 
 export function CanvasPropertiesPanel() {
   const nodes = useCanvasStore((state) => state.nodes);
-  const selectedNodeId = useCanvasStore((state) => state.selectedNodeId);
+  const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
+
+  if (selectedNodeIds.length > 1) {
+    return (
+      <aside
+        aria-label="Canvas properties"
+        className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+      >
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Properties
+        </p>
+
+        <h3 className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
+          Multi Selection
+        </h3>
+
+        <div className="mt-4 rounded-xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-800">
+          {selectedNodeIds.length} nodes selected. Bulk editing will be added in
+          a later issue.
+        </div>
+      </aside>
+    );
+  }
 
   const selectedNode =
-    selectedNodeId === null
+    selectedNodeIds.length === 0
       ? undefined
-      : nodes.find((node) => node.id === selectedNodeId);
+      : nodes.find((node) => node.id === selectedNodeIds[0]);
 
   return (
     <aside

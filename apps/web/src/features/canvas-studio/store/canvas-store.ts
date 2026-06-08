@@ -37,6 +37,10 @@ type CanvasStoreState = {
   ) => void;
   readonly updateNode: (nodeId: string, update: CanvasNodeUpdate) => void;
   readonly duplicateSelectedNodes: () => void;
+  readonly bringSelectedForward: () => void;
+  readonly sendSelectedBackward: () => void;
+  readonly bringSelectedToFront: () => void;
+  readonly sendSelectedToBack: () => void;
   readonly zoomIn: () => void;
   readonly zoomOut: () => void;
   readonly resetZoom: () => void;
@@ -49,23 +53,83 @@ function createNodeId(prefix: string): string {
 }
 
 function duplicateCanvasNode(node: CanvasNode): CanvasNode {
-  const nextId = createNodeId(node.type);
-
-  if (node.type === "rectangle") {
-    return {
-      ...node,
-      id: nextId,
-      x: node.x + 24,
-      y: node.y + 24,
-    };
-  }
-
   return {
     ...node,
-    id: nextId,
+    id: createNodeId(node.type),
     x: node.x + 24,
     y: node.y + 24,
   };
+}
+
+function moveSelectedForward(
+  nodes: readonly CanvasNode[],
+  selectedNodeIds: readonly string[],
+): readonly CanvasNode[] {
+  const nextNodes = [...nodes];
+
+  for (let index = nextNodes.length - 2; index >= 0; index -= 1) {
+    const node = nextNodes[index];
+
+    if (node !== undefined && selectedNodeIds.includes(node.id)) {
+      const nextNode = nextNodes[index + 1];
+
+      if (nextNode !== undefined && !selectedNodeIds.includes(nextNode.id)) {
+        nextNodes[index] = nextNode;
+        nextNodes[index + 1] = node;
+      }
+    }
+  }
+
+  return nextNodes;
+}
+
+function moveSelectedBackward(
+  nodes: readonly CanvasNode[],
+  selectedNodeIds: readonly string[],
+): readonly CanvasNode[] {
+  const nextNodes = [...nodes];
+
+  for (let index = 1; index < nextNodes.length; index += 1) {
+    const node = nextNodes[index];
+
+    if (node !== undefined && selectedNodeIds.includes(node.id)) {
+      const previousNode = nextNodes[index - 1];
+
+      if (
+        previousNode !== undefined &&
+        !selectedNodeIds.includes(previousNode.id)
+      ) {
+        nextNodes[index - 1] = node;
+        nextNodes[index] = previousNode;
+      }
+    }
+  }
+
+  return nextNodes;
+}
+
+function moveSelectedToFront(
+  nodes: readonly CanvasNode[],
+  selectedNodeIds: readonly string[],
+): readonly CanvasNode[] {
+  const unselectedNodes = nodes.filter(
+    (node) => !selectedNodeIds.includes(node.id),
+  );
+  const selectedNodes = nodes.filter((node) => selectedNodeIds.includes(node.id));
+
+  return [...unselectedNodes, ...selectedNodes];
+}
+
+function moveSelectedToBack(
+  nodes: readonly CanvasNode[],
+  selectedNodeIds: readonly string[],
+): readonly CanvasNode[] {
+  const selectedNodes = nodes.filter((node) => selectedNodeIds.includes(node.id));
+  const unselectedNodes = nodes.filter(
+    (node) => !selectedNodeIds.includes(node.id),
+  );
+
+  return [...selectedNodes, ...unselectedNodes];
 }
 
 export const useCanvasStore = create<CanvasStoreState>((set) => ({
@@ -190,6 +254,30 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
         selectedNodeIds: duplicatedNodes.map((node) => node.id),
       };
     });
+  },
+
+  bringSelectedForward: () => {
+    set((state) => ({
+      nodes: moveSelectedForward(state.nodes, state.selectedNodeIds),
+    }));
+  },
+
+  sendSelectedBackward: () => {
+    set((state) => ({
+      nodes: moveSelectedBackward(state.nodes, state.selectedNodeIds),
+    }));
+  },
+
+  bringSelectedToFront: () => {
+    set((state) => ({
+      nodes: moveSelectedToFront(state.nodes, state.selectedNodeIds),
+    }));
+  },
+
+  sendSelectedToBack: () => {
+    set((state) => ({
+      nodes: moveSelectedToBack(state.nodes, state.selectedNodeIds),
+    }));
   },
 
   zoomIn: () => {

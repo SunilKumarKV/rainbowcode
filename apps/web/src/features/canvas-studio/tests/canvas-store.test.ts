@@ -1,116 +1,337 @@
-import { describe, expect, it } from "vitest";
-import { getCanvasShortcutAction } from "@/features/canvas-studio/utils/canvas-shortcuts";
+import { beforeEach, describe, expect, it } from "vitest";
+import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 
-describe("getCanvasShortcutAction", () => {
-  it("maps Delete to delete selected node", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "Delete",
-        metaKey: false,
-        ctrlKey: false,
-      }),
-    ).toBe("delete-selected");
+describe("useCanvasStore", () => {
+  beforeEach(() => {
+    useCanvasStore.getState().resetCanvas();
   });
 
-  it("maps Backspace to delete selected node", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "Backspace",
-        metaKey: false,
-        ctrlKey: false,
-      }),
-    ).toBe("delete-selected");
+  it("adds a rectangle node", () => {
+    useCanvasStore.getState().addRectangle();
+
+    const state = useCanvasStore.getState();
+
+    expect(state.nodes).toHaveLength(1);
+    expect(state.nodes[0]?.type).toBe("rectangle");
+    expect(state.selectedNodeIds).toEqual([state.nodes[0]?.id]);
   });
 
-  it("maps Cmd/Ctrl + D to duplicate selected nodes", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "d",
-        metaKey: true,
-        ctrlKey: false,
-      }),
-    ).toBe("duplicate-selected");
+  it("adds a text node", () => {
+    useCanvasStore.getState().addText();
 
-    expect(
-      getCanvasShortcutAction({
-        key: "D",
-        metaKey: false,
-        ctrlKey: true,
-      }),
-    ).toBe("duplicate-selected");
+    const state = useCanvasStore.getState();
+
+    expect(state.nodes).toHaveLength(1);
+    expect(state.nodes[0]?.type).toBe("text");
+    expect(state.selectedNodeIds).toEqual([state.nodes[0]?.id]);
   });
 
-  it("maps Escape to clear selection", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "Escape",
-        metaKey: false,
-        ctrlKey: false,
-      }),
-    ).toBe("clear-selection");
+  it("selects a single node", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+
+    const nodeId = useCanvasStore.getState().nodes[0]?.id;
+
+    expect(nodeId).toBeDefined();
+
+    if (nodeId !== undefined) {
+      useCanvasStore.getState().selectNode(nodeId);
+      expect(useCanvasStore.getState().selectedNodeIds).toEqual([nodeId]);
+    }
   });
 
-  it("maps Cmd/Ctrl + 0 to reset zoom", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "0",
-        metaKey: true,
-        ctrlKey: false,
-      }),
-    ).toBe("reset-zoom");
+  it("supports additive multi-select", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
 
-    expect(
-      getCanvasShortcutAction({
-        key: "0",
-        metaKey: false,
-        ctrlKey: true,
-      }),
-    ).toBe("reset-zoom");
+    const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+    const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+    expect(firstNodeId).toBeDefined();
+    expect(secondNodeId).toBeDefined();
+
+    if (firstNodeId !== undefined && secondNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(firstNodeId);
+      useCanvasStore.getState().selectNode(secondNodeId, true);
+
+      expect(useCanvasStore.getState().selectedNodeIds).toEqual([
+        firstNodeId,
+        secondNodeId,
+      ]);
+    }
   });
 
-  it("maps Cmd/Ctrl + plus to zoom in", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "+",
-        metaKey: true,
-        ctrlKey: false,
-      }),
-    ).toBe("zoom-in");
+  it("toggles node out of multi-selection", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
 
-    expect(
-      getCanvasShortcutAction({
-        key: "=",
-        metaKey: false,
-        ctrlKey: true,
-      }),
-    ).toBe("zoom-in");
+    const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+    const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+    expect(firstNodeId).toBeDefined();
+    expect(secondNodeId).toBeDefined();
+
+    if (firstNodeId !== undefined && secondNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(firstNodeId);
+      useCanvasStore.getState().selectNode(secondNodeId, true);
+      useCanvasStore.getState().selectNode(firstNodeId, true);
+
+      expect(useCanvasStore.getState().selectedNodeIds).toEqual([secondNodeId]);
+    }
   });
 
-  it("maps Cmd/Ctrl + minus to zoom out", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "-",
-        metaKey: true,
-        ctrlKey: false,
-      }),
-    ).toBe("zoom-out");
+  it("clears selection", () => {
+    useCanvasStore.getState().addRectangle();
 
-    expect(
-      getCanvasShortcutAction({
-        key: "_",
-        metaKey: false,
-        ctrlKey: true,
-      }),
-    ).toBe("zoom-out");
+    useCanvasStore.getState().clearSelection();
+
+    expect(useCanvasStore.getState().selectedNodeIds).toEqual([]);
   });
 
-  it("returns none for unrelated keys", () => {
-    expect(
-      getCanvasShortcutAction({
-        key: "a",
-        metaKey: false,
-        ctrlKey: false,
-      }),
-    ).toBe("none");
+  it("duplicates a selected rectangle node", () => {
+    useCanvasStore.getState().addRectangle();
+
+    const originalNode = useCanvasStore.getState().nodes[0];
+
+    expect(originalNode).toBeDefined();
+
+    if (originalNode !== undefined) {
+      useCanvasStore.getState().duplicateSelectedNodes();
+
+      const state = useCanvasStore.getState();
+      const duplicatedNode = state.nodes[1];
+
+      expect(state.nodes).toHaveLength(2);
+      expect(duplicatedNode?.type).toBe("rectangle");
+      expect(duplicatedNode?.id).not.toBe(originalNode.id);
+      expect(duplicatedNode?.x).toBe(originalNode.x + 24);
+      expect(duplicatedNode?.y).toBe(originalNode.y + 24);
+      expect(duplicatedNode?.width).toBe(originalNode.width);
+      expect(duplicatedNode?.height).toBe(originalNode.height);
+      expect(state.selectedNodeIds).toEqual([duplicatedNode?.id]);
+    }
+  });
+
+  it("duplicates a selected text node", () => {
+    useCanvasStore.getState().addText();
+
+    const originalNode = useCanvasStore.getState().nodes[0];
+
+    expect(originalNode).toBeDefined();
+
+    if (originalNode !== undefined) {
+      useCanvasStore.getState().duplicateSelectedNodes();
+
+      const state = useCanvasStore.getState();
+      const duplicatedNode = state.nodes[1];
+
+      expect(state.nodes).toHaveLength(2);
+      expect(duplicatedNode?.type).toBe("text");
+      expect(duplicatedNode?.id).not.toBe(originalNode.id);
+      expect(duplicatedNode?.x).toBe(originalNode.x + 24);
+      expect(duplicatedNode?.y).toBe(originalNode.y + 24);
+      expect(duplicatedNode?.width).toBe(originalNode.width);
+      expect(duplicatedNode?.height).toBe(originalNode.height);
+      expect(state.selectedNodeIds).toEqual([duplicatedNode?.id]);
+    }
+  });
+
+  it("duplicates multiple selected nodes", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+
+    const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+    const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+    expect(firstNodeId).toBeDefined();
+    expect(secondNodeId).toBeDefined();
+
+    if (firstNodeId !== undefined && secondNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(firstNodeId);
+      useCanvasStore.getState().selectNode(secondNodeId, true);
+      useCanvasStore.getState().duplicateSelectedNodes();
+
+      const state = useCanvasStore.getState();
+
+      expect(state.nodes).toHaveLength(4);
+      expect(state.selectedNodeIds).toHaveLength(2);
+      expect(state.selectedNodeIds).toEqual([
+        state.nodes[2]?.id,
+        state.nodes[3]?.id,
+      ]);
+    }
+  });
+
+  it("does nothing when duplicating without selection", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().clearSelection();
+
+    useCanvasStore.getState().duplicateSelectedNodes();
+
+    expect(useCanvasStore.getState().nodes).toHaveLength(1);
+    expect(useCanvasStore.getState().selectedNodeIds).toEqual([]);
+  });
+
+  it("brings selected node forward", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+
+    const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+
+    expect(firstNodeId).toBeDefined();
+
+    if (firstNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(firstNodeId);
+      useCanvasStore.getState().bringSelectedForward();
+
+      expect(useCanvasStore.getState().nodes[1]?.id).toBe(firstNodeId);
+    }
+  });
+
+  it("sends selected node backward", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+
+    const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+    expect(secondNodeId).toBeDefined();
+
+    if (secondNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(secondNodeId);
+      useCanvasStore.getState().sendSelectedBackward();
+
+      expect(useCanvasStore.getState().nodes[0]?.id).toBe(secondNodeId);
+    }
+  });
+
+  it("brings selected node to front", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+    useCanvasStore.getState().addRectangle();
+
+    const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+
+    expect(firstNodeId).toBeDefined();
+
+    if (firstNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(firstNodeId);
+      useCanvasStore.getState().bringSelectedToFront();
+
+      expect(useCanvasStore.getState().nodes[2]?.id).toBe(firstNodeId);
+    }
+  });
+
+  it("sends selected node to back", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+    useCanvasStore.getState().addRectangle();
+
+    const lastNodeId = useCanvasStore.getState().nodes[2]?.id;
+
+    expect(lastNodeId).toBeDefined();
+
+    if (lastNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(lastNodeId);
+      useCanvasStore.getState().sendSelectedToBack();
+
+      expect(useCanvasStore.getState().nodes[0]?.id).toBe(lastNodeId);
+    }
+  });
+
+  it("moves a node", () => {
+    useCanvasStore.getState().addRectangle();
+
+    const nodeId = useCanvasStore.getState().nodes[0]?.id;
+
+    expect(nodeId).toBeDefined();
+
+    if (nodeId !== undefined) {
+      useCanvasStore.getState().moveNode(nodeId, { x: 320, y: 240 });
+
+      const node = useCanvasStore.getState().nodes[0];
+
+      expect(node?.x).toBe(320);
+      expect(node?.y).toBe(240);
+    }
+  });
+
+  it("resizes a node", () => {
+    useCanvasStore.getState().addRectangle();
+
+    const nodeId = useCanvasStore.getState().nodes[0]?.id;
+
+    expect(nodeId).toBeDefined();
+
+    if (nodeId !== undefined) {
+      useCanvasStore.getState().resizeNode(nodeId, {
+        width: 320,
+        height: 180,
+      });
+
+      const node = useCanvasStore.getState().nodes[0];
+
+      expect(node?.width).toBe(320);
+      expect(node?.height).toBe(180);
+    }
+  });
+
+  it("updates a selected node properties", () => {
+    useCanvasStore.getState().addRectangle();
+
+    const nodeId = useCanvasStore.getState().nodes[0]?.id;
+
+    expect(nodeId).toBeDefined();
+
+    if (nodeId !== undefined) {
+      useCanvasStore.getState().updateNode(nodeId, {
+        x: 50,
+        y: 60,
+        width: 300,
+        height: 180,
+      });
+
+      const node = useCanvasStore.getState().nodes[0];
+
+      expect(node?.x).toBe(50);
+      expect(node?.y).toBe(60);
+      expect(node?.width).toBe(300);
+      expect(node?.height).toBe(180);
+    }
+  });
+
+  it("updates zoom controls", () => {
+    expect(useCanvasStore.getState().zoom).toBe(1);
+
+    useCanvasStore.getState().zoomIn();
+    expect(useCanvasStore.getState().zoom).toBe(1.1);
+
+    useCanvasStore.getState().zoomOut();
+    expect(useCanvasStore.getState().zoom).toBe(1);
+
+    useCanvasStore.getState().resetZoom();
+    expect(useCanvasStore.getState().zoom).toBe(1);
+  });
+
+  it("deletes all selected nodes", () => {
+    useCanvasStore.getState().addRectangle();
+    useCanvasStore.getState().addText();
+
+    const firstNodeId = useCanvasStore.getState().nodes[0]?.id;
+    const secondNodeId = useCanvasStore.getState().nodes[1]?.id;
+
+    expect(firstNodeId).toBeDefined();
+    expect(secondNodeId).toBeDefined();
+
+    if (firstNodeId !== undefined && secondNodeId !== undefined) {
+      useCanvasStore.getState().selectNode(firstNodeId);
+      useCanvasStore.getState().selectNode(secondNodeId, true);
+
+      useCanvasStore.getState().deleteSelectedNode();
+
+      const state = useCanvasStore.getState();
+
+      expect(state.nodes).toHaveLength(0);
+      expect(state.selectedNodeIds).toEqual([]);
+    }
   });
 });
