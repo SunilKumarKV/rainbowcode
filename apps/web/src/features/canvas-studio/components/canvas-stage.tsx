@@ -1,17 +1,28 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Layer, Rect, Stage, Text, Transformer } from "react-konva";
 import type Konva from "konva";
+import { Layer, Rect, Stage, Text, Transformer } from "react-konva";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 
 const CANVAS_WIDTH = 900;
 const CANVAS_HEIGHT = 520;
 
+function isAdditiveSelection(
+  event: Konva.KonvaEventObject<MouseEvent | TouchEvent>,
+): boolean {
+  const nativeEvent = event.evt;
+
+  return "metaKey" in nativeEvent
+    ? nativeEvent.metaKey || nativeEvent.ctrlKey
+    : false;
+}
+
 export function CanvasStage() {
   const nodes = useCanvasStore((state) => state.nodes);
-  const selectedNodeId = useCanvasStore((state) => state.selectedNodeId);
+  const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
   const selectNode = useCanvasStore((state) => state.selectNode);
+  const clearSelection = useCanvasStore((state) => state.clearSelection);
   const moveNode = useCanvasStore((state) => state.moveNode);
   const resizeNode = useCanvasStore((state) => state.resizeNode);
   const zoom = useCanvasStore((state) => state.zoom);
@@ -26,23 +37,13 @@ export function CanvasStage() {
       return;
     }
 
-    if (selectedNodeId === null) {
-      transformer.nodes([]);
-      transformer.getLayer()?.batchDraw();
-      return;
-    }
+    const selectedNodes = selectedNodeIds
+      .map((nodeId) => nodeRefs.current.get(nodeId))
+      .filter((node): node is Konva.Node => node !== undefined);
 
-    const selectedNode = nodeRefs.current.get(selectedNodeId);
-
-    if (selectedNode === undefined) {
-      transformer.nodes([]);
-      transformer.getLayer()?.batchDraw();
-      return;
-    }
-
-    transformer.nodes([selectedNode]);
+    transformer.nodes(selectedNodes);
     transformer.getLayer()?.batchDraw();
-  }, [selectedNodeId, nodes]);
+  }, [selectedNodeIds, nodes]);
 
   return (
     <div className="overflow-auto rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900">
@@ -54,18 +55,18 @@ export function CanvasStage() {
         className="rounded-2xl bg-white shadow-sm dark:bg-slate-950"
         onMouseDown={(event) => {
           if (event.target === event.target.getStage()) {
-            selectNode(null);
+            clearSelection();
           }
         }}
         onTouchStart={(event) => {
           if (event.target === event.target.getStage()) {
-            selectNode(null);
+            clearSelection();
           }
         }}
       >
         <Layer>
           {nodes.map((node) => {
-            const isSelected = selectedNodeId === node.id;
+            const isSelected = selectedNodeIds.includes(node.id);
 
             if (node.type === "rectangle") {
               return (
@@ -88,8 +89,12 @@ export function CanvasStage() {
                   stroke={isSelected ? "#0f172a" : "transparent"}
                   strokeWidth={isSelected ? 2 : 0}
                   draggable
-                  onClick={() => selectNode(node.id)}
-                  onTap={() => selectNode(node.id)}
+                  onClick={(event) =>
+                    selectNode(node.id, isAdditiveSelection(event))
+                  }
+                  onTap={(event) =>
+                    selectNode(node.id, isAdditiveSelection(event))
+                  }
                   onDragEnd={(event) =>
                     moveNode(node.id, {
                       x: event.target.x(),
@@ -140,8 +145,12 @@ export function CanvasStage() {
                 stroke={isSelected ? "#0f172a" : "transparent"}
                 strokeWidth={isSelected ? 1 : 0}
                 draggable
-                onClick={() => selectNode(node.id)}
-                onTap={() => selectNode(node.id)}
+                onClick={(event) =>
+                  selectNode(node.id, isAdditiveSelection(event))
+                }
+                onTap={(event) =>
+                  selectNode(node.id, isAdditiveSelection(event))
+                }
                 onDragEnd={(event) =>
                   moveNode(node.id, {
                     x: event.target.x(),
@@ -181,9 +190,9 @@ export function CanvasStage() {
               "middle-left",
               "middle-right",
             ]}
-            boundBoxFunc={(_oldBox, newBox) => {
+            boundBoxFunc={(oldBox, newBox) => {
               if (newBox.width < 24 || newBox.height < 24) {
-                return _oldBox;
+                return oldBox;
               }
 
               return newBox;

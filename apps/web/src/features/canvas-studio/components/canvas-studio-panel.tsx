@@ -46,8 +46,8 @@ export function CanvasStudioPanel() {
 
       <div className="rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
         Shortcuts: Delete remove selected, Cmd/Ctrl + D duplicate selected, Esc
-        clear selection, Cmd/Ctrl + Click multi-select, Cmd/Ctrl + + zoom in,
-        Cmd/Ctrl + - zoom out, Cmd/Ctrl + 0 reset zoom.
+        clear selection, Cmd/Ctrl + Click multi-select. Use Forward, Backward,
+        To Front, and To Back for layer ordering.
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">

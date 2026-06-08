@@ -8,6 +8,12 @@ export function CanvasToolbar() {
   const duplicateSelectedNodes = useCanvasStore(
     (state) => state.duplicateSelectedNodes,
   );
+  const bringSelectedForward = useCanvasStore(
+    (state) => state.bringSelectedForward,
+  );
+  const sendSelectedBackward = useCanvasStore(
+    (state) => state.sendSelectedBackward,
+  );
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
@@ -25,7 +31,7 @@ export function CanvasToolbar() {
           Canvas Studio
         </p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Draw, select, move, resize, duplicate, and zoom visual nodes.
+          Draw, select, move, resize, duplicate, reorder, and zoom visual nodes.
         </p>
       </div>
 
@@ -53,6 +59,24 @@ export function CanvasToolbar() {
           className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
         >
           Duplicate
+        </button>
+
+        <button
+          type="button"
+          onClick={bringSelectedForward}
+          disabled={!hasSelection}
+          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+        >
+          Forward
+        </button>
+
+        <button
+          type="button"
+          onClick={sendSelectedBackward}
+          disabled={!hasSelection}
+          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+        >
+          Backward
         </button>
 
         <div className="flex items-center gap-1 rounded-xl border border-slate-200 px-2 dark:border-slate-800">
