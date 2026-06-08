@@ -7,5 +7,9 @@ export function getCanvasNodeLabel(node: CanvasNode, index: number): string {
     return `Rectangle ${layerNumber}`;
   }
 
+  if (node.type === "group") {
+    return `Group ${layerNumber}`;
+  }
+
   return node.text.trim().length > 0 ? node.text : `Text ${layerNumber}`;
 }

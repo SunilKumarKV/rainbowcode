@@ -1,4 +1,4 @@
-export type CanvasNodeType = "rectangle" | "text";
+export type CanvasNodeType = "rectangle" | "text" | "group";
 
 export type BaseCanvasNode = {
   readonly id: string;
@@ -22,4 +22,9 @@ export type TextCanvasNode = BaseCanvasNode & {
   readonly fill: string;
 };
 
-export type CanvasNode = RectangleCanvasNode | TextCanvasNode;
+export type GroupCanvasNode = BaseCanvasNode & {
+  readonly type: "group";
+  readonly childNodeIds: readonly string[];
+};
+
+export type CanvasNode = RectangleCanvasNode | TextCanvasNode | GroupCanvasNode;

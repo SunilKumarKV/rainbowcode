@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type Konva from "konva";
-import { Layer, Rect, Stage, Text, Transformer } from "react-konva";
+import { Group, Layer, Rect, Stage, Text, Transformer } from "react-konva";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 
 const CANVAS_WIDTH = 900;
@@ -123,8 +123,65 @@ export function CanvasStage() {
               );
             }
 
+            if (node.type === "text") {
+              return (
+                <Text
+                  key={node.id}
+                  ref={(shapeNode) => {
+                    if (shapeNode === null) {
+                      nodeRefs.current.delete(node.id);
+                      return;
+                    }
+
+                    nodeRefs.current.set(node.id, shapeNode);
+                  }}
+                  x={node.x}
+                  y={node.y}
+                  width={node.width}
+                  height={node.height}
+                  text={node.text}
+                  fontSize={node.fontSize}
+                  fill={node.fill}
+                  padding={8}
+                  stroke={isSelected ? "#0f172a" : "transparent"}
+                  strokeWidth={isSelected ? 1 : 0}
+                  draggable
+                  onClick={(event) =>
+                    selectNode(node.id, isAdditiveSelection(event))
+                  }
+                  onTap={(event) =>
+                    selectNode(node.id, isAdditiveSelection(event))
+                  }
+                  onDragEnd={(event) =>
+                    moveNode(node.id, {
+                      x: event.target.x(),
+                      y: event.target.y(),
+                    })
+                  }
+                  onTransformEnd={(event) => {
+                    const shape = event.target;
+                    const scaleX = shape.scaleX();
+                    const scaleY = shape.scaleY();
+
+                    shape.scaleX(1);
+                    shape.scaleY(1);
+
+                    resizeNode(node.id, {
+                      width: node.width * scaleX,
+                      height: node.height * scaleY,
+                    });
+
+                    moveNode(node.id, {
+                      x: shape.x(),
+                      y: shape.y(),
+                    });
+                  }}
+                />
+              );
+            }
+
             return (
-              <Text
+              <Group
                 key={node.id}
                 ref={(shapeNode) => {
                   if (shapeNode === null) {
@@ -138,12 +195,6 @@ export function CanvasStage() {
                 y={node.y}
                 width={node.width}
                 height={node.height}
-                text={node.text}
-                fontSize={node.fontSize}
-                fill={node.fill}
-                padding={8}
-                stroke={isSelected ? "#0f172a" : "transparent"}
-                strokeWidth={isSelected ? 1 : 0}
                 draggable
                 onClick={(event) =>
                   selectNode(node.id, isAdditiveSelection(event))
@@ -157,25 +208,18 @@ export function CanvasStage() {
                     y: event.target.y(),
                   })
                 }
-                onTransformEnd={(event) => {
-                  const shape = event.target;
-                  const scaleX = shape.scaleX();
-                  const scaleY = shape.scaleY();
-
-                  shape.scaleX(1);
-                  shape.scaleY(1);
-
-                  resizeNode(node.id, {
-                    width: node.width * scaleX,
-                    height: node.height * scaleY,
-                  });
-
-                  moveNode(node.id, {
-                    x: shape.x(),
-                    y: shape.y(),
-                  });
-                }}
-              />
+              >
+                <Rect
+                  x={0}
+                  y={0}
+                  width={node.width}
+                  height={node.height}
+                  fill="transparent"
+                  stroke={isSelected ? "#0f172a" : "#94a3b8"}
+                  dash={[8, 6]}
+                  strokeWidth={isSelected ? 2 : 1}
+                />
+              </Group>
             );
           })}
 

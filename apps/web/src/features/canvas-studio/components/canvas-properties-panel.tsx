@@ -45,6 +45,49 @@ type CanvasPropertiesFieldsProps = {
 function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
   const updateNode = useCanvasStore((state) => state.updateNode);
 
+  if (node.type === "group") {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <NumberField
+            id="canvas-group-x"
+            label="X"
+            value={node.x}
+            onChange={(value) => updateNode(node.id, { x: value })}
+          />
+
+          <NumberField
+            id="canvas-group-y"
+            label="Y"
+            value={node.y}
+            onChange={(value) => updateNode(node.id, { y: value })}
+          />
+
+          <NumberField
+            id="canvas-group-width"
+            label="Width"
+            value={node.width}
+            min={24}
+            onChange={(value) => updateNode(node.id, { width: value })}
+          />
+
+          <NumberField
+            id="canvas-group-height"
+            label="Height"
+            value={node.height}
+            min={24}
+            onChange={(value) => updateNode(node.id, { height: value })}
+          />
+        </div>
+
+        <div className="rounded-xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-800">
+          Group contains {node.childNodeIds.length} child nodes. Group movement
+          and ungroup will be added in upcoming issues.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
