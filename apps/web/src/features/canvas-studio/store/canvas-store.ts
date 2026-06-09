@@ -1,6 +1,11 @@
 "use client";
 
 import { create } from "zustand";
+import {
+  createCanvasSnapshot,
+  pushCanvasHistory,
+  type CanvasHistoryState,
+} from "@/features/canvas-studio/history/canvas-history";
 import { getCanvasTemplate } from "@/features/canvas-studio/templates/canvas-templates";
 import type { CanvasTemplateId } from "@/features/canvas-studio/templates/canvas-templates";
 import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
@@ -25,6 +30,9 @@ type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
   readonly selectedNodeIds: readonly string[];
   readonly zoom: number;
+  readonly history: CanvasHistoryState;
+  readonly canUndo: boolean;
+  readonly canRedo: boolean;
   readonly addRectangle: () => void;
   readonly addText: () => void;
   readonly selectNode: (nodeId: string, additive?: boolean) => void;
@@ -45,17 +53,34 @@ type CanvasStoreState = {
   readonly sendSelectedBackward: () => void;
   readonly bringSelectedToFront: () => void;
   readonly sendSelectedToBack: () => void;
+  readonly applyTemplate: (templateId: CanvasTemplateId) => void;
+  readonly importNodes: (nodes: readonly CanvasNode[]) => void;
+  readonly undo: () => void;
+  readonly redo: () => void;
   readonly zoomIn: () => void;
   readonly zoomOut: () => void;
   readonly resetZoom: () => void;
   readonly deleteSelectedNode: () => void;
   readonly resetCanvas: () => void;
-  readonly importNodes: (nodes: readonly CanvasNode[]) => void;
-  readonly applyTemplate: (templateId: CanvasTemplateId) => void;
 };
 
 function createNodeId(prefix: string): string {
   return `${prefix}-${crypto.randomUUID()}`;
+}
+
+function withHistory(state: {
+  readonly nodes: readonly CanvasNode[];
+  readonly selectedNodeIds: readonly string[];
+  readonly history: CanvasHistoryState;
+}): Pick<CanvasStoreState, "history" | "canUndo" | "canRedo"> {
+  const snapshot = createCanvasSnapshot(state.nodes, state.selectedNodeIds);
+  const history = pushCanvasHistory(state.history, snapshot);
+
+  return {
+    history,
+    canUndo: history.past.length > 0,
+    canRedo: history.future.length > 0,
+  };
 }
 
 function duplicateCanvasNode(node: CanvasNode): CanvasNode {
@@ -245,6 +270,12 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
   selectedNodeIds: [],
   zoom: 1,
+  history: {
+    past: [],
+    future: [],
+  },
+  canUndo: false,
+  canRedo: false,
 
   addRectangle: () => {
     const node: CanvasNode = {
@@ -259,6 +290,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     };
 
     set((state) => ({
+      ...withHistory(state),
       nodes: [...state.nodes, node],
       selectedNodeIds: [node.id],
     }));
@@ -278,6 +310,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     };
 
     set((state) => ({
+      ...withHistory(state),
       nodes: [...state.nodes, node],
       selectedNodeIds: [node.id],
     }));
@@ -317,11 +350,13 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
 
       if (targetNode.type === "group") {
         return {
+          ...withHistory(state),
           nodes: moveGroupAndChildren(state.nodes, targetNode, position),
         };
       }
 
       return {
+        ...withHistory(state),
         nodes: state.nodes.map((node) =>
           node.id === nodeId
             ? {
@@ -345,11 +380,13 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
 
       if (targetNode.type === "group") {
         return {
+          ...withHistory(state),
           nodes: resizeGroupAndChildren(state.nodes, targetNode, size),
         };
       }
 
       return {
+        ...withHistory(state),
         nodes: state.nodes.map((node) =>
           node.id === nodeId ? resizeCanvasNode(node, size) : node,
         ),
@@ -384,11 +421,13 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
         }
 
         return {
+          ...withHistory(state),
           nodes: nextNodes,
         };
       }
 
       return {
+        ...withHistory(state),
         nodes: state.nodes.map((node) =>
           node.id === nodeId
             ? ({
@@ -418,6 +457,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       );
 
       return {
+        ...withHistory(state),
         nodes: [...state.nodes, ...duplicatedNodes],
         selectedNodeIds: duplicatedNodes.map((node) => node.id),
       };
@@ -451,6 +491,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       };
 
       return {
+        ...withHistory(state),
         nodes: [...state.nodes, groupNode],
         selectedNodeIds: [groupNode.id],
       };
@@ -473,6 +514,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       );
 
       return {
+        ...withHistory(state),
         nodes: state.nodes.filter(
           (node) => !selectedGroups.some((group) => group.id === node.id),
         ),
@@ -483,26 +525,106 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
 
   bringSelectedForward: () => {
     set((state) => ({
+      ...withHistory(state),
       nodes: moveSelectedForward(state.nodes, state.selectedNodeIds),
     }));
   },
 
   sendSelectedBackward: () => {
     set((state) => ({
+      ...withHistory(state),
       nodes: moveSelectedBackward(state.nodes, state.selectedNodeIds),
     }));
   },
 
   bringSelectedToFront: () => {
     set((state) => ({
+      ...withHistory(state),
       nodes: moveSelectedToFront(state.nodes, state.selectedNodeIds),
     }));
   },
 
   sendSelectedToBack: () => {
     set((state) => ({
+      ...withHistory(state),
       nodes: moveSelectedToBack(state.nodes, state.selectedNodeIds),
     }));
+  },
+
+  applyTemplate: (templateId) => {
+    const template = getCanvasTemplate(templateId);
+
+    set((state) => ({
+      ...withHistory(state),
+      nodes: template.nodes,
+      selectedNodeIds: [],
+    }));
+  },
+
+  importNodes: (nodes) => {
+    set((state) => ({
+      ...withHistory(state),
+      nodes,
+      selectedNodeIds: [],
+    }));
+  },
+
+  undo: () => {
+    set((state) => {
+      const previousSnapshot = state.history.past.at(-1);
+
+      if (previousSnapshot === undefined) {
+        return state;
+      }
+
+      const currentSnapshot = createCanvasSnapshot(
+        state.nodes,
+        state.selectedNodeIds,
+      );
+
+      const past = state.history.past.slice(0, -1);
+      const future = [currentSnapshot, ...state.history.future];
+
+      return {
+        nodes: previousSnapshot.nodes,
+        selectedNodeIds: previousSnapshot.selectedNodeIds,
+        history: {
+          past,
+          future,
+        },
+        canUndo: past.length > 0,
+        canRedo: future.length > 0,
+      };
+    });
+  },
+
+  redo: () => {
+    set((state) => {
+      const nextSnapshot = state.history.future[0];
+
+      if (nextSnapshot === undefined) {
+        return state;
+      }
+
+      const currentSnapshot = createCanvasSnapshot(
+        state.nodes,
+        state.selectedNodeIds,
+      );
+
+      const past = [...state.history.past, currentSnapshot];
+      const future = state.history.future.slice(1);
+
+      return {
+        nodes: nextSnapshot.nodes,
+        selectedNodeIds: nextSnapshot.selectedNodeIds,
+        history: {
+          past,
+          future,
+        },
+        canUndo: past.length > 0,
+        canRedo: future.length > 0,
+      };
+    });
   },
 
   zoomIn: () => {
@@ -523,6 +645,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
 
   deleteSelectedNode: () => {
     set((state) => ({
+      ...withHistory(state),
       nodes: state.nodes.filter(
         (node) => !state.selectedNodeIds.includes(node.id),
       ),
@@ -530,27 +653,12 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     }));
   },
 
-  applyTemplate: (templateId) => {
-  const template = getCanvasTemplate(templateId);
-
-  set({
-    nodes: template.nodes,
-    selectedNodeIds: [],
-  });
-},
-
-  importNodes: (nodes) => {
-  set({
-    nodes,
-    selectedNodeIds: [],
-  });
-},
-
   resetCanvas: () => {
-    set({
+    set((state) => ({
+      ...withHistory(state),
       nodes: [],
       selectedNodeIds: [],
       zoom: 1,
-    });
+    }));
   },
 }));

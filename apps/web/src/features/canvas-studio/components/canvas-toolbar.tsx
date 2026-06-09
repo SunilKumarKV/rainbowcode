@@ -22,6 +22,10 @@ export function CanvasToolbar() {
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
   const applyTemplate = useCanvasStore((state) => state.applyTemplate);
+  const undo = useCanvasStore((state) => state.undo);
+  const redo = useCanvasStore((state) => state.redo);
+  const canUndo = useCanvasStore((state) => state.canUndo);
+  const canRedo = useCanvasStore((state) => state.canRedo);
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
   const zoom = useCanvasStore((state) => state.zoom);
@@ -71,6 +75,24 @@ export function CanvasToolbar() {
           <option value="hero">Hero Section</option>
           <option value="pricing-card">Pricing Card</option>
         </select>
+
+        <button
+          type="button"
+          onClick={undo}
+          disabled={!canUndo}
+          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+        >
+          Undo
+        </button>
+
+        <button
+          type="button"
+          onClick={redo}
+          disabled={!canRedo}
+          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+        >
+          Redo
+        </button>
 
         <button
           type="button"
