@@ -48,6 +48,7 @@ type CanvasStoreState = {
   readonly resetZoom: () => void;
   readonly deleteSelectedNode: () => void;
   readonly resetCanvas: () => void;
+  readonly importNodes: (nodes: readonly CanvasNode[]) => void;
 };
 
 function createNodeId(prefix: string): string {
@@ -525,6 +526,13 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       selectedNodeIds: [],
     }));
   },
+
+  importNodes: (nodes) => {
+  set({
+    nodes,
+    selectedNodeIds: [],
+  });
+},
 
   resetCanvas: () => {
     set({
