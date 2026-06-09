@@ -255,6 +255,30 @@ it("updates group size from properties and resizes child nodes", () => {
   }
 });
 
+it("imports canvas nodes", () => {
+  useCanvasStore.getState().addRectangle();
+
+  useCanvasStore.getState().importNodes([
+    {
+      id: "imported-text",
+      type: "text",
+      x: 20,
+      y: 30,
+      width: 200,
+      height: 48,
+      text: "Imported",
+      fontSize: 24,
+      fill: "var(--color-foreground)",
+    },
+  ]);
+
+  const state = useCanvasStore.getState();
+
+  expect(state.nodes).toHaveLength(1);
+  expect(state.nodes[0]?.id).toBe("imported-text");
+  expect(state.selectedNodeIds).toEqual([]);
+});
+
 it("updates group position from properties and moves child nodes", () => {
   useCanvasStore.getState().addRectangle();
   useCanvasStore.getState().addText();
