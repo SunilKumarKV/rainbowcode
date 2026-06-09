@@ -163,6 +163,39 @@ function moveSelectedToBack(
   return [...selectedNodes, ...unselectedNodes];
 }
 
+function moveGroupAndChildren(
+  nodes: readonly CanvasNode[],
+  groupNode: CanvasNode,
+  position: { readonly x: number; readonly y: number },
+): readonly CanvasNode[] {
+  if (groupNode.type !== "group") {
+    return nodes;
+  }
+
+  const deltaX = position.x - groupNode.x;
+  const deltaY = position.y - groupNode.y;
+
+  return nodes.map((node) => {
+    if (node.id === groupNode.id) {
+      return {
+        ...node,
+        x: position.x,
+        y: position.y,
+      };
+    }
+
+    if (groupNode.childNodeIds.includes(node.id)) {
+      return {
+        ...node,
+        x: node.x + deltaX,
+        y: node.y + deltaY,
+      };
+    }
+
+    return node;
+  });
+}
+
 export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
   selectedNodeIds: [],
@@ -230,17 +263,31 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   },
 
   moveNode: (nodeId, position) => {
-    set((state) => ({
-      nodes: state.nodes.map((node) =>
-        node.id === nodeId
-          ? {
-              ...node,
-              x: position.x,
-              y: position.y,
-            }
-          : node,
-      ),
-    }));
+    set((state) => {
+      const targetNode = state.nodes.find((node) => node.id === nodeId);
+
+      if (targetNode === undefined) {
+        return state;
+      }
+
+      if (targetNode.type === "group") {
+        return {
+          nodes: moveGroupAndChildren(state.nodes, targetNode, position),
+        };
+      }
+
+      return {
+        nodes: state.nodes.map((node) =>
+          node.id === nodeId
+            ? {
+                ...node,
+                x: position.x,
+                y: position.y,
+              }
+            : node,
+        ),
+      };
+    });
   },
 
   resizeNode: (nodeId, size) => {
@@ -252,18 +299,43 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   },
 
   updateNode: (nodeId, update) => {
-    set((state) => ({
-      nodes: state.nodes.map((node) =>
-        node.id === nodeId
-          ? ({
-              ...node,
-              ...update,
-              id: node.id,
-              type: node.type,
-            } as CanvasNode)
-          : node,
-      ),
-    }));
+    set((state) => {
+      const targetNode = state.nodes.find((node) => node.id === nodeId);
+
+      if (
+        targetNode?.type === "group" &&
+        (update.x !== undefined || update.y !== undefined)
+      ) {
+        return {
+          nodes: moveGroupAndChildren(state.nodes, targetNode, {
+            x: update.x ?? targetNode.x,
+            y: update.y ?? targetNode.y,
+          }).map((node) =>
+            node.id === nodeId
+              ? ({
+                  ...node,
+                  ...update,
+                  id: node.id,
+                  type: node.type,
+                } as CanvasNode)
+              : node,
+          ),
+        };
+      }
+
+      return {
+        nodes: state.nodes.map((node) =>
+          node.id === nodeId
+            ? ({
+                ...node,
+                ...update,
+                id: node.id,
+                type: node.type,
+              } as CanvasNode)
+            : node,
+        ),
+      };
+    });
   },
 
   duplicateSelectedNodes: () => {

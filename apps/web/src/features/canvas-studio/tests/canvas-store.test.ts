@@ -121,6 +121,91 @@ it("ungroups selected group node", () => {
   }
 });
 
+it("moves group and child nodes together", () => {
+  useCanvasStore.getState().addRectangle();
+  useCanvasStore.getState().addText();
+
+  const firstNode = useCanvasStore.getState().nodes[0];
+  const secondNode = useCanvasStore.getState().nodes[1];
+
+  expect(firstNode).toBeDefined();
+  expect(secondNode).toBeDefined();
+
+  if (firstNode !== undefined && secondNode !== undefined) {
+    useCanvasStore.getState().selectNode(firstNode.id);
+    useCanvasStore.getState().selectNode(secondNode.id, true);
+    useCanvasStore.getState().groupSelectedNodes();
+
+    const groupNode = useCanvasStore
+      .getState()
+      .nodes.find((node) => node.type === "group");
+
+    expect(groupNode).toBeDefined();
+
+    if (groupNode?.type === "group") {
+      useCanvasStore.getState().moveNode(groupNode.id, {
+        x: groupNode.x + 40,
+        y: groupNode.y + 30,
+      });
+
+      const state = useCanvasStore.getState();
+      const movedFirstNode = state.nodes.find((node) => node.id === firstNode.id);
+      const movedSecondNode = state.nodes.find(
+        (node) => node.id === secondNode.id,
+      );
+      const movedGroupNode = state.nodes.find((node) => node.id === groupNode.id);
+
+      expect(movedGroupNode?.x).toBe(groupNode.x + 40);
+      expect(movedGroupNode?.y).toBe(groupNode.y + 30);
+      expect(movedFirstNode?.x).toBe(firstNode.x + 40);
+      expect(movedFirstNode?.y).toBe(firstNode.y + 30);
+      expect(movedSecondNode?.x).toBe(secondNode.x + 40);
+      expect(movedSecondNode?.y).toBe(secondNode.y + 30);
+    }
+  }
+});
+
+it("updates group position from properties and moves child nodes", () => {
+  useCanvasStore.getState().addRectangle();
+  useCanvasStore.getState().addText();
+
+  const firstNode = useCanvasStore.getState().nodes[0];
+  const secondNode = useCanvasStore.getState().nodes[1];
+
+  expect(firstNode).toBeDefined();
+  expect(secondNode).toBeDefined();
+
+  if (firstNode !== undefined && secondNode !== undefined) {
+    useCanvasStore.getState().selectNode(firstNode.id);
+    useCanvasStore.getState().selectNode(secondNode.id, true);
+    useCanvasStore.getState().groupSelectedNodes();
+
+    const groupNode = useCanvasStore
+      .getState()
+      .nodes.find((node) => node.type === "group");
+
+    expect(groupNode).toBeDefined();
+
+    if (groupNode?.type === "group") {
+      useCanvasStore.getState().updateNode(groupNode.id, {
+        x: groupNode.x + 12,
+        y: groupNode.y + 18,
+      });
+
+      const state = useCanvasStore.getState();
+      const movedFirstNode = state.nodes.find((node) => node.id === firstNode.id);
+      const movedSecondNode = state.nodes.find(
+        (node) => node.id === secondNode.id,
+      );
+
+      expect(movedFirstNode?.x).toBe(firstNode.x + 12);
+      expect(movedFirstNode?.y).toBe(firstNode.y + 18);
+      expect(movedSecondNode?.x).toBe(secondNode.x + 12);
+      expect(movedSecondNode?.y).toBe(secondNode.y + 18);
+    }
+  }
+});
+
   it("toggles node out of multi-selection", () => {
     useCanvasStore.getState().addRectangle();
     useCanvasStore.getState().addText();
