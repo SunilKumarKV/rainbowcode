@@ -24,6 +24,8 @@ export function useCanvasKeyboardShortcuts(): void {
   const duplicateSelectedNodes = useCanvasStore(
     (state) => state.duplicateSelectedNodes,
   );
+  const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
+  const pasteCopiedNodes = useCanvasStore((state) => state.pasteCopiedNodes);
   const clearSelection = useCanvasStore((state) => state.clearSelection);
   const zoomIn = useCanvasStore((state) => state.zoomIn);
   const zoomOut = useCanvasStore((state) => state.zoomOut);
@@ -57,6 +59,16 @@ export function useCanvasKeyboardShortcuts(): void {
 
       if (action === "duplicate-selected") {
         duplicateSelectedNodes();
+        return;
+      }
+
+      if (action === "copy-selected") {
+        copySelectedNodes();
+        return;
+      }
+
+      if (action === "paste-copied") {
+        pasteCopiedNodes();
         return;
       }
 
@@ -95,8 +107,10 @@ export function useCanvasKeyboardShortcuts(): void {
     };
   }, [
     clearSelection,
+    copySelectedNodes,
     deleteSelectedNode,
     duplicateSelectedNodes,
+    pasteCopiedNodes,
     redo,
     resetZoom,
     undo,
