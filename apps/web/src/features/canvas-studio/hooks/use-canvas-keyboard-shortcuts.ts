@@ -28,6 +28,8 @@ export function useCanvasKeyboardShortcuts(): void {
   const zoomIn = useCanvasStore((state) => state.zoomIn);
   const zoomOut = useCanvasStore((state) => state.zoomOut);
   const resetZoom = useCanvasStore((state) => state.resetZoom);
+  const undo = useCanvasStore((state) => state.undo);
+  const redo = useCanvasStore((state) => state.redo);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent): void {
@@ -39,6 +41,7 @@ export function useCanvasKeyboardShortcuts(): void {
         key: event.key,
         metaKey: event.metaKey,
         ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
       });
 
       if (action === "none") {
@@ -72,6 +75,16 @@ export function useCanvasKeyboardShortcuts(): void {
         return;
       }
 
+      if (action === "undo") {
+        undo();
+        return;
+      }
+
+      if (action === "redo") {
+        redo();
+        return;
+      }
+
       resetZoom();
     }
 
@@ -84,7 +97,9 @@ export function useCanvasKeyboardShortcuts(): void {
     clearSelection,
     deleteSelectedNode,
     duplicateSelectedNodes,
+    redo,
     resetZoom,
+    undo,
     zoomIn,
     zoomOut,
   ]);

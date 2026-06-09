@@ -5,12 +5,15 @@ export type CanvasShortcutAction =
   | "zoom-in"
   | "zoom-out"
   | "reset-zoom"
+  | "undo"
+  | "redo"
   | "none";
 
 export type CanvasShortcutInput = {
   readonly key: string;
   readonly metaKey: boolean;
   readonly ctrlKey: boolean;
+  readonly shiftKey?: boolean;
 };
 
 function isModifierPressed(input: CanvasShortcutInput): boolean {
@@ -32,6 +35,18 @@ export function getCanvasShortcutAction(
 
   if (!isModifierPressed(input)) {
     return "none";
+  }
+
+  if (key === "z" && input.shiftKey === true) {
+    return "redo";
+  }
+
+  if (key === "z") {
+    return "undo";
+  }
+
+  if (key === "y") {
+    return "redo";
   }
 
   if (key === "d") {
