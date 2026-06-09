@@ -1,6 +1,7 @@
 "use client";
 
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import type { CanvasTemplateId } from "@/features/canvas-studio/templates/canvas-templates";
 
 export function CanvasToolbar() {
   const addRectangle = useCanvasStore((state) => state.addRectangle);
@@ -20,6 +21,7 @@ export function CanvasToolbar() {
   );
   const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
+  const applyTemplate = useCanvasStore((state) => state.applyTemplate);
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
   const zoom = useCanvasStore((state) => state.zoom);
@@ -32,6 +34,17 @@ export function CanvasToolbar() {
   const canUngroup = nodes.some(
     (node) => node.type === "group" && selectedNodeIds.includes(node.id),
   );
+
+  function handleTemplateChange(
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ): void {
+    const templateId = event.currentTarget.value as CanvasTemplateId | "";
+
+    if (templateId !== "") {
+      applyTemplate(templateId);
+      event.currentTarget.value = "";
+    }
+  }
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
@@ -46,6 +59,19 @@ export function CanvasToolbar() {
       </div>
 
       <div className="flex flex-wrap gap-2">
+        <select
+          aria-label="Apply canvas template"
+          defaultValue=""
+          onChange={handleTemplateChange}
+          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+        >
+          <option value="" disabled>
+            Templates
+          </option>
+          <option value="hero">Hero Section</option>
+          <option value="pricing-card">Pricing Card</option>
+        </select>
+
         <button
           type="button"
           onClick={addRectangle}

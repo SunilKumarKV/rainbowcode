@@ -320,6 +320,18 @@ it("updates group position from properties and moves child nodes", () => {
   }
 });
 
+it("applies a canvas template", () => {
+  useCanvasStore.getState().addRectangle();
+
+  useCanvasStore.getState().applyTemplate("hero");
+
+  const state = useCanvasStore.getState();
+
+  expect(state.nodes.length).toBeGreaterThan(1);
+  expect(state.nodes[0]?.id).toBe("template-hero-bg");
+  expect(state.selectedNodeIds).toEqual([]);
+});
+
   it("toggles node out of multi-selection", () => {
     useCanvasStore.getState().addRectangle();
     useCanvasStore.getState().addText();
