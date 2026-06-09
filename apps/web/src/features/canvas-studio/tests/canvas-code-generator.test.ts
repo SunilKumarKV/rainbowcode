@@ -50,6 +50,25 @@ describe("generateCanvasCode", () => {
     expect(output).toContain('color: "var(--color-foreground)"');
   });
 
+  it("generates group node code", () => {
+  const output = generateCanvasCode([
+    {
+      id: "group-1",
+      type: "group",
+      x: 10,
+      y: 20,
+      width: 300,
+      height: 180,
+      childNodeIds: ["rectangle-1", "text-1"],
+    },
+  ]);
+
+  expect(output).toContain('data-rbc-group="group-1"');
+  expect(output).toContain('data-rbc-children="rectangle-1,text-1"');
+  expect(output).toContain('left: "10px"');
+  expect(output).toContain('width: "300px"');
+});
+
   it("escapes unsafe text", () => {
     const output = generateCanvasCode([
       {

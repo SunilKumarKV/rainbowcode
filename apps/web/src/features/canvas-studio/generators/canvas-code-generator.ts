@@ -44,13 +44,37 @@ function generateTextNodeCode(node: CanvasNode): string {
 </p>`;
 }
 
+function generateGroupNodeCode(node: CanvasNode): string {
+  if (node.type !== "group") {
+    throw new Error("Expected group node.");
+  }
+
+  return `<div
+  className="absolute rounded-xl border border-dashed border-slate-400"
+  data-rbc-group="${node.id}"
+  data-rbc-children="${node.childNodeIds.join(",")}"
+  style={{
+    left: "${Math.round(node.x)}px",
+    top: "${Math.round(node.y)}px",
+    width: "${Math.round(node.width)}px",
+    height: "${Math.round(node.height)}px",
+  }}
+/>`;
+}
+
 export function generateCanvasCode(nodes: readonly CanvasNode[]): string {
   const nodeCode = nodes
-    .map((node) =>
-      node.type === "rectangle"
-        ? generateRectangleNodeCode(node)
-        : generateTextNodeCode(node),
-    )
+    .map((node) => {
+      if (node.type === "rectangle") {
+        return generateRectangleNodeCode(node);
+      }
+
+      if (node.type === "text") {
+        return generateTextNodeCode(node);
+      }
+
+      return generateGroupNodeCode(node);
+    })
     .join("\n\n");
 
   return `<section className="relative min-h-[520px] w-full overflow-hidden rounded-3xl bg-white">
