@@ -1,6 +1,8 @@
 export type CanvasShortcutAction =
   | "delete-selected"
   | "duplicate-selected"
+  | "copy-selected"
+  | "paste-copied"
   | "clear-selection"
   | "zoom-in"
   | "zoom-out"
@@ -47,6 +49,14 @@ export function getCanvasShortcutAction(
 
   if (key === "y") {
     return "redo";
+  }
+
+  if (key === "c") {
+    return "copy-selected";
+  }
+
+  if (key === "v") {
+    return "paste-copied";
   }
 
   if (key === "d") {

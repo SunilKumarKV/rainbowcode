@@ -29,6 +29,7 @@ type CanvasNodeUpdate = Partial<{
 type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
   readonly selectedNodeIds: readonly string[];
+  readonly clipboardNodeIds: readonly string[];
   readonly zoom: number;
   readonly history: CanvasHistoryState;
   readonly canUndo: boolean;
@@ -47,6 +48,8 @@ type CanvasStoreState = {
   ) => void;
   readonly updateNode: (nodeId: string, update: CanvasNodeUpdate) => void;
   readonly duplicateSelectedNodes: () => void;
+  readonly copySelectedNodes: () => void;
+  readonly pasteCopiedNodes: () => void;
   readonly groupSelectedNodes: () => void;
   readonly ungroupSelectedNodes: () => void;
   readonly bringSelectedForward: () => void;
@@ -269,6 +272,7 @@ function resizeGroupAndChildren(
 export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
   selectedNodeIds: [],
+  clipboardNodeIds: [],
   zoom: 1,
   history: {
     past: [],
@@ -460,6 +464,37 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
         ...withHistory(state),
         nodes: [...state.nodes, ...duplicatedNodes],
         selectedNodeIds: duplicatedNodes.map((node) => node.id),
+      };
+    });
+  },
+
+  copySelectedNodes: () => {
+    set((state) => ({
+      clipboardNodeIds: [...state.selectedNodeIds],
+    }));
+  },
+
+  pasteCopiedNodes: () => {
+    set((state) => {
+      if (state.clipboardNodeIds.length === 0) {
+        return state;
+      }
+
+      const copiedNodes = state.nodes.filter((node) =>
+        state.clipboardNodeIds.includes(node.id),
+      );
+
+      if (copiedNodes.length === 0) {
+        return state;
+      }
+
+      const pastedNodes = copiedNodes.map((node) => duplicateCanvasNode(node));
+
+      return {
+        ...withHistory(state),
+        nodes: [...state.nodes, ...pastedNodes],
+        selectedNodeIds: pastedNodes.map((node) => node.id),
+        clipboardNodeIds: pastedNodes.map((node) => node.id),
       };
     });
   },
@@ -658,6 +693,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       ...withHistory(state),
       nodes: [],
       selectedNodeIds: [],
+      clipboardNodeIds: [],
       zoom: 1,
     }));
   },

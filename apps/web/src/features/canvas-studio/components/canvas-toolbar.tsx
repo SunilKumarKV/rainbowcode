@@ -24,6 +24,9 @@ export function CanvasToolbar() {
   const applyTemplate = useCanvasStore((state) => state.applyTemplate);
   const undo = useCanvasStore((state) => state.undo);
   const redo = useCanvasStore((state) => state.redo);
+  const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
+const pasteCopiedNodes = useCanvasStore((state) => state.pasteCopiedNodes);
+const clipboardNodeIds = useCanvasStore((state) => state.clipboardNodeIds);
   const canUndo = useCanvasStore((state) => state.canUndo);
   const canRedo = useCanvasStore((state) => state.canRedo);
   const nodes = useCanvasStore((state) => state.nodes);
@@ -93,6 +96,24 @@ export function CanvasToolbar() {
         >
           Redo
         </button>
+
+        <button
+  type="button"
+  onClick={copySelectedNodes}
+  disabled={!hasSelection}
+  className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+>
+  Copy
+</button>
+
+<button
+  type="button"
+  onClick={pasteCopiedNodes}
+  disabled={clipboardNodeIds.length === 0}
+  className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+>
+  Paste
+</button>
 
         <button
           type="button"
