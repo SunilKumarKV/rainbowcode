@@ -1,6 +1,8 @@
 "use client";
 
 import { create } from "zustand";
+import { getCanvasTemplate } from "@/features/canvas-studio/templates/canvas-templates";
+import type { CanvasTemplateId } from "@/features/canvas-studio/templates/canvas-templates";
 import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
 import { resizeCanvasNode } from "@/features/canvas-studio/utils/canvas-node-utils";
 import {
@@ -49,6 +51,7 @@ type CanvasStoreState = {
   readonly deleteSelectedNode: () => void;
   readonly resetCanvas: () => void;
   readonly importNodes: (nodes: readonly CanvasNode[]) => void;
+  readonly applyTemplate: (templateId: CanvasTemplateId) => void;
 };
 
 function createNodeId(prefix: string): string {
@@ -526,6 +529,15 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       selectedNodeIds: [],
     }));
   },
+
+  applyTemplate: (templateId) => {
+  const template = getCanvasTemplate(templateId);
+
+  set({
+    nodes: template.nodes,
+    selectedNodeIds: [],
+  });
+},
 
   importNodes: (nodes) => {
   set({
