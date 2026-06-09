@@ -5,6 +5,7 @@ import { CanvasPropertiesPanel } from "@/features/canvas-studio/components/canva
 import { CanvasStage } from "@/features/canvas-studio/components/canvas-stage";
 import { CanvasToolbar } from "@/features/canvas-studio/components/canvas-toolbar";
 import { exportCanvasComponent } from "@/features/canvas-studio/exporters/export-canvas-component";
+import { exportCanvasJson } from "@/features/canvas-studio/exporters/export-canvas-json";
 import { generateCanvasCode } from "@/features/canvas-studio/generators/canvas-code-generator";
 import { useCanvasKeyboardShortcuts } from "@/features/canvas-studio/hooks/use-canvas-keyboard-shortcuts";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
@@ -31,6 +32,14 @@ export function CanvasStudioPanel() {
     );
   }
 
+  function exportCanvasJsonFile(): void {
+    downloadFile(
+      "rainbow-canvas.json",
+      exportCanvasJson(nodes),
+      "application/json",
+    );
+  }
+
   return (
     <section
       aria-label="Canvas Studio"
@@ -46,8 +55,8 @@ export function CanvasStudioPanel() {
 
       <div className="rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
         Shortcuts: Delete remove selected, Cmd/Ctrl + D duplicate selected, Esc
-        clear selection, Cmd/Ctrl + Click multi-select. Group requires two or
-        more selected nodes. Ungroup requires a selected group.
+        clear selection, Cmd/Ctrl + Click multi-select. Export JSON saves the
+        current canvas node structure.
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
@@ -67,7 +76,7 @@ export function CanvasStudioPanel() {
           <div>
             <h3 className="text-sm font-semibold">Generated Canvas Code</h3>
             <p className="text-xs text-slate-400">
-              Export filename: rainbow-canvas.tsx
+              Export filenames: rainbow-canvas.tsx, rainbow-canvas.json
             </p>
           </div>
 
@@ -86,6 +95,14 @@ export function CanvasStudioPanel() {
               className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
             >
               Export Canvas
+            </button>
+
+            <button
+              type="button"
+              onClick={exportCanvasJsonFile}
+              className="rounded-xl border border-slate-700 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+            >
+              Export JSON
             </button>
           </div>
         </div>
