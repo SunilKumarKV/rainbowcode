@@ -165,6 +165,96 @@ it("moves group and child nodes together", () => {
   }
 });
 
+it("resizes group and child nodes proportionally", () => {
+  useCanvasStore.getState().addRectangle();
+  useCanvasStore.getState().addText();
+
+  const firstNode = useCanvasStore.getState().nodes[0];
+  const secondNode = useCanvasStore.getState().nodes[1];
+
+  expect(firstNode).toBeDefined();
+  expect(secondNode).toBeDefined();
+
+  if (firstNode !== undefined && secondNode !== undefined) {
+    useCanvasStore.getState().selectNode(firstNode.id);
+    useCanvasStore.getState().selectNode(secondNode.id, true);
+    useCanvasStore.getState().groupSelectedNodes();
+
+    const groupNode = useCanvasStore
+      .getState()
+      .nodes.find((node) => node.type === "group");
+
+    expect(groupNode).toBeDefined();
+
+    if (groupNode?.type === "group") {
+      useCanvasStore.getState().resizeNode(groupNode.id, {
+        width: groupNode.width * 2,
+        height: groupNode.height * 2,
+      });
+
+      const state = useCanvasStore.getState();
+      const resizedGroupNode = state.nodes.find(
+        (node) => node.id === groupNode.id,
+      );
+      const resizedFirstNode = state.nodes.find(
+        (node) => node.id === firstNode.id,
+      );
+      const resizedSecondNode = state.nodes.find(
+        (node) => node.id === secondNode.id,
+      );
+
+      expect(resizedGroupNode?.width).toBe(groupNode.width * 2);
+      expect(resizedGroupNode?.height).toBe(groupNode.height * 2);
+      expect(resizedFirstNode?.width).toBe(firstNode.width * 2);
+      expect(resizedFirstNode?.height).toBe(firstNode.height * 2);
+      expect(resizedSecondNode?.width).toBe(secondNode.width * 2);
+      expect(resizedSecondNode?.height).toBe(secondNode.height * 2);
+    }
+  }
+});
+
+it("updates group size from properties and resizes child nodes", () => {
+  useCanvasStore.getState().addRectangle();
+  useCanvasStore.getState().addText();
+
+  const firstNode = useCanvasStore.getState().nodes[0];
+
+  expect(firstNode).toBeDefined();
+
+  if (firstNode !== undefined) {
+    const secondNode = useCanvasStore.getState().nodes[1];
+
+    expect(secondNode).toBeDefined();
+
+    if (secondNode !== undefined) {
+      useCanvasStore.getState().selectNode(firstNode.id);
+      useCanvasStore.getState().selectNode(secondNode.id, true);
+      useCanvasStore.getState().groupSelectedNodes();
+
+      const groupNode = useCanvasStore
+        .getState()
+        .nodes.find((node) => node.type === "group");
+
+      expect(groupNode).toBeDefined();
+
+      if (groupNode?.type === "group") {
+        useCanvasStore.getState().updateNode(groupNode.id, {
+          width: groupNode.width * 2,
+          height: groupNode.height * 2,
+        });
+
+        const state = useCanvasStore.getState();
+        const resizedFirstNode = state.nodes.find(
+          (node) => node.id === firstNode.id,
+        );
+
+        expect(resizedFirstNode?.width).toBe(firstNode.width * 2);
+        expect(resizedFirstNode?.height).toBe(firstNode.height * 2);
+      }
+    }
+  }
+});
+
 it("updates group position from properties and moves child nodes", () => {
   useCanvasStore.getState().addRectangle();
   useCanvasStore.getState().addText();

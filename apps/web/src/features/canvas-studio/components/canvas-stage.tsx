@@ -208,6 +208,24 @@ export function CanvasStage() {
                     y: event.target.y(),
                   })
                 }
+                onTransformEnd={(event) => {
+                  const shape = event.target;
+                  const scaleX = shape.scaleX();
+                  const scaleY = shape.scaleY();
+
+                  shape.scaleX(1);
+                  shape.scaleY(1);
+
+                  resizeNode(node.id, {
+                    width: node.width * scaleX,
+                    height: node.height * scaleY,
+                  });
+
+                  moveNode(node.id, {
+                    x: shape.x(),
+                    y: shape.y(),
+                  });
+                }}
               >
                 <Rect
                   x={0}

@@ -196,6 +196,47 @@ function moveGroupAndChildren(
   });
 }
 
+function resizeGroupAndChildren(
+  nodes: readonly CanvasNode[],
+  groupNode: CanvasNode,
+  size: { readonly width: number; readonly height: number },
+): readonly CanvasNode[] {
+  if (groupNode.type !== "group") {
+    return nodes;
+  }
+
+  const nextWidth = Math.max(24, Math.round(size.width));
+  const nextHeight = Math.max(24, Math.round(size.height));
+
+  const scaleX = groupNode.width === 0 ? 1 : nextWidth / groupNode.width;
+  const scaleY = groupNode.height === 0 ? 1 : nextHeight / groupNode.height;
+
+  return nodes.map((node) => {
+    if (node.id === groupNode.id) {
+      return {
+        ...node,
+        width: nextWidth,
+        height: nextHeight,
+      };
+    }
+
+    if (groupNode.childNodeIds.includes(node.id)) {
+      const relativeX = node.x - groupNode.x;
+      const relativeY = node.y - groupNode.y;
+
+      return {
+        ...node,
+        x: groupNode.x + relativeX * scaleX,
+        y: groupNode.y + relativeY * scaleY,
+        width: Math.max(24, Math.round(node.width * scaleX)),
+        height: Math.max(24, Math.round(node.height * scaleY)),
+      };
+    }
+
+    return node;
+  });
+}
+
 export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
   selectedNodeIds: [],
@@ -291,35 +332,55 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   },
 
   resizeNode: (nodeId, size) => {
-    set((state) => ({
-      nodes: state.nodes.map((node) =>
-        node.id === nodeId ? resizeCanvasNode(node, size) : node,
-      ),
-    }));
+    set((state) => {
+      const targetNode = state.nodes.find((node) => node.id === nodeId);
+
+      if (targetNode === undefined) {
+        return state;
+      }
+
+      if (targetNode.type === "group") {
+        return {
+          nodes: resizeGroupAndChildren(state.nodes, targetNode, size),
+        };
+      }
+
+      return {
+        nodes: state.nodes.map((node) =>
+          node.id === nodeId ? resizeCanvasNode(node, size) : node,
+        ),
+      };
+    });
   },
 
   updateNode: (nodeId, update) => {
     set((state) => {
       const targetNode = state.nodes.find((node) => node.id === nodeId);
 
-      if (
-        targetNode?.type === "group" &&
-        (update.x !== undefined || update.y !== undefined)
-      ) {
-        return {
-          nodes: moveGroupAndChildren(state.nodes, targetNode, {
+      if (targetNode?.type === "group") {
+        let nextNodes = state.nodes;
+
+        if (update.x !== undefined || update.y !== undefined) {
+          nextNodes = moveGroupAndChildren(nextNodes, targetNode, {
             x: update.x ?? targetNode.x,
             y: update.y ?? targetNode.y,
-          }).map((node) =>
-            node.id === nodeId
-              ? ({
-                  ...node,
-                  ...update,
-                  id: node.id,
-                  type: node.type,
-                } as CanvasNode)
-              : node,
-          ),
+          });
+        }
+
+        const movedGroupNode = nextNodes.find((node) => node.id === nodeId);
+
+        if (
+          movedGroupNode?.type === "group" &&
+          (update.width !== undefined || update.height !== undefined)
+        ) {
+          nextNodes = resizeGroupAndChildren(nextNodes, movedGroupNode, {
+            width: update.width ?? movedGroupNode.width,
+            height: update.height ?? movedGroupNode.height,
+          });
+        }
+
+        return {
+          nodes: nextNodes,
         };
       }
 
