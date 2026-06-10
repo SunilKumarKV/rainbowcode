@@ -5,7 +5,7 @@ import { RbcBadge } from "@/components/ui/rbc-badge";
 import { studioNavItems } from "@/lib/navigation/studio-nav";
 import { useAppShellStore } from "@/stores/app-shell-store";
 
-const statuses: Record<string, "Ready" | "V1" | "Next" | "Soon"> = {
+const statuses: Record<string, "Next" | "Ready" | "V1" | "Soon"> = {
   "Brand Studio": "Next",
   "Theme Studio": "Ready",
   "Component Studio": "Ready",
@@ -13,7 +13,7 @@ const statuses: Record<string, "Ready" | "V1" | "Next" | "Soon"> = {
   "Code Studio": "Soon",
 };
 
-function getBadgeVariant(status: "Ready" | "V1" | "Next" | "Soon") {
+function getStatusVariant(status: "Next" | "Ready" | "V1" | "Soon") {
   if (status === "Ready" || status === "V1") {
     return "success";
   }
@@ -31,28 +31,22 @@ export function Sidebar() {
   return (
     <aside
       aria-label="Studio navigation"
-      className={`min-h-0 rounded-[28px] border border-white/70 bg-white/72 shadow-[0_24px_90px_rgba(15,23,42,0.10)] backdrop-blur-2xl transition-all dark:border-white/10 dark:bg-slate-950/72 ${
-        isSidebarOpen
-          ? "w-full p-4 lg:w-auto"
-          : "hidden overflow-hidden p-0 lg:block lg:w-0"
+      className={`min-h-0 border-r border-slate-200/80 bg-white/82 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/82 ${
+        isSidebarOpen ? "block" : "hidden lg:block"
       }`}
     >
-      <div className="flex h-full min-h-0 flex-col">
-        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-slate-800 dark:bg-slate-900/60">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
-            Project
+      <div className="flex h-full min-h-0 flex-col p-3">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+            Current Project
           </p>
-
-          <h2 className="mt-2 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+          <h2 className="mt-2 truncate text-sm font-black text-slate-950 dark:text-white">
             Untitled Design System
           </h2>
-
-          <p className="mt-2 text-xs leading-5 text-slate-500">
-            Build once. Export everywhere.
-          </p>
+          <p className="mt-1 text-xs text-slate-500">Local draft</p>
         </div>
 
-        <nav className="mt-4 flex-1 space-y-2 overflow-y-auto pr-1">
+        <nav className="mt-3 flex-1 space-y-1 overflow-y-auto" aria-label="Studios">
           {studioNavItems.map((item) => {
             const status = statuses[item.label] ?? "Soon";
 
@@ -60,33 +54,32 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group block rounded-3xl border border-transparent p-3 transition hover:border-indigo-200/80 hover:bg-white/90 hover:shadow-lg hover:shadow-indigo-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:hover:border-indigo-900/80 dark:hover:bg-slate-900/90"
+                className="group block rounded-2xl px-3 py-2.5 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-900"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <span>
-                    <span className="block text-sm font-bold text-slate-800 group-hover:text-slate-950 dark:text-slate-200 dark:group-hover:text-white">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-bold text-slate-800 group-hover:text-slate-950 dark:text-slate-200 dark:group-hover:text-white">
                       {item.label}
                     </span>
-                    <span className="mt-1 block text-xs leading-5 text-slate-500">
+                    <span className="mt-0.5 block truncate text-xs text-slate-500">
                       {item.description}
                     </span>
                   </span>
 
-                  <RbcBadge variant={getBadgeVariant(status)}>
-                    {status}
-                  </RbcBadge>
+                  <RbcBadge variant={getStatusVariant(status)}>{status}</RbcBadge>
                 </div>
               </Link>
             );
           })}
         </nav>
 
-        <div className="mt-4 rounded-3xl border border-dashed border-indigo-200 bg-indigo-50/70 p-4 dark:border-indigo-900 dark:bg-indigo-950/30">
-          <p className="text-sm font-bold text-slate-950 dark:text-white">
-            Founder roadmap
+        <div className="mt-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+          <p className="text-xs font-bold text-slate-950 dark:text-white">
+            Founder standard
           </p>
-          <p className="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-400">
-            UI/UX polish → Brand Studio → Code Studio → Marketplace → Launch.
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            Build editor quality first. Brand Studio starts after UI system is
+            production-grade.
           </p>
         </div>
       </div>
