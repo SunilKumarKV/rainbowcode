@@ -3,7 +3,6 @@ import { CodePanel } from "@/components/app-shell/code-panel";
 import { PropertiesPanel } from "@/components/app-shell/properties-panel";
 import { Sidebar } from "@/components/app-shell/sidebar";
 import { Topbar } from "@/components/app-shell/topbar";
-import { Workspace } from "@/components/app-shell/workspace";
 import { rbcSurface } from "@/lib/design-system/ui-tokens";
 
 type AppShellProps = {
@@ -21,7 +20,6 @@ export function AppShell({ children }: AppShellProps) {
 
           <main className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
             <section className="min-w-0 space-y-4">
-              <Workspace />
               {children}
               <CodePanel />
             </section>
