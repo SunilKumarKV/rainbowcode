@@ -11,20 +11,25 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className={`min-h-screen ${rbcSurface.app}`}>
-      <div className="mx-auto flex min-h-screen w-full max-w-[1800px] flex-col px-3 py-3 sm:px-4 lg:px-6">
+    <div className={`min-h-screen overflow-hidden ${rbcSurface.app}`}>
+      <div className="flex h-screen flex-col">
         <Topbar />
 
-        <div className="mt-4 grid min-h-[calc(100vh-104px)] gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)]">
           <Sidebar />
 
-          <main className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-            <section className="min-w-0 space-y-4">
+          <main className="grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_260px] xl:grid-cols-[minmax(0,1fr)_360px] xl:grid-rows-1">
+            <section className="min-h-0 min-w-0 overflow-y-auto border-t border-slate-200/70 bg-slate-100/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
               {children}
-              <CodePanel />
             </section>
 
-            <PropertiesPanel />
+            <aside className="hidden min-h-0 overflow-y-auto border-l border-slate-200/70 bg-white/80 p-3 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/80 xl:block">
+              <PropertiesPanel />
+            </aside>
+
+            <section className="min-h-0 overflow-y-auto border-t border-slate-200/70 bg-slate-950 dark:border-slate-800 xl:hidden">
+              <CodePanel />
+            </section>
           </main>
         </div>
       </div>
