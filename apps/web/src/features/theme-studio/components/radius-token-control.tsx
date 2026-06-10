@@ -20,15 +20,19 @@ export function RadiusTokenControl({
   const numericValue = Number.parseFloat(value.replace("rem", ""));
 
   return (
-    <div className="space-y-2">
-      <label
-        htmlFor={`radius-token-${tokenKey}`}
-        className="text-xs font-medium text-slate-600 dark:text-slate-400"
-      >
-        {label}
-      </label>
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+      <div className="flex items-center justify-between gap-3">
+        <label
+          htmlFor={`radius-token-${tokenKey}`}
+          className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500"
+        >
+          {label}
+        </label>
 
-      <div className="flex items-center gap-2">
+        <span className="font-mono text-xs text-slate-500">{value}</span>
+      </div>
+
+      <div className="mt-3 flex items-center gap-3">
         <input
           id={`radius-token-${tokenKey}`}
           type="range"
@@ -39,7 +43,7 @@ export function RadiusTokenControl({
           onChange={(event) =>
             onChange(tokenKey, `${event.currentTarget.value}rem`)
           }
-          className="min-w-0 flex-1 accent-slate-950 dark:accent-white"
+          className="min-w-0 flex-1 accent-indigo-600 dark:accent-indigo-300"
         />
 
         <input
@@ -47,7 +51,7 @@ export function RadiusTokenControl({
           value={value}
           aria-label={`${label} rem value`}
           onChange={(event) => onChange(tokenKey, event.currentTarget.value)}
-          className="h-10 w-24 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:focus:ring-slate-700"
+          className="h-11 w-24 rounded-2xl border border-slate-200 bg-white px-3 font-mono text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
         />
       </div>
     </div>
