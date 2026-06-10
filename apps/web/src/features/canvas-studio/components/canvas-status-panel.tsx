@@ -1,5 +1,6 @@
 "use client";
 
+import { RbcBadge } from "@/components/ui/rbc-badge";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 import { getCanvasReadinessItems } from "@/features/canvas-studio/utils/canvas-readiness";
 
@@ -23,42 +24,39 @@ export function CanvasStatusPanel() {
   return (
     <section
       aria-label="Canvas status"
-      className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+      className="overflow-hidden rounded-[28px] border border-white/70 bg-white/74 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/74"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/70 px-4 py-4 dark:border-slate-800">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Canvas V1 Status
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+            Editor Health
           </p>
-          <h3 className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
-            Editor readiness
+          <h3 className="mt-1 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+            Canvas Readiness
           </h3>
+          <p className="mt-1 text-xs text-slate-500">
+            Live state for selection, snap grid, history, and export readiness.
+          </p>
         </div>
 
-        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-          V1 QA Mode
-        </span>
+        <RbcBadge variant="success">Production Flow</RbcBadge>
       </div>
 
-      <dl className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <dl className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
           <div
             key={item.label}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-900"
+            className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-slate-800 dark:bg-slate-900/60"
           >
-            <dt className="text-xs text-slate-500">{item.label}</dt>
-            <dd className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
+            <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              {item.label}
+            </dt>
+            <dd className="mt-2 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
               {item.value}
             </dd>
           </div>
         ))}
       </dl>
-
-      <p className="mt-4 text-xs leading-5 text-slate-500">
-        Manual QA before Brand Studio: verify desktop, tablet, mobile, keyboard
-        navigation, dark mode, export/import, undo/redo, snap grid, grouping,
-        and generated code.
-      </p>
     </section>
   );
 }

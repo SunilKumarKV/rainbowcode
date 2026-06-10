@@ -1,8 +1,8 @@
 "use client";
 
+import { RbcButton } from "@/components/ui/rbc-button";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 import type { CanvasTemplateId } from "@/features/canvas-studio/templates/canvas-templates";
-
 
 export function CanvasToolbar() {
   const addRectangle = useCanvasStore((state) => state.addRectangle);
@@ -10,6 +10,8 @@ export function CanvasToolbar() {
   const duplicateSelectedNodes = useCanvasStore(
     (state) => state.duplicateSelectedNodes,
   );
+  const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
+  const pasteCopiedNodes = useCanvasStore((state) => state.pasteCopiedNodes);
   const groupSelectedNodes = useCanvasStore((state) => state.groupSelectedNodes);
   const ungroupSelectedNodes = useCanvasStore(
     (state) => state.ungroupSelectedNodes,
@@ -25,15 +27,13 @@ export function CanvasToolbar() {
   const applyTemplate = useCanvasStore((state) => state.applyTemplate);
   const undo = useCanvasStore((state) => state.undo);
   const redo = useCanvasStore((state) => state.redo);
-  const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
-const pasteCopiedNodes = useCanvasStore((state) => state.pasteCopiedNodes);
-const clipboardNodeIds = useCanvasStore((state) => state.clipboardNodeIds);
-const snapToGridEnabled = useCanvasStore((state) => state.snapToGridEnabled);
-const toggleSnapToGrid = useCanvasStore((state) => state.toggleSnapToGrid);
   const canUndo = useCanvasStore((state) => state.canUndo);
   const canRedo = useCanvasStore((state) => state.canRedo);
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
+  const clipboardNodeIds = useCanvasStore((state) => state.clipboardNodeIds);
+  const snapToGridEnabled = useCanvasStore((state) => state.snapToGridEnabled);
+  const toggleSnapToGrid = useCanvasStore((state) => state.toggleSnapToGrid);
   const zoom = useCanvasStore((state) => state.zoom);
   const zoomIn = useCanvasStore((state) => state.zoomIn);
   const zoomOut = useCanvasStore((state) => state.zoomOut);
@@ -57,181 +57,178 @@ const toggleSnapToGrid = useCanvasStore((state) => state.toggleSnapToGrid);
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Canvas Studio
-        </p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Draw, select, move, resize, duplicate, group, ungroup, reorder, and
-          zoom visual nodes.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <select
-          aria-label="Apply canvas template"
-          defaultValue=""
-          onChange={handleTemplateChange}
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
-        >
-          <option value="" disabled>
-            Templates
-          </option>
-          <option value="hero">Hero Section</option>
-          <option value="pricing-card">Pricing Card</option>
-        </select>
-
-        <button
-          type="button"
-          onClick={undo}
-          disabled={!canUndo}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Undo
-        </button>
-
-        <button
-          type="button"
-          onClick={redo}
-          disabled={!canRedo}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Redo
-        </button>
-
-        <button
-  type="button"
-  onClick={copySelectedNodes}
-  disabled={!hasSelection}
-  className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
->
-  Copy
-</button>
-
-<button
-  type="button"
-  onClick={pasteCopiedNodes}
-  disabled={clipboardNodeIds.length === 0}
-  className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
->
-  Paste
-</button>
-
-<button
-  type="button"
-  onClick={toggleSnapToGrid}
-  aria-pressed={snapToGridEnabled}
-  className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
->
-  Snap {snapToGridEnabled ? "On" : "Off"}
-</button>
-
-        <button
-          type="button"
-          onClick={addRectangle}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Add Rectangle
-        </button>
-
-        <button
-          type="button"
-          onClick={addText}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Add Text
-        </button>
-
-        <button
-          type="button"
-          onClick={duplicateSelectedNodes}
-          disabled={!hasSelection}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Duplicate
-        </button>
-
-        <button
-          type="button"
-          onClick={groupSelectedNodes}
-          disabled={!canGroup}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Group
-        </button>
-
-        <button
-          type="button"
-          onClick={ungroupSelectedNodes}
-          disabled={!canUngroup}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Ungroup
-        </button>
-
-        <button
-          type="button"
-          onClick={bringSelectedForward}
-          disabled={!hasSelection}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Forward
-        </button>
-
-        <button
-          type="button"
-          onClick={sendSelectedBackward}
-          disabled={!hasSelection}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Backward
-        </button>
-
-        <div className="flex items-center gap-1 rounded-xl border border-slate-200 px-2 dark:border-slate-800">
-          <button
-            type="button"
-            onClick={zoomOut}
-            aria-label="Zoom out"
-            className="px-2 py-2 text-sm font-medium text-slate-700 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-200"
-          >
-            −
-          </button>
-
-          <button
-            type="button"
-            onClick={resetZoom}
-            className="min-w-14 px-2 py-2 text-xs font-semibold text-slate-600 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-300"
-          >
-            {Math.round(zoom * 100)}%
-          </button>
-
-          <button
-            type="button"
-            onClick={zoomIn}
-            aria-label="Zoom in"
-            className="px-2 py-2 text-sm font-medium text-slate-700 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-200"
-          >
-            +
-          </button>
+    <div className="overflow-hidden rounded-[28px] border border-white/70 bg-white/76 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/74">
+      <div className="flex flex-col gap-4 border-b border-slate-200/70 px-4 py-4 dark:border-slate-800 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+            Canvas Tools
+          </p>
+          <h2 className="mt-1 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+            Visual Editor Actions
+          </h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Create, organize, align, duplicate, and export your layout.
+          </p>
         </div>
 
-        <button
-          type="button"
-          onClick={deleteSelectedNode}
-          disabled={!hasSelection}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Delete
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            aria-label="Apply canvas template"
+            defaultValue=""
+            onChange={handleTemplateChange}
+            className="h-10 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+          >
+            <option value="" disabled>
+              Apply template
+            </option>
+            <option value="hero">Hero Section</option>
+            <option value="pricing-card">Pricing Card</option>
+          </select>
 
-        <button
-          type="button"
-          onClick={resetCanvas}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
-          Reset
-        </button>
+          <RbcButton
+            variant="secondary"
+            onClick={undo}
+            disabled={!canUndo}
+            className="h-10"
+          >
+            Undo
+          </RbcButton>
+
+          <RbcButton
+            variant="secondary"
+            onClick={redo}
+            disabled={!canRedo}
+            className="h-10"
+          >
+            Redo
+          </RbcButton>
+
+          <RbcButton
+            variant={snapToGridEnabled ? "primary" : "secondary"}
+            onClick={toggleSnapToGrid}
+            aria-pressed={snapToGridEnabled}
+            className="h-10"
+          >
+            Snap {snapToGridEnabled ? "On" : "Off"}
+          </RbcButton>
+        </div>
+      </div>
+
+      <div className="grid gap-3 p-4 xl:grid-cols-4">
+        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+          <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Create
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <RbcButton variant="primary" onClick={addRectangle}>
+              Rectangle
+            </RbcButton>
+            <RbcButton variant="secondary" onClick={addText}>
+              Text
+            </RbcButton>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+          <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Clipboard
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <RbcButton
+              variant="secondary"
+              onClick={copySelectedNodes}
+              disabled={!hasSelection}
+            >
+              Copy
+            </RbcButton>
+            <RbcButton
+              variant="secondary"
+              onClick={pasteCopiedNodes}
+              disabled={clipboardNodeIds.length === 0}
+            >
+              Paste
+            </RbcButton>
+            <RbcButton
+              variant="secondary"
+              onClick={duplicateSelectedNodes}
+              disabled={!hasSelection}
+            >
+              Duplicate
+            </RbcButton>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+          <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Structure
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <RbcButton
+              variant="secondary"
+              onClick={groupSelectedNodes}
+              disabled={!canGroup}
+            >
+              Group
+            </RbcButton>
+            <RbcButton
+              variant="secondary"
+              onClick={ungroupSelectedNodes}
+              disabled={!canUngroup}
+            >
+              Ungroup
+            </RbcButton>
+            <RbcButton
+              variant="secondary"
+              onClick={bringSelectedForward}
+              disabled={!hasSelection}
+            >
+              Forward
+            </RbcButton>
+            <RbcButton
+              variant="secondary"
+              onClick={sendSelectedBackward}
+              disabled={!hasSelection}
+            >
+              Backward
+            </RbcButton>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+          <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            View
+          </p>
+
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <RbcButton variant="secondary" onClick={zoomOut} aria-label="Zoom out">
+              −
+            </RbcButton>
+
+            <button
+              type="button"
+              onClick={resetZoom}
+              className="h-10 min-w-16 rounded-xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+
+            <RbcButton variant="secondary" onClick={zoomIn} aria-label="Zoom in">
+              +
+            </RbcButton>
+
+            <RbcButton
+              variant="danger"
+              onClick={deleteSelectedNode}
+              disabled={!hasSelection}
+            >
+              Delete
+            </RbcButton>
+
+            <RbcButton variant="ghost" onClick={resetCanvas}>
+              Reset
+            </RbcButton>
+          </div>
+        </div>
       </div>
     </div>
   );
