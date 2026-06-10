@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { CanvasLayersPanel } from "@/features/canvas-studio/components/canvas-layers-panel";
 import { CanvasPropertiesPanel } from "@/features/canvas-studio/components/canvas-properties-panel";
 import { CanvasStage } from "@/features/canvas-studio/components/canvas-stage";
+import { CanvasStatusPanel } from "@/features/canvas-studio/components/canvas-status-panel";
 import { CanvasToolbar } from "@/features/canvas-studio/components/canvas-toolbar";
 import { exportCanvasComponent } from "@/features/canvas-studio/exporters/export-canvas-component";
 import { exportCanvasJson } from "@/features/canvas-studio/exporters/export-canvas-json";
@@ -20,8 +21,6 @@ export function CanvasStudioPanel() {
   const [importError, setImportError] = useState<string | null>(null);
 
   const nodes = useCanvasStore((state) => state.nodes);
-  const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
-  const zoom = useCanvasStore((state) => state.zoom);
   const importNodes = useCanvasStore((state) => state.importNodes);
 
   const generatedCanvasCode = generateCanvasCode(nodes);
@@ -82,16 +81,12 @@ export function CanvasStudioPanel() {
     >
       <CanvasToolbar />
 
-      <div className="grid gap-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-400 md:grid-cols-3">
-        <span>Nodes: {nodes.length}</span>
-        <span>Selected: {selectedNodeIds.length}</span>
-        <span>Zoom: {Math.round(zoom * 100)}%</span>
-      </div>
+      <CanvasStatusPanel />
 
       <div className="rounded-2xl border border-slate-200 bg-white p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
-        Shortcuts: Delete remove selected, Cmd/Ctrl + D duplicate selected, Esc
-        clear selection, Cmd/Ctrl + Click multi-select. Import JSON loads a
-        saved canvas node structure.
+        Shortcuts: Delete remove selected, Cmd/Ctrl + D duplicate selected,
+        Cmd/Ctrl + C copy, Cmd/Ctrl + V paste, Cmd/Ctrl + Z undo, Cmd/Ctrl +
+        Shift + Z redo, Esc clear selection, Cmd/Ctrl + Click multi-select.
       </div>
 
       {importError === null ? null : (
