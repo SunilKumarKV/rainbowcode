@@ -9,6 +9,7 @@ import {
 import { getCanvasTemplate } from "@/features/canvas-studio/templates/canvas-templates";
 import type { CanvasTemplateId } from "@/features/canvas-studio/templates/canvas-templates";
 import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
+import { snapSizeToGrid, snapToGrid } from "@/features/canvas-studio/utils/canvas-grid";
 import { resizeCanvasNode } from "@/features/canvas-studio/utils/canvas-node-utils";
 import {
   decreaseCanvasZoom,
@@ -30,6 +31,7 @@ type CanvasStoreState = {
   readonly nodes: readonly CanvasNode[];
   readonly selectedNodeIds: readonly string[];
   readonly clipboardNodeIds: readonly string[];
+  readonly snapToGridEnabled: boolean;
   readonly zoom: number;
   readonly history: CanvasHistoryState;
   readonly canUndo: boolean;
@@ -60,6 +62,7 @@ type CanvasStoreState = {
   readonly importNodes: (nodes: readonly CanvasNode[]) => void;
   readonly undo: () => void;
   readonly redo: () => void;
+  readonly toggleSnapToGrid: () => void;
   readonly zoomIn: () => void;
   readonly zoomOut: () => void;
   readonly resetZoom: () => void;
@@ -83,6 +86,34 @@ function withHistory(state: {
     history,
     canUndo: history.past.length > 0,
     canRedo: history.future.length > 0,
+  };
+}
+
+function maybeSnapPosition(
+  position: { readonly x: number; readonly y: number },
+  enabled: boolean,
+): { readonly x: number; readonly y: number } {
+  if (!enabled) {
+    return position;
+  }
+
+  return {
+    x: snapToGrid(position.x),
+    y: snapToGrid(position.y),
+  };
+}
+
+function maybeSnapSize(
+  size: { readonly width: number; readonly height: number },
+  enabled: boolean,
+): { readonly width: number; readonly height: number } {
+  if (!enabled) {
+    return size;
+  }
+
+  return {
+    width: snapSizeToGrid(size.width),
+    height: snapSizeToGrid(size.height),
   };
 }
 
@@ -273,6 +304,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   nodes: [],
   selectedNodeIds: [],
   clipboardNodeIds: [],
+  snapToGridEnabled: true,
   zoom: 1,
   history: {
     past: [],
@@ -347,6 +379,10 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   moveNode: (nodeId, position) => {
     set((state) => {
       const targetNode = state.nodes.find((node) => node.id === nodeId);
+      const nextPosition = maybeSnapPosition(
+        position,
+        state.snapToGridEnabled,
+      );
 
       if (targetNode === undefined) {
         return state;
@@ -355,7 +391,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       if (targetNode.type === "group") {
         return {
           ...withHistory(state),
-          nodes: moveGroupAndChildren(state.nodes, targetNode, position),
+          nodes: moveGroupAndChildren(state.nodes, targetNode, nextPosition),
         };
       }
 
@@ -365,8 +401,8 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
           node.id === nodeId
             ? {
                 ...node,
-                x: position.x,
-                y: position.y,
+                x: nextPosition.x,
+                y: nextPosition.y,
               }
             : node,
         ),
@@ -377,6 +413,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
   resizeNode: (nodeId, size) => {
     set((state) => {
       const targetNode = state.nodes.find((node) => node.id === nodeId);
+      const nextSize = maybeSnapSize(size, state.snapToGridEnabled);
 
       if (targetNode === undefined) {
         return state;
@@ -385,14 +422,14 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       if (targetNode.type === "group") {
         return {
           ...withHistory(state),
-          nodes: resizeGroupAndChildren(state.nodes, targetNode, size),
+          nodes: resizeGroupAndChildren(state.nodes, targetNode, nextSize),
         };
       }
 
       return {
         ...withHistory(state),
         nodes: state.nodes.map((node) =>
-          node.id === nodeId ? resizeCanvasNode(node, size) : node,
+          node.id === nodeId ? resizeCanvasNode(node, nextSize) : node,
         ),
       };
     });
@@ -662,6 +699,12 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
     });
   },
 
+  toggleSnapToGrid: () => {
+    set((state) => ({
+      snapToGridEnabled: !state.snapToGridEnabled,
+    }));
+  },
+
   zoomIn: () => {
     set((state) => ({
       zoom: increaseCanvasZoom(state.zoom),
@@ -694,6 +737,7 @@ export const useCanvasStore = create<CanvasStoreState>((set) => ({
       nodes: [],
       selectedNodeIds: [],
       clipboardNodeIds: [],
+      snapToGridEnabled: true,
       zoom: 1,
     }));
   },

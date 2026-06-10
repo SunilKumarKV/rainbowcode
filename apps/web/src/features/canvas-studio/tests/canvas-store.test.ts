@@ -155,12 +155,12 @@ it("moves group and child nodes together", () => {
       );
       const movedGroupNode = state.nodes.find((node) => node.id === groupNode.id);
 
-      expect(movedGroupNode?.x).toBe(groupNode.x + 40);
-      expect(movedGroupNode?.y).toBe(groupNode.y + 30);
-      expect(movedFirstNode?.x).toBe(firstNode.x + 40);
-      expect(movedFirstNode?.y).toBe(firstNode.y + 30);
-      expect(movedSecondNode?.x).toBe(secondNode.x + 40);
-      expect(movedSecondNode?.y).toBe(secondNode.y + 30);
+      expect(movedGroupNode?.x).toBe(160);
+expect(movedGroupNode?.y).toBe(152);
+expect(movedFirstNode?.x).toBe(160);
+expect(movedFirstNode?.y).toBe(152);
+expect(movedSecondNode?.x).toBe(200);
+expect(movedSecondNode?.y).toBe(212);
     }
   }
 });
@@ -203,12 +203,12 @@ it("resizes group and child nodes proportionally", () => {
         (node) => node.id === secondNode.id,
       );
 
-      expect(resizedGroupNode?.width).toBe(groupNode.width * 2);
-      expect(resizedGroupNode?.height).toBe(groupNode.height * 2);
-      expect(resizedFirstNode?.width).toBe(firstNode.width * 2);
-      expect(resizedFirstNode?.height).toBe(firstNode.height * 2);
-      expect(resizedSecondNode?.width).toBe(secondNode.width * 2);
-      expect(resizedSecondNode?.height).toBe(secondNode.height * 2);
+      expect(resizedGroupNode?.width).toBe(520);
+expect(resizedGroupNode?.height).toBe(224);
+expect(resizedFirstNode?.width).toBe(360);
+expect(resizedFirstNode?.height).toBe(224);
+expect(resizedSecondNode?.width).toBe(440);
+expect(resizedSecondNode?.height).toBe(98);
     }
   }
 });
@@ -542,7 +542,7 @@ it("applies a canvas template", () => {
       const node = useCanvasStore.getState().nodes[0];
 
       expect(node?.width).toBe(320);
-      expect(node?.height).toBe(180);
+expect(node?.height).toBe(184);
     }
   });
 
