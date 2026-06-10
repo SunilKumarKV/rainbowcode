@@ -46,7 +46,10 @@ export function Sidebar() {
           <p className="mt-1 text-xs text-slate-500">Local draft</p>
         </div>
 
-        <nav className="mt-3 flex-1 space-y-1 overflow-y-auto" aria-label="Studios">
+        <nav
+          className="mt-3 flex-1 space-y-1 overflow-y-auto"
+          aria-label="RainbowCode studios"
+        >
           {studioNavItems.map((item) => {
             const status = statuses[item.label] ?? "Soon";
 
@@ -54,7 +57,7 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group block rounded-2xl px-3 py-2.5 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-900"
+                className="group block rounded-2xl px-3 py-2.5 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-slate-900 dark:focus-visible:ring-offset-slate-950"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="min-w-0">
@@ -66,7 +69,9 @@ export function Sidebar() {
                     </span>
                   </span>
 
-                  <RbcBadge variant={getStatusVariant(status)}>{status}</RbcBadge>
+                  <RbcBadge variant={getStatusVariant(status)}>
+                    {status}
+                  </RbcBadge>
                 </div>
               </Link>
             );

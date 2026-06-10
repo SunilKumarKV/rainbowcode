@@ -72,8 +72,11 @@ export function CanvasToolbar() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="canvas-template-select" className="sr-only">
+            Apply canvas template
+          </label>
           <select
-            aria-label="Apply canvas template"
+            id="canvas-template-select"
             defaultValue=""
             onChange={handleTemplateChange}
             className="h-10 rounded-2xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
@@ -85,21 +88,11 @@ export function CanvasToolbar() {
             <option value="pricing-card">Pricing Card</option>
           </select>
 
-          <RbcButton
-            variant="secondary"
-            onClick={undo}
-            disabled={!canUndo}
-            className="h-10"
-          >
+          <RbcButton variant="secondary" onClick={undo} disabled={!canUndo}>
             Undo
           </RbcButton>
 
-          <RbcButton
-            variant="secondary"
-            onClick={redo}
-            disabled={!canRedo}
-            className="h-10"
-          >
+          <RbcButton variant="secondary" onClick={redo} disabled={!canRedo}>
             Redo
           </RbcButton>
 
@@ -107,7 +100,6 @@ export function CanvasToolbar() {
             variant={snapToGridEnabled ? "primary" : "secondary"}
             onClick={toggleSnapToGrid}
             aria-pressed={snapToGridEnabled}
-            className="h-10"
           >
             Snap {snapToGridEnabled ? "On" : "Off"}
           </RbcButton>
@@ -115,7 +107,10 @@ export function CanvasToolbar() {
       </div>
 
       <div className="grid gap-3 p-4 xl:grid-cols-4">
-        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <section
+          aria-label="Create canvas objects"
+          className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60"
+        >
           <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
             Create
           </p>
@@ -127,9 +122,12 @@ export function CanvasToolbar() {
               Text
             </RbcButton>
           </div>
-        </div>
+        </section>
 
-        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <section
+          aria-label="Canvas clipboard actions"
+          className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60"
+        >
           <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
             Clipboard
           </p>
@@ -156,9 +154,12 @@ export function CanvasToolbar() {
               Duplicate
             </RbcButton>
           </div>
-        </div>
+        </section>
 
-        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <section
+          aria-label="Canvas structure actions"
+          className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60"
+        >
           <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
             Structure
           </p>
@@ -192,9 +193,12 @@ export function CanvasToolbar() {
               Backward
             </RbcButton>
           </div>
-        </div>
+        </section>
 
-        <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <section
+          aria-label="Canvas view and destructive actions"
+          className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60"
+        >
           <p className="px-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
             View
           </p>
@@ -207,6 +211,7 @@ export function CanvasToolbar() {
             <button
               type="button"
               onClick={resetZoom}
+              aria-label="Reset zoom"
               className="h-10 min-w-16 rounded-xl border border-slate-200 bg-white px-3 text-sm font-black text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
             >
               {Math.round(zoom * 100)}%
@@ -228,7 +233,7 @@ export function CanvasToolbar() {
               Reset
             </RbcButton>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );
