@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type Konva from "konva";
 import { Group, Layer, Rect, Stage, Text, Transformer } from "react-konva";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import { CANVAS_GRID_SIZE } from "@/features/canvas-studio/utils/canvas-grid";
 
 const CANVAS_WIDTH = 900;
 const CANVAS_HEIGHT = 520;
@@ -21,6 +22,7 @@ function isAdditiveSelection(
 export function CanvasStage() {
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
+  const snapToGridEnabled = useCanvasStore((state) => state.snapToGridEnabled);
   const selectNode = useCanvasStore((state) => state.selectNode);
   const clearSelection = useCanvasStore((state) => state.clearSelection);
   const moveNode = useCanvasStore((state) => state.moveNode);
@@ -65,6 +67,38 @@ export function CanvasStage() {
         }}
       >
         <Layer>
+          {snapToGridEnabled
+            ? Array.from({
+                length: Math.floor(CANVAS_WIDTH / CANVAS_GRID_SIZE) + 1,
+              }).map((_, index) => (
+                <Rect
+                  key={`grid-x-${index}`}
+                  x={index * CANVAS_GRID_SIZE}
+                  y={0}
+                  width={1}
+                  height={CANVAS_HEIGHT}
+                  fill="rgba(148, 163, 184, 0.16)"
+                  listening={false}
+                />
+              ))
+            : null}
+
+          {snapToGridEnabled
+            ? Array.from({
+                length: Math.floor(CANVAS_HEIGHT / CANVAS_GRID_SIZE) + 1,
+              }).map((_, index) => (
+                <Rect
+                  key={`grid-y-${index}`}
+                  x={0}
+                  y={index * CANVAS_GRID_SIZE}
+                  width={CANVAS_WIDTH}
+                  height={1}
+                  fill="rgba(148, 163, 184, 0.16)"
+                  listening={false}
+                />
+              ))
+            : null}
+
           {nodes.map((node) => {
             const isSelected = selectedNodeIds.includes(node.id);
 

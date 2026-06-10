@@ -3,6 +3,7 @@
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 import type { CanvasTemplateId } from "@/features/canvas-studio/templates/canvas-templates";
 
+
 export function CanvasToolbar() {
   const addRectangle = useCanvasStore((state) => state.addRectangle);
   const addText = useCanvasStore((state) => state.addText);
@@ -27,6 +28,8 @@ export function CanvasToolbar() {
   const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
 const pasteCopiedNodes = useCanvasStore((state) => state.pasteCopiedNodes);
 const clipboardNodeIds = useCanvasStore((state) => state.clipboardNodeIds);
+const snapToGridEnabled = useCanvasStore((state) => state.snapToGridEnabled);
+const toggleSnapToGrid = useCanvasStore((state) => state.toggleSnapToGrid);
   const canUndo = useCanvasStore((state) => state.canUndo);
   const canRedo = useCanvasStore((state) => state.canRedo);
   const nodes = useCanvasStore((state) => state.nodes);
@@ -113,6 +116,15 @@ const clipboardNodeIds = useCanvasStore((state) => state.clipboardNodeIds);
   className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
 >
   Paste
+</button>
+
+<button
+  type="button"
+  onClick={toggleSnapToGrid}
+  aria-pressed={snapToGridEnabled}
+  className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+>
+  Snap {snapToGridEnabled ? "On" : "Off"}
 </button>
 
         <button
