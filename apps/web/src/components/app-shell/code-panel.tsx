@@ -17,14 +17,28 @@ export function CodePanel() {
         <span className="text-xs text-slate-500">React / Tailwind / JSON</span>
       </div>
 
-      <pre className="h-[calc(100%-44px)] overflow-auto p-4 text-xs leading-6 text-slate-100">
-        <code>{`export const rainbowCode = {
-  product: "global-design-to-code-editor",
-  studios: ["brand", "theme", "component", "canvas", "code"],
-  canvas: "v1-ready",
-  next: "brand-studio"
-};`}</code>
-      </pre>
+      <div className="grid h-[calc(100%-44px)] place-items-center p-4">
+        <div className="max-w-md text-center">
+          <div className="mx-auto grid size-12 place-items-center rounded-2xl border border-white/10 bg-white/5 text-lg">
+            {"</>"}
+          </div>
+
+          <h3 className="mt-4 text-sm font-bold text-white">
+            Code output is generated inside Canvas Studio
+          </h3>
+
+          <p className="mt-2 text-xs leading-5 text-slate-400">
+            Use the Canvas Studio generated-code panel for live TSX export, JSON
+            export, import, copy, and future RBC CLI install flows.
+          </p>
+
+          <pre className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 text-left text-xs leading-6 text-slate-300">
+            <code>{`rbc export canvas
+rbc add component
+rbc install theme`}</code>
+          </pre>
+        </div>
+      </div>
     </section>
   );
 }

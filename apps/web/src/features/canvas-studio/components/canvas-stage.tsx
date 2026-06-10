@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import type Konva from "konva";
 import { Group, Layer, Rect, Stage, Text, Transformer } from "react-konva";
+import { RbcBadge } from "@/components/ui/rbc-badge";
+import { RbcButton } from "@/components/ui/rbc-button";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 import { CANVAS_GRID_SIZE } from "@/features/canvas-studio/utils/canvas-grid";
 
@@ -17,6 +19,57 @@ function isAdditiveSelection(
   return "metaKey" in nativeEvent
     ? nativeEvent.metaKey || nativeEvent.ctrlKey
     : false;
+}
+
+function CanvasEmptyState() {
+  const addRectangle = useCanvasStore((state) => state.addRectangle);
+  const addText = useCanvasStore((state) => state.addText);
+  const applyTemplate = useCanvasStore((state) => state.applyTemplate);
+
+  return (
+    <div className="absolute inset-6 z-20 grid place-items-center rounded-[22px] border border-dashed border-slate-300 bg-white/82 p-6 text-center backdrop-blur-sm dark:border-slate-700 dark:bg-slate-950/78">
+      <div className="max-w-md">
+        <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[conic-gradient(from_180deg,#ff0080,#7928ca,#2afadf,#ff0080)] text-sm font-black text-white shadow-xl shadow-indigo-500/20">
+          RBC
+        </div>
+
+        <div className="mt-4 flex justify-center gap-2">
+          <RbcBadge variant="info">Start here</RbcBadge>
+          <RbcBadge variant="success">Canvas ready</RbcBadge>
+        </div>
+
+        <h3 className="mt-4 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+          Create your first visual layout
+        </h3>
+
+        <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+          Start from a template or add your own rectangle/text nodes. Every
+          design action updates live code and JSON export.
+        </p>
+
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
+          <RbcButton variant="primary" onClick={() => applyTemplate("hero")}>
+            Use Hero Template
+          </RbcButton>
+
+          <RbcButton
+            variant="secondary"
+            onClick={() => applyTemplate("pricing-card")}
+          >
+            Pricing Card
+          </RbcButton>
+
+          <RbcButton variant="secondary" onClick={addRectangle}>
+            Add Rectangle
+          </RbcButton>
+
+          <RbcButton variant="ghost" onClick={addText}>
+            Add Text
+          </RbcButton>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function CanvasStage() {
@@ -73,7 +126,9 @@ export function CanvasStage() {
       </div>
 
       <div className="mt-3 overflow-auto rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.18),transparent_36%),linear-gradient(135deg,#0f172a,#020617)] p-6">
-        <div className="inline-block rounded-[24px] bg-white p-4 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
+        <div className="relative inline-block rounded-[24px] bg-white p-4 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
+          {nodes.length === 0 ? <CanvasEmptyState /> : null}
+
           <Stage
             width={CANVAS_WIDTH * zoom}
             height={CANVAS_HEIGHT * zoom}

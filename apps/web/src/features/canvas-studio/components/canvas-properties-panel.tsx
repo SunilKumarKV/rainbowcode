@@ -1,5 +1,7 @@
 "use client";
 
+import { RbcBadge } from "@/components/ui/rbc-badge";
+import { RbcButton } from "@/components/ui/rbc-button";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 import type { CanvasNode } from "@/features/canvas-studio/types/canvas-node";
 
@@ -22,7 +24,7 @@ function NumberField({ id, label, value, min, onChange }: NumberFieldProps) {
     <div>
       <label
         htmlFor={id}
-        className="text-xs font-medium text-slate-600 dark:text-slate-400"
+        className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500"
       >
         {label}
       </label>
@@ -32,7 +34,7 @@ function NumberField({ id, label, value, min, onChange }: NumberFieldProps) {
         min={min}
         value={Math.round(value)}
         onChange={(event) => onChange(toNumber(event.currentTarget.value))}
-        className="mt-1 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:focus:ring-slate-700"
+        className="mt-1 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
       />
     </div>
   );
@@ -80,9 +82,9 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
           />
         </div>
 
-        <div className="rounded-xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-800">
-          Group contains {node.childNodeIds.length} child nodes. Group movement
-          and ungroup will be added in upcoming issues.
+        <div className="rounded-3xl border border-dashed border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-300">
+          Group contains <strong>{node.childNodeIds.length}</strong> child
+          nodes. Moving or resizing this group updates child nodes together.
         </div>
       </div>
     );
@@ -125,7 +127,7 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
       <div>
         <label
           htmlFor="canvas-node-fill"
-          className="text-xs font-medium text-slate-600 dark:text-slate-400"
+          className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500"
         >
           Fill / Color
         </label>
@@ -136,7 +138,7 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
           onChange={(event) =>
             updateNode(node.id, { fill: event.currentTarget.value })
           }
-          className="mt-1 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:focus:ring-slate-700"
+          className="mt-1 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
         />
       </div>
 
@@ -155,7 +157,7 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
           <div>
             <label
               htmlFor="canvas-node-text"
-              className="text-xs font-medium text-slate-600 dark:text-slate-400"
+              className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500"
             >
               Text
             </label>
@@ -166,7 +168,7 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
               onChange={(event) =>
                 updateNode(node.id, { text: event.currentTarget.value })
               }
-              className="mt-1 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:focus:ring-slate-700"
+              className="mt-1 h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
             />
           </div>
 
@@ -183,6 +185,37 @@ function CanvasPropertiesFields({ node }: CanvasPropertiesFieldsProps) {
   );
 }
 
+function PropertiesEmptyState() {
+  const addRectangle = useCanvasStore((state) => state.addRectangle);
+  const applyTemplate = useCanvasStore((state) => state.applyTemplate);
+
+  return (
+    <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-900/60">
+      <div className="mx-auto grid size-10 place-items-center rounded-2xl bg-white text-lg shadow-sm dark:bg-slate-950">
+        ⚙
+      </div>
+
+      <h3 className="mt-3 text-sm font-black text-slate-950 dark:text-white">
+        Nothing selected
+      </h3>
+
+      <p className="mt-2 text-xs leading-5 text-slate-500">
+        Select a layer or canvas object to edit size, position, color, text, or
+        group behavior.
+      </p>
+
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <RbcButton variant="primary" onClick={addRectangle}>
+          Add Node
+        </RbcButton>
+        <RbcButton variant="secondary" onClick={() => applyTemplate("hero")}>
+          Use Template
+        </RbcButton>
+      </div>
+    </div>
+  );
+}
+
 export function CanvasPropertiesPanel() {
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
@@ -191,19 +224,22 @@ export function CanvasPropertiesPanel() {
     return (
       <aside
         aria-label="Canvas properties"
-        className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+        className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Properties
-        </p>
+        <div className="border-b border-slate-200/70 px-4 py-4 dark:border-slate-800">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+            Inspector
+          </p>
+          <h3 className="mt-1 text-sm font-black text-slate-950 dark:text-white">
+            Multi Selection
+          </h3>
+        </div>
 
-        <h3 className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
-          Multi Selection
-        </h3>
-
-        <div className="mt-4 rounded-xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-800">
-          {selectedNodeIds.length} nodes selected. Bulk editing will be added in
-          a later issue.
+        <div className="p-4">
+          <div className="rounded-3xl border border-dashed border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-300">
+            <strong>{selectedNodeIds.length}</strong> nodes selected. Use group,
+            duplicate, copy, or layer actions from the toolbar.
+          </div>
         </div>
       </aside>
     );
@@ -217,30 +253,39 @@ export function CanvasPropertiesPanel() {
   return (
     <aside
       aria-label="Canvas properties"
-      className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
+      className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76"
     >
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Properties
-        </p>
-        <h3 className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
-          Selected Node
-        </h3>
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200/70 px-4 py-4 dark:border-slate-800">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+            Inspector
+          </p>
+          <h3 className="mt-1 text-sm font-black text-slate-950 dark:text-white">
+            Properties
+          </h3>
+        </div>
+
+        <RbcBadge variant={selectedNode === undefined ? "neutral" : "info"}>
+          {selectedNode === undefined ? "Idle" : selectedNode.type}
+        </RbcBadge>
       </div>
 
-      {selectedNode === undefined ? (
-        <div className="mt-4 rounded-xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-800">
-          Select a canvas node to edit its properties.
-        </div>
-      ) : (
-        <div className="mt-4">
-          <div className="mb-4 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-500 dark:bg-slate-900">
-            Type: {selectedNode.type}
-          </div>
+      <div className="p-4">
+        {selectedNode === undefined ? (
+          <PropertiesEmptyState />
+        ) : (
+          <>
+            <div className="mb-4 rounded-3xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
+              <p className="text-xs text-slate-500">Selected object</p>
+              <p className="mt-1 truncate text-sm font-black text-slate-950 dark:text-white">
+                {selectedNode.id}
+              </p>
+            </div>
 
-          <CanvasPropertiesFields node={selectedNode} />
-        </div>
-      )}
+            <CanvasPropertiesFields node={selectedNode} />
+          </>
+        )}
+      </div>
     </aside>
   );
 }
