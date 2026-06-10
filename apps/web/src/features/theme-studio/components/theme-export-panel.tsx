@@ -1,9 +1,11 @@
 "use client";
 
+import { RbcBadge } from "@/components/ui/rbc-badge";
+import { RbcButton } from "@/components/ui/rbc-button";
+import { downloadFile } from "@/features/theme-engine/exporters/download-file";
 import { exportCssTheme } from "@/features/theme-engine/exporters/export-css";
 import { exportJsonTheme } from "@/features/theme-engine/exporters/export-json";
 import { exportTailwindTheme } from "@/features/theme-engine/exporters/export-tailwind";
-import { downloadFile } from "@/features/theme-engine/exporters/download-file";
 import { useThemeStore } from "@/features/theme-engine/store/theme-store";
 
 export function ThemeExportPanel() {
@@ -30,39 +32,38 @@ export function ThemeExportPanel() {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
-      <h3 className="text-sm font-semibold text-slate-950 dark:text-white">
-        Export Theme
-      </h3>
-      <p className="mt-1 text-xs leading-5 text-slate-500">
-        Download generated tokens for production projects.
-      </p>
+    <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
+      <div className="border-b border-slate-200/70 px-4 py-4 dark:border-slate-800">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+              Export
+            </p>
+            <h3 className="mt-1 text-sm font-black text-slate-950 dark:text-white">
+              Theme Output
+            </h3>
+          </div>
 
-      <div className="mt-4 grid gap-2">
-        <button
-          type="button"
-          onClick={handleExportCss}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
+          <RbcBadge variant="info">Ready</RbcBadge>
+        </div>
+
+        <p className="mt-2 text-xs leading-5 text-slate-500">
+          Export production tokens for CSS, JSON, and Tailwind.
+        </p>
+      </div>
+
+      <div className="grid gap-2 p-4">
+        <RbcButton variant="secondary" onClick={handleExportCss}>
           Export CSS Variables
-        </button>
+        </RbcButton>
 
-        <button
-          type="button"
-          onClick={handleExportJson}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
+        <RbcButton variant="secondary" onClick={handleExportJson}>
           Export JSON Tokens
-        </button>
+        </RbcButton>
 
-        <button
-          type="button"
-          onClick={handleExportTailwind}
-          className="rounded-xl border border-slate-200 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
-        >
+        <RbcButton variant="primary" onClick={handleExportTailwind}>
           Export Tailwind Theme
-        </button>
-        <ThemeExportPanel />
+        </RbcButton>
       </div>
     </section>
   );
