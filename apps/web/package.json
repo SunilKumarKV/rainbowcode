@@ -26,7 +26,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "happy-dom": "^20.10.1",
+    "happy-dom": "^20.10.2",
     "tailwindcss": "latest",
     "typescript": "latest",
     "vitest": "latest"
