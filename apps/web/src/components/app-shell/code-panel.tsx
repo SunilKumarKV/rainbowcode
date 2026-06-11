@@ -24,19 +24,13 @@ export function CodePanel() {
           </div>
 
           <h3 className="mt-4 text-sm font-bold text-white">
-            Code output is generated inside Canvas Studio
+            Code output lives inside Canvas Studio
           </h3>
 
           <p className="mt-2 text-xs leading-5 text-slate-400">
-            Use the Canvas Studio generated-code panel for live TSX export, JSON
-            export, import, copy, and future RBC CLI install flows.
+            Use generated-code controls from the canvas panel for TSX, JSON,
+            copy, import, and export flows.
           </p>
-
-          <pre className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 text-left text-xs leading-6 text-slate-300">
-            <code>{`rbc export canvas
-rbc add component
-rbc install theme`}</code>
-          </pre>
         </div>
       </div>
     </section>
