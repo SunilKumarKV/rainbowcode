@@ -12,8 +12,8 @@ export type CanvasTemplate = {
 export const canvasTemplates: readonly CanvasTemplate[] = [
   {
     id: "hero",
-    name: "Hero Section",
-    description: "Landing page hero layout with background block and headline.",
+    name: "Feature Intro",
+    description: "Reusable intro layout with headline and supporting copy.",
     nodes: [
       {
         id: "template-hero-bg",
@@ -32,7 +32,7 @@ export const canvasTemplates: readonly CanvasTemplate[] = [
         y: 135,
         width: 440,
         height: 64,
-        text: "Build beautiful interfaces faster",
+        text: "Section title",
         fontSize: 32,
         fill: "var(--color-background)",
       },
@@ -43,7 +43,7 @@ export const canvasTemplates: readonly CanvasTemplate[] = [
         y: 215,
         width: 420,
         height: 48,
-        text: "Design visually. Export production-ready code.",
+        text: "Supporting copy",
         fontSize: 20,
         fill: "var(--color-background)",
       },
@@ -51,8 +51,8 @@ export const canvasTemplates: readonly CanvasTemplate[] = [
   },
   {
     id: "pricing-card",
-    name: "Pricing Card",
-    description: "Simple SaaS pricing card layout.",
+    name: "Detail Card",
+    description: "Reusable card layout with headline, value, and action.",
     nodes: [
       {
         id: "template-pricing-card",
@@ -71,7 +71,7 @@ export const canvasTemplates: readonly CanvasTemplate[] = [
         y: 130,
         width: 240,
         height: 40,
-        text: "Pro Plan",
+        text: "Card title",
         fontSize: 28,
         fill: "var(--color-foreground)",
       },
@@ -82,7 +82,7 @@ export const canvasTemplates: readonly CanvasTemplate[] = [
         y: 190,
         width: 220,
         height: 52,
-        text: "$19/mo",
+        text: "Key value",
         fontSize: 36,
         fill: "var(--color-primary)",
       },
@@ -103,7 +103,7 @@ export const canvasTemplates: readonly CanvasTemplate[] = [
         y: 350,
         width: 140,
         height: 28,
-        text: "Get Started",
+        text: "Action",
         fontSize: 18,
         fill: "var(--color-background)",
       },

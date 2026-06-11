@@ -107,8 +107,8 @@ export function CanvasToolbar() {
         <option value="" disabled>
           Templates
         </option>
-        <option value="hero">Hero Section</option>
-        <option value="pricing-card">Pricing Card</option>
+        <option value="hero">Feature Intro</option>
+        <option value="pricing-card">Detail Card</option>
       </select>
 
       <Divider />

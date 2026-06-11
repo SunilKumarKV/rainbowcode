@@ -7,8 +7,8 @@ describe("StudioHome", () => {
     render(<StudioHome />);
 
     expect(screen.getByText("RainbowCode Studio")).toBeDefined();
-    expect(screen.getByText("Recent work")).toBeDefined();
+    expect(screen.getByText("Current state")).toBeDefined();
     expect(screen.getByText("RainbowCode studios")).toBeDefined();
-    expect(screen.getByText("Latest studio updates")).toBeDefined();
+    expect(screen.getByText("Export readiness")).toBeDefined();
   });
 });
