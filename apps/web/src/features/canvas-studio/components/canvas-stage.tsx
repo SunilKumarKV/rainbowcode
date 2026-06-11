@@ -5,11 +5,13 @@ import type Konva from "konva";
 import { Group, Layer, Rect, Stage, Text, Transformer } from "react-konva";
 import { RbcBadge } from "@/components/ui/rbc-badge";
 import { RbcButton } from "@/components/ui/rbc-button";
+import { CanvasMiniMap } from "@/features/canvas-studio/components/canvas-mini-map";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
 import { CANVAS_GRID_SIZE } from "@/features/canvas-studio/utils/canvas-grid";
 
 const CANVAS_WIDTH = 900;
 const CANVAS_HEIGHT = 520;
+const RULER_SIZE = 28;
 
 function isAdditiveSelection(
   event: Konva.KonvaEventObject<MouseEvent | TouchEvent>,
@@ -27,9 +29,9 @@ function CanvasEmptyState() {
   const applyTemplate = useCanvasStore((state) => state.applyTemplate);
 
   return (
-    <div className="absolute inset-6 z-20 grid place-items-center rounded-[22px] border border-dashed border-slate-300 bg-white/82 p-6 text-center backdrop-blur-sm dark:border-slate-700 dark:bg-slate-950/78">
+    <div className="absolute inset-6 z-20 grid place-items-center rounded-[22px] border border-dashed border-slate-300 bg-white/86 p-6 text-center backdrop-blur-sm dark:border-slate-700 dark:bg-slate-950/82">
       <div className="max-w-md">
-        <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[conic-gradient(from_180deg,#ff0080,#7928ca,#2afadf,#ff0080)] text-sm font-black text-white shadow-xl shadow-indigo-500/20">
+        <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[conic-gradient(from_180deg,#4f46e5,#db2777,#06b6d4,#4f46e5)] text-sm font-black text-white shadow-xl shadow-indigo-500/20">
           RBC
         </div>
 
@@ -72,6 +74,50 @@ function CanvasEmptyState() {
   );
 }
 
+function HorizontalRuler() {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute left-7 right-0 top-0 z-10 flex h-7 border-b border-slate-800 bg-slate-950 text-[10px] font-bold text-slate-500"
+    >
+      {Array.from({ length: Math.floor(CANVAS_WIDTH / 100) + 1 }).map(
+        (_, index) => (
+          <div
+            key={index}
+            className="relative shrink-0 border-l border-slate-800"
+            style={{ width: 100 }}
+          >
+            <span className="absolute left-1 top-1">{index * 100}</span>
+          </div>
+        ),
+      )}
+    </div>
+  );
+}
+
+function VerticalRuler() {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute bottom-0 left-0 top-7 z-10 w-7 border-r border-slate-800 bg-slate-950 text-[10px] font-bold text-slate-500"
+    >
+      {Array.from({ length: Math.floor(CANVAS_HEIGHT / 100) + 1 }).map(
+        (_, index) => (
+          <div
+            key={index}
+            className="relative border-t border-slate-800"
+            style={{ height: 100 }}
+          >
+            <span className="absolute left-1 top-1 origin-left rotate-90">
+              {index * 100}
+            </span>
+          </div>
+        ),
+      )}
+    </div>
+  );
+}
+
 export function CanvasStage() {
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
@@ -101,18 +147,27 @@ export function CanvasStage() {
   }, [selectedNodeIds, nodes]);
 
   return (
-    <div className="rounded-[32px] border border-white/70 bg-slate-950 p-3 shadow-[0_30px_100px_rgba(15,23,42,0.20)] dark:border-white/10">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-3 pb-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-            Artboard
-          </p>
-          <h3 className="mt-1 text-sm font-bold text-white">
-            Rainbow Canvas / 900 × 520
-          </h3>
+    <div className="overflow-hidden rounded-[32px] border border-slate-800 bg-slate-950 shadow-[0_30px_100px_rgba(15,23,42,0.24)]">
+      <div className="flex h-12 flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-white/[0.03] px-4">
+        <div className="flex items-center gap-3">
+          <div className="grid size-7 place-items-center rounded-lg bg-indigo-500 text-[10px] font-black text-white">
+            CV
+          </div>
+
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
+              Artboard
+            </p>
+            <h3 className="-mt-0.5 text-sm font-bold text-white">
+              Rainbow Canvas
+            </h3>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs text-slate-400">
+          <span className="rounded-full border border-white/10 px-3 py-1">
+            {CANVAS_WIDTH} × {CANVAS_HEIGHT}
+          </span>
           <span className="rounded-full border border-white/10 px-3 py-1">
             {Math.round(zoom * 100)}%
           </span>
@@ -120,262 +175,286 @@ export function CanvasStage() {
             Snap {snapToGridEnabled ? "On" : "Off"}
           </span>
           <span className="rounded-full border border-white/10 px-3 py-1">
-            {nodes.length} nodes
+            {selectedNodeIds.length} selected
           </span>
         </div>
       </div>
 
-      <div className="mt-3 overflow-auto rounded-[24px] bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.18),transparent_36%),linear-gradient(135deg,#0f172a,#020617)] p-6">
-        <div className="relative inline-block rounded-[24px] bg-white p-4 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
-          {nodes.length === 0 ? <CanvasEmptyState /> : null}
+      <div className="relative h-[680px] overflow-auto bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.2),transparent_34%),linear-gradient(135deg,#111827,#020617)] p-6">
+        <CanvasMiniMap
+          nodes={nodes}
+          canvasWidth={CANVAS_WIDTH}
+          canvasHeight={CANVAS_HEIGHT}
+        />
 
-          <Stage
-            width={CANVAS_WIDTH * zoom}
-            height={CANVAS_HEIGHT * zoom}
-            scaleX={zoom}
-            scaleY={zoom}
-            className="rounded-2xl bg-white"
-            onMouseDown={(event) => {
-              if (event.target === event.target.getStage()) {
-                clearSelection();
-              }
-            }}
-            onTouchStart={(event) => {
-              if (event.target === event.target.getStage()) {
-                clearSelection();
-              }
+        <div className="relative inline-block min-w-max rounded-[26px] border border-white/10 bg-slate-950 p-7 shadow-[0_30px_90px_rgba(0,0,0,0.35)]">
+          <div className="absolute left-0 top-0 z-20 size-7 border-b border-r border-slate-800 bg-slate-950" />
+          <HorizontalRuler />
+          <VerticalRuler />
+
+          <div
+            className="relative bg-white p-4"
+            style={{
+              marginLeft: RULER_SIZE,
+              marginTop: RULER_SIZE,
             }}
           >
-            <Layer>
-              {snapToGridEnabled
-                ? Array.from({
-                    length: Math.floor(CANVAS_WIDTH / CANVAS_GRID_SIZE) + 1,
-                  }).map((_, index) => (
-                    <Rect
-                      key={`grid-x-${index}`}
-                      x={index * CANVAS_GRID_SIZE}
-                      y={0}
-                      width={1}
-                      height={CANVAS_HEIGHT}
-                      fill="rgba(148, 163, 184, 0.16)"
-                      listening={false}
-                    />
-                  ))
-                : null}
+            {nodes.length === 0 ? <CanvasEmptyState /> : null}
 
-              {snapToGridEnabled
-                ? Array.from({
-                    length: Math.floor(CANVAS_HEIGHT / CANVAS_GRID_SIZE) + 1,
-                  }).map((_, index) => (
-                    <Rect
-                      key={`grid-y-${index}`}
-                      x={0}
-                      y={index * CANVAS_GRID_SIZE}
-                      width={CANVAS_WIDTH}
-                      height={1}
-                      fill="rgba(148, 163, 184, 0.16)"
-                      listening={false}
-                    />
-                  ))
-                : null}
-
-              {nodes.map((node) => {
-                const isSelected = selectedNodeIds.includes(node.id);
-
-                if (node.type === "rectangle") {
-                  return (
-                    <Rect
-                      key={node.id}
-                      ref={(shapeNode) => {
-                        if (shapeNode === null) {
-                          nodeRefs.current.delete(node.id);
-                          return;
-                        }
-
-                        nodeRefs.current.set(node.id, shapeNode);
-                      }}
-                      x={node.x}
-                      y={node.y}
-                      width={node.width}
-                      height={node.height}
-                      cornerRadius={node.radius}
-                      fill={node.fill}
-                      stroke={isSelected ? "#4f46e5" : "transparent"}
-                      strokeWidth={isSelected ? 2 : 0}
-                      draggable
-                      onClick={(event) =>
-                        selectNode(node.id, isAdditiveSelection(event))
-                      }
-                      onTap={(event) =>
-                        selectNode(node.id, isAdditiveSelection(event))
-                      }
-                      onDragEnd={(event) =>
-                        moveNode(node.id, {
-                          x: event.target.x(),
-                          y: event.target.y(),
-                        })
-                      }
-                      onTransformEnd={(event) => {
-                        const shape = event.target;
-                        const scaleX = shape.scaleX();
-                        const scaleY = shape.scaleY();
-
-                        shape.scaleX(1);
-                        shape.scaleY(1);
-
-                        resizeNode(node.id, {
-                          width: node.width * scaleX,
-                          height: node.height * scaleY,
-                        });
-
-                        moveNode(node.id, {
-                          x: shape.x(),
-                          y: shape.y(),
-                        });
-                      }}
-                    />
-                  );
+            <Stage
+              width={CANVAS_WIDTH * zoom}
+              height={CANVAS_HEIGHT * zoom}
+              scaleX={zoom}
+              scaleY={zoom}
+              className="rounded-2xl bg-white shadow-inner"
+              onMouseDown={(event) => {
+                if (event.target === event.target.getStage()) {
+                  clearSelection();
                 }
-
-                if (node.type === "text") {
-                  return (
-                    <Text
-                      key={node.id}
-                      ref={(shapeNode) => {
-                        if (shapeNode === null) {
-                          nodeRefs.current.delete(node.id);
-                          return;
-                        }
-
-                        nodeRefs.current.set(node.id, shapeNode);
-                      }}
-                      x={node.x}
-                      y={node.y}
-                      width={node.width}
-                      height={node.height}
-                      text={node.text}
-                      fontSize={node.fontSize}
-                      fill={node.fill}
-                      padding={8}
-                      stroke={isSelected ? "#4f46e5" : "transparent"}
-                      strokeWidth={isSelected ? 1 : 0}
-                      draggable
-                      onClick={(event) =>
-                        selectNode(node.id, isAdditiveSelection(event))
-                      }
-                      onTap={(event) =>
-                        selectNode(node.id, isAdditiveSelection(event))
-                      }
-                      onDragEnd={(event) =>
-                        moveNode(node.id, {
-                          x: event.target.x(),
-                          y: event.target.y(),
-                        })
-                      }
-                      onTransformEnd={(event) => {
-                        const shape = event.target;
-                        const scaleX = shape.scaleX();
-                        const scaleY = shape.scaleY();
-
-                        shape.scaleX(1);
-                        shape.scaleY(1);
-
-                        resizeNode(node.id, {
-                          width: node.width * scaleX,
-                          height: node.height * scaleY,
-                        });
-
-                        moveNode(node.id, {
-                          x: shape.x(),
-                          y: shape.y(),
-                        });
-                      }}
-                    />
-                  );
+              }}
+              onTouchStart={(event) => {
+                if (event.target === event.target.getStage()) {
+                  clearSelection();
                 }
+              }}
+            >
+              <Layer>
+                {snapToGridEnabled
+                  ? Array.from({
+                      length: Math.floor(CANVAS_WIDTH / CANVAS_GRID_SIZE) + 1,
+                    }).map((_, index) => (
+                      <Rect
+                        key={`grid-x-${index}`}
+                        x={index * CANVAS_GRID_SIZE}
+                        y={0}
+                        width={1}
+                        height={CANVAS_HEIGHT}
+                        fill="rgba(148, 163, 184, 0.16)"
+                        listening={false}
+                      />
+                    ))
+                  : null}
 
-                return (
-                  <Group
-                    key={node.id}
-                    ref={(shapeNode) => {
-                      if (shapeNode === null) {
-                        nodeRefs.current.delete(node.id);
-                        return;
-                      }
+                {snapToGridEnabled
+                  ? Array.from({
+                      length:
+                        Math.floor(CANVAS_HEIGHT / CANVAS_GRID_SIZE) + 1,
+                    }).map((_, index) => (
+                      <Rect
+                        key={`grid-y-${index}`}
+                        x={0}
+                        y={index * CANVAS_GRID_SIZE}
+                        width={CANVAS_WIDTH}
+                        height={1}
+                        fill="rgba(148, 163, 184, 0.16)"
+                        listening={false}
+                      />
+                    ))
+                  : null}
 
-                      nodeRefs.current.set(node.id, shapeNode);
-                    }}
-                    x={node.x}
-                    y={node.y}
-                    width={node.width}
-                    height={node.height}
-                    draggable
-                    onClick={(event) =>
-                      selectNode(node.id, isAdditiveSelection(event))
-                    }
-                    onTap={(event) =>
-                      selectNode(node.id, isAdditiveSelection(event))
-                    }
-                    onDragEnd={(event) =>
-                      moveNode(node.id, {
-                        x: event.target.x(),
-                        y: event.target.y(),
-                      })
-                    }
-                    onTransformEnd={(event) => {
-                      const shape = event.target;
-                      const scaleX = shape.scaleX();
-                      const scaleY = shape.scaleY();
+                {nodes.map((node) => {
+                  const isSelected = selectedNodeIds.includes(node.id);
 
-                      shape.scaleX(1);
-                      shape.scaleY(1);
+                  if (node.type === "rectangle") {
+                    return (
+                      <Rect
+                        key={node.id}
+                        ref={(shapeNode) => {
+                          if (shapeNode === null) {
+                            nodeRefs.current.delete(node.id);
+                            return;
+                          }
 
-                      resizeNode(node.id, {
-                        width: node.width * scaleX,
-                        height: node.height * scaleY,
-                      });
+                          nodeRefs.current.set(node.id, shapeNode);
+                        }}
+                        x={node.x}
+                        y={node.y}
+                        width={node.width}
+                        height={node.height}
+                        cornerRadius={node.radius}
+                        fill={node.fill}
+                        stroke={isSelected ? "#4f46e5" : "transparent"}
+                        strokeWidth={isSelected ? 2 : 0}
+                        draggable
+                        onClick={(event) =>
+                          selectNode(node.id, isAdditiveSelection(event))
+                        }
+                        onTap={(event) =>
+                          selectNode(node.id, isAdditiveSelection(event))
+                        }
+                        onDragEnd={(event) =>
+                          moveNode(node.id, {
+                            x: event.target.x(),
+                            y: event.target.y(),
+                          })
+                        }
+                        onTransformEnd={(event) => {
+                          const shape = event.target;
+                          const scaleX = shape.scaleX();
+                          const scaleY = shape.scaleY();
 
-                      moveNode(node.id, {
-                        x: shape.x(),
-                        y: shape.y(),
-                      });
-                    }}
-                  >
-                    <Rect
-                      x={0}
-                      y={0}
-                      width={node.width}
-                      height={node.height}
-                      fill="transparent"
-                      stroke={isSelected ? "#4f46e5" : "#94a3b8"}
-                      dash={[8, 6]}
-                      strokeWidth={isSelected ? 2 : 1}
-                    />
-                  </Group>
-                );
-              })}
+                          shape.scaleX(1);
+                          shape.scaleY(1);
 
-              <Transformer
-                ref={transformerRef}
-                rotateEnabled={false}
-                enabledAnchors={[
-                  "top-left",
-                  "top-right",
-                  "bottom-left",
-                  "bottom-right",
-                  "middle-left",
-                  "middle-right",
-                ]}
-                boundBoxFunc={(oldBox, newBox) => {
-                  if (newBox.width < 24 || newBox.height < 24) {
-                    return oldBox;
+                          resizeNode(node.id, {
+                            width: node.width * scaleX,
+                            height: node.height * scaleY,
+                          });
+
+                          moveNode(node.id, {
+                            x: shape.x(),
+                            y: shape.y(),
+                          });
+                        }}
+                      />
+                    );
                   }
 
-                  return newBox;
-                }}
-              />
-            </Layer>
-          </Stage>
+                  if (node.type === "text") {
+                    return (
+                      <Text
+                        key={node.id}
+                        ref={(shapeNode) => {
+                          if (shapeNode === null) {
+                            nodeRefs.current.delete(node.id);
+                            return;
+                          }
+
+                          nodeRefs.current.set(node.id, shapeNode);
+                        }}
+                        x={node.x}
+                        y={node.y}
+                        width={node.width}
+                        height={node.height}
+                        text={node.text}
+                        fontSize={node.fontSize}
+                        fill={node.fill}
+                        padding={8}
+                        stroke={isSelected ? "#4f46e5" : "transparent"}
+                        strokeWidth={isSelected ? 1 : 0}
+                        draggable
+                        onClick={(event) =>
+                          selectNode(node.id, isAdditiveSelection(event))
+                        }
+                        onTap={(event) =>
+                          selectNode(node.id, isAdditiveSelection(event))
+                        }
+                        onDragEnd={(event) =>
+                          moveNode(node.id, {
+                            x: event.target.x(),
+                            y: event.target.y(),
+                          })
+                        }
+                        onTransformEnd={(event) => {
+                          const shape = event.target;
+                          const scaleX = shape.scaleX();
+                          const scaleY = shape.scaleY();
+
+                          shape.scaleX(1);
+                          shape.scaleY(1);
+
+                          resizeNode(node.id, {
+                            width: node.width * scaleX,
+                            height: node.height * scaleY,
+                          });
+
+                          moveNode(node.id, {
+                            x: shape.x(),
+                            y: shape.y(),
+                          });
+                        }}
+                      />
+                    );
+                  }
+
+                  return (
+                    <Group
+                      key={node.id}
+                      ref={(shapeNode) => {
+                        if (shapeNode === null) {
+                          nodeRefs.current.delete(node.id);
+                          return;
+                        }
+
+                        nodeRefs.current.set(node.id, shapeNode);
+                      }}
+                      x={node.x}
+                      y={node.y}
+                      width={node.width}
+                      height={node.height}
+                      draggable
+                      onClick={(event) =>
+                        selectNode(node.id, isAdditiveSelection(event))
+                      }
+                      onTap={(event) =>
+                        selectNode(node.id, isAdditiveSelection(event))
+                      }
+                      onDragEnd={(event) =>
+                        moveNode(node.id, {
+                          x: event.target.x(),
+                          y: event.target.y(),
+                        })
+                      }
+                      onTransformEnd={(event) => {
+                        const shape = event.target;
+                        const scaleX = shape.scaleX();
+                        const scaleY = shape.scaleY();
+
+                        shape.scaleX(1);
+                        shape.scaleY(1);
+
+                        resizeNode(node.id, {
+                          width: node.width * scaleX,
+                          height: node.height * scaleY,
+                        });
+
+                        moveNode(node.id, {
+                          x: shape.x(),
+                          y: shape.y(),
+                        });
+                      }}
+                    >
+                      <Rect
+                        x={0}
+                        y={0}
+                        width={node.width}
+                        height={node.height}
+                        fill="transparent"
+                        stroke={isSelected ? "#4f46e5" : "#94a3b8"}
+                        dash={[8, 6]}
+                        strokeWidth={isSelected ? 2 : 1}
+                      />
+                    </Group>
+                  );
+                })}
+
+                <Transformer
+                  ref={transformerRef}
+                  rotateEnabled={false}
+                  enabledAnchors={[
+                    "top-left",
+                    "top-right",
+                    "bottom-left",
+                    "bottom-right",
+                    "middle-left",
+                    "middle-right",
+                  ]}
+                  anchorFill="#ffffff"
+                  anchorStroke="#4f46e5"
+                  anchorSize={10}
+                  borderStroke="#4f46e5"
+                  borderDash={[4, 4]}
+                  boundBoxFunc={(oldBox, newBox) => {
+                    if (newBox.width < 24 || newBox.height < 24) {
+                      return oldBox;
+                    }
+
+                    return newBox;
+                  }}
+                />
+              </Layer>
+            </Stage>
+          </div>
         </div>
       </div>
     </div>
