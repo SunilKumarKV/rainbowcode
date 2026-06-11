@@ -20,7 +20,7 @@ describe("RainbowCode UI tokens", () => {
 
   it("exposes shared text classes", () => {
     expect(rbcText.eyebrow).toContain("uppercase");
-    expect(rbcText.title).toContain("font-semibold");
+    expect(rbcText.title).toContain("font-black");
   });
 
   it("exposes button variants", () => {
