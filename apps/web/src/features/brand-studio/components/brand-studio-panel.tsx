@@ -5,6 +5,7 @@ import { RbcButton } from "@/components/ui/rbc-button";
 import { exportBrandJson } from "@/features/brand-studio/exporters/export-brand-json";
 import { useBrandStore } from "@/features/brand-studio/store/brand-store";
 import { downloadFile } from "@/features/theme-engine/exporters/download-file";
+import { LogoBuilderPanel } from "@/features/logo-builder/components/logo-builder-panel";
 
 export function BrandStudioPanel() {
   const brand = useBrandStore((state) => state.brand);
@@ -181,8 +182,10 @@ export function BrandStudioPanel() {
         </div>
 
         <RbcButton variant="primary" onClick={exportBrand} className="w-full">
-          Export Brand Kit JSON
-        </RbcButton>
+  Export Brand Kit JSON
+</RbcButton>
+
+<LogoBuilderPanel />
       </div>
     </section>
   );
