@@ -219,6 +219,11 @@ function PropertiesEmptyState() {
 export function CanvasPropertiesPanel() {
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
+  const duplicateSelectedNodes = useCanvasStore(
+    (state) => state.duplicateSelectedNodes,
+  );
+  const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
+  const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
 
   if (selectedNodeIds.length > 1) {
     return (
@@ -239,6 +244,30 @@ export function CanvasPropertiesPanel() {
           <div className="rounded-3xl border border-dashed border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-300">
             <strong>{selectedNodeIds.length}</strong> nodes selected. Use group,
             duplicate, copy, or layer actions from the toolbar.
+          </div>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={copySelectedNodes}
+              className="h-9 rounded-xl border border-slate-200 bg-white text-xs font-black text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+            >
+              Copy
+            </button>
+            <button
+              type="button"
+              onClick={duplicateSelectedNodes}
+              className="h-9 rounded-xl border border-slate-200 bg-white text-xs font-black text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+            >
+              Duplicate
+            </button>
+            <button
+              type="button"
+              onClick={deleteSelectedNode}
+              className="h-9 rounded-xl border border-red-200 bg-red-50 text-xs font-black text-red-700 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </aside>
@@ -276,10 +305,42 @@ export function CanvasPropertiesPanel() {
         ) : (
           <>
             <div className="mb-4 rounded-3xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900">
-              <p className="text-xs text-slate-500">Selected object</p>
-              <p className="mt-1 truncate text-sm font-black text-slate-950 dark:text-white">
-                {selectedNode.id}
-              </p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs text-slate-500">Selected object</p>
+                  <p className="mt-1 truncate text-sm font-black text-slate-950 dark:text-white">
+                    {selectedNode.id}
+                  </p>
+                </div>
+
+                <span className="rounded-full bg-indigo-50 px-2 py-1 text-[10px] font-black text-indigo-700 ring-1 ring-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:ring-indigo-900">
+                  {selectedNode.type}
+                </span>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={copySelectedNodes}
+                  className="h-8 rounded-lg bg-white text-[10px] font-black text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-800"
+                >
+                  Copy
+                </button>
+                <button
+                  type="button"
+                  onClick={duplicateSelectedNodes}
+                  className="h-8 rounded-lg bg-white text-[10px] font-black text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-800"
+                >
+                  Duplicate
+                </button>
+                <button
+                  type="button"
+                  onClick={deleteSelectedNode}
+                  className="h-8 rounded-lg bg-red-50 text-[10px] font-black text-red-600 ring-1 ring-red-200 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:bg-red-950 dark:text-red-300 dark:ring-red-900"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
 
             <CanvasPropertiesFields node={selectedNode} />

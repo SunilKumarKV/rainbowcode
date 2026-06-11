@@ -118,6 +118,98 @@ function VerticalRuler() {
   );
 }
 
+function SelectionHud() {
+  const nodes = useCanvasStore((state) => state.nodes);
+  const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
+  const duplicateSelectedNodes = useCanvasStore(
+    (state) => state.duplicateSelectedNodes,
+  );
+  const copySelectedNodes = useCanvasStore((state) => state.copySelectedNodes);
+  const deleteSelectedNode = useCanvasStore((state) => state.deleteSelectedNode);
+  const groupSelectedNodes = useCanvasStore((state) => state.groupSelectedNodes);
+  const ungroupSelectedNodes = useCanvasStore(
+    (state) => state.ungroupSelectedNodes,
+  );
+
+  if (selectedNodeIds.length === 0) {
+    return null;
+  }
+
+  const selectedNodes = nodes.filter((node) =>
+    selectedNodeIds.includes(node.id),
+  );
+
+  const firstNode = selectedNodes[0];
+  const canGroup = selectedNodeIds.length > 1;
+  const canUngroup = selectedNodes.some((node) => node.type === "group");
+
+  return (
+    <div className="absolute left-10 top-10 z-30 flex max-w-[calc(100%-5rem)] flex-wrap items-center gap-2 rounded-2xl border border-indigo-300 bg-white/92 px-3 py-2 text-xs font-bold text-slate-700 shadow-2xl backdrop-blur-2xl dark:border-indigo-800 dark:bg-slate-950/92 dark:text-slate-200">
+      <span className="rounded-full bg-indigo-50 px-2 py-1 text-[10px] font-black text-indigo-700 ring-1 ring-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:ring-indigo-900">
+        {selectedNodeIds.length} selected
+      </span>
+
+      {firstNode === undefined ? null : (
+        <>
+          <span className="text-slate-500">
+            {firstNode.type.toUpperCase()}
+          </span>
+          <span className="hidden text-slate-400 sm:inline">
+            {Math.round(firstNode.x)}, {Math.round(firstNode.y)} ·{" "}
+            {Math.round(firstNode.width)}×{Math.round(firstNode.height)}
+          </span>
+        </>
+      )}
+
+      <span className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
+
+      <button
+        type="button"
+        onClick={copySelectedNodes}
+        className="rounded-lg px-2 py-1 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-800"
+      >
+        Copy
+      </button>
+
+      <button
+        type="button"
+        onClick={duplicateSelectedNodes}
+        className="rounded-lg px-2 py-1 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-800"
+      >
+        Duplicate
+      </button>
+
+      {canGroup ? (
+        <button
+          type="button"
+          onClick={groupSelectedNodes}
+          className="rounded-lg px-2 py-1 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-800"
+        >
+          Group
+        </button>
+      ) : null}
+
+      {canUngroup ? (
+        <button
+          type="button"
+          onClick={ungroupSelectedNodes}
+          className="rounded-lg px-2 py-1 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-800"
+        >
+          Ungroup
+        </button>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={deleteSelectedNode}
+        className="rounded-lg px-2 py-1 text-red-600 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-300 dark:hover:bg-red-950/50"
+      >
+        Delete
+      </button>
+    </div>
+  );
+}
+
 export function CanvasStage() {
   const nodes = useCanvasStore((state) => state.nodes);
   const selectedNodeIds = useCanvasStore((state) => state.selectedNodeIds);
@@ -181,6 +273,8 @@ export function CanvasStage() {
       </div>
 
       <div className="relative h-[680px] overflow-auto bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.2),transparent_34%),linear-gradient(135deg,#111827,#020617)] p-6">
+        <SelectionHud />
+
         <CanvasMiniMap
           nodes={nodes}
           canvasWidth={CANVAS_WIDTH}
@@ -275,6 +369,9 @@ export function CanvasStage() {
                         fill={node.fill}
                         stroke={isSelected ? "#4f46e5" : "transparent"}
                         strokeWidth={isSelected ? 2 : 0}
+                        shadowColor={isSelected ? "#4f46e5" : undefined}
+                        shadowBlur={isSelected ? 10 : 0}
+                        shadowOpacity={isSelected ? 0.22 : 0}
                         draggable
                         onClick={(event) =>
                           selectNode(node.id, isAdditiveSelection(event))
@@ -332,6 +429,9 @@ export function CanvasStage() {
                         padding={8}
                         stroke={isSelected ? "#4f46e5" : "transparent"}
                         strokeWidth={isSelected ? 1 : 0}
+                        shadowColor={isSelected ? "#4f46e5" : undefined}
+                        shadowBlur={isSelected ? 8 : 0}
+                        shadowOpacity={isSelected ? 0.18 : 0}
                         draggable
                         onClick={(event) =>
                           selectNode(node.id, isAdditiveSelection(event))
