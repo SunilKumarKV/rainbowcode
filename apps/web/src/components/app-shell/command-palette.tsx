@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import { studioNavItems } from "@/lib/navigation/studio-nav";
+import { useAppShellStore } from "@/stores/app-shell-store";
 
 type Command = {
   readonly id: string;
@@ -12,7 +15,17 @@ type Command = {
 };
 
 export function CommandPalette() {
-  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  const isOpen = useAppShellStore((state) => state.isCommandPaletteOpen);
+  const openCommandPalette = useAppShellStore(
+    (state) => state.openCommandPalette,
+  );
+  const closeCommandPalette = useAppShellStore(
+    (state) => state.closeCommandPalette,
+  );
+  const toggleCommandPalette = useAppShellStore(
+    (state) => state.toggleCommandPalette,
+  );
   const [query, setQuery] = useState("");
 
   const addRectangle = useCanvasStore((state) => state.addRectangle);
@@ -37,16 +50,22 @@ export function CommandPalette() {
 
   const commands = useMemo<readonly Command[]>(
     () => [
+      ...studioNavItems.map((item) => ({
+        id: `open-${item.studio}`,
+        title: `Open ${item.label}`,
+        description: item.description,
+        action: () => router.push(item.href),
+      })),
       {
         id: "template-hero",
-        title: "Apply Hero Template",
-        description: "Replace canvas with a landing hero layout.",
+        title: "Apply Feature Intro Layout",
+        description: "Replace canvas with a reusable intro section layout.",
         action: () => applyTemplate("hero"),
       },
       {
         id: "template-pricing",
-        title: "Apply Pricing Card Template",
-        description: "Replace canvas with a SaaS pricing card layout.",
+        title: "Apply Detail Card Layout",
+        description: "Replace canvas with a reusable detail card layout.",
         action: () => applyTemplate("pricing-card"),
       },
       {
@@ -158,6 +177,7 @@ export function CommandPalette() {
       ungroupSelectedNodes,
       zoomIn,
       zoomOut,
+      router,
     ],
   );
 
@@ -176,7 +196,7 @@ export function CommandPalette() {
       }
 
       event.preventDefault();
-      setIsOpen((current) => !current);
+      toggleCommandPalette();
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -194,14 +214,14 @@ export function CommandPalette() {
 
   function runCommand(command: Command): void {
     command.action();
-    setIsOpen(false);
+    closeCommandPalette();
   }
 
   return (
     <>
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={openCommandPalette}
         className="fixed bottom-5 left-1/2 z-40 hidden -translate-x-1/2 items-center gap-3 rounded-2xl border border-slate-200 bg-white/92 px-4 py-2 text-xs font-bold text-slate-700 shadow-2xl backdrop-blur-2xl transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950/92 dark:text-slate-200 lg:flex"
       >
         <span className="text-slate-500">Command Palette</span>
@@ -218,7 +238,7 @@ export function CommandPalette() {
           className="fixed inset-0 z-[100] grid place-items-start bg-slate-950/48 px-4 py-20 backdrop-blur-sm"
           onMouseDown={(event) => {
             if (event.currentTarget === event.target) {
-              setIsOpen(false);
+              closeCommandPalette();
             }
           }}
         >
@@ -234,7 +254,7 @@ export function CommandPalette() {
                 onChange={(event) => setQuery(event.currentTarget.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Escape") {
-                    setIsOpen(false);
+                    closeCommandPalette();
                   }
 
                   if (event.key === "Enter" && filteredCommands[0] !== undefined) {
