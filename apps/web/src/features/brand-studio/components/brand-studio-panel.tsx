@@ -6,6 +6,7 @@ import { exportBrandJson } from "@/features/brand-studio/exporters/export-brand-
 import { useBrandStore } from "@/features/brand-studio/store/brand-store";
 import { downloadFile } from "@/features/theme-engine/exporters/download-file";
 import { LogoBuilderPanel } from "@/features/logo-builder/components/logo-builder-panel";
+import { TypographySystemPanel } from "@/features/brand-studio/components/typography-system-panel";
 
 export function BrandStudioPanel() {
   const brand = useBrandStore((state) => state.brand);
@@ -186,6 +187,7 @@ export function BrandStudioPanel() {
 </RbcButton>
 
 <LogoBuilderPanel />
+<TypographySystemPanel />
       </div>
     </section>
   );
