@@ -42,7 +42,7 @@ html {
 }
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 20% 0%, rgba(79, 70, 229, 0.18), transparent 28rem),
     radial-gradient(circle at 90% 10%, rgba(219, 39, 119, 0.12), transparent 26rem),

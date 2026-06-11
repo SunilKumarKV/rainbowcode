@@ -51,14 +51,14 @@ function CanvasEmptyState() {
 
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           <RbcButton variant="primary" onClick={() => applyTemplate("hero")}>
-            Use Hero Template
+            Use Intro Layout
           </RbcButton>
 
           <RbcButton
             variant="secondary"
             onClick={() => applyTemplate("pricing-card")}
           >
-            Pricing Card
+            Detail Card
           </RbcButton>
 
           <RbcButton variant="secondary" onClick={addRectangle}>

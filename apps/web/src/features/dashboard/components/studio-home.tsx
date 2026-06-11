@@ -1,9 +1,25 @@
-import { ActivityFeed } from "@/features/dashboard/components/activity-feed";
+"use client";
+
+import { RbcBadge } from "@/components/ui/rbc-badge";
+import { useBrandStore } from "@/features/brand-studio/store/brand-store";
+import { useCanvasStore } from "@/features/canvas-studio/store/canvas-store";
+import { useComponentStudioStore } from "@/features/component-studio/store/component-studio-store";
 import { QuickActions } from "@/features/dashboard/components/quick-actions";
 import { RecentProjects } from "@/features/dashboard/components/recent-projects";
 import { StudioModules } from "@/features/dashboard/components/studio-modules";
+import { ActivityFeed } from "@/features/dashboard/components/activity-feed";
+import { useThemeStore } from "@/features/theme-engine/store/theme-store";
 
 export function StudioHome() {
+  const brand = useBrandStore((state) => state.brand);
+  const nodeCount = useCanvasStore((state) => state.nodes.length);
+  const selectedComponent = useComponentStudioStore(
+    (state) => state.selectedComponent,
+  );
+  const colorTokenCount = useThemeStore(
+    (state) => Object.keys(state.theme.colors).length,
+  );
+
   return (
     <section
       aria-label="RainbowCode studio home"
@@ -14,28 +30,36 @@ export function StudioHome() {
 
         <div className="relative z-10 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-indigo-200">
-              RainbowCode Studio
-            </p>
+            <div className="flex flex-wrap gap-2">
+              <RbcBadge variant="info">RainbowCode Studio</RbcBadge>
+              <RbcBadge variant="neutral">Single workspace</RbcBadge>
+            </div>
 
             <h1 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-6xl">
-              Build a design system before writing UI code.
+              Work from one live design system instead of scattered files.
             </h1>
 
             <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-              Start from brand kits, theme tokens, component variants, canvas
-              layouts, and export-ready code in one product workflow.
+              This overview reflects the current local workspace: brand
+              identity, validated theme tokens, component configuration, canvas
+              progress, and export availability.
             </p>
           </div>
 
           <div className="grid min-w-64 gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
             <div>
-              <p className="text-xs text-slate-400">Current milestone</p>
-              <p className="mt-1 text-lg font-black">Canvas V1 + Brand Kit</p>
+              <p className="text-xs text-slate-400">Workspace</p>
+              <p className="mt-1 text-lg font-black">
+                {brand.name.trim().length > 0 ? brand.name : "Unnamed workspace"}
+              </p>
             </div>
 
             <div className="grid grid-cols-3 gap-2 text-center">
-              {["Brand", "Canvas", "Code"].map((item) => (
+              {[
+                `${colorTokenCount} tokens`,
+                `${selectedComponent}`,
+                `${nodeCount} nodes`,
+              ].map((item) => (
                 <div
                   key={item}
                   className="rounded-2xl border border-white/10 bg-white/5 p-3"
@@ -55,16 +79,17 @@ export function StudioHome() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="rounded-[28px] border border-white/70 bg-white/82 p-5 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
           <p className="text-xs font-black uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
-            Next builder
+            Workspace note
           </p>
 
           <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
-            Real Brand Studio Logo Builder
+            No fake projects, no seeded metrics
           </h2>
 
           <p className="mt-3 text-sm leading-6 text-slate-500">
-            The next production feature is visual logo generation with type,
-            symbol, gradients, palette sync, and exportable brand assets.
+            The studio starts from a clean local workspace. Create real brand,
+            theme, component, and canvas state here, then export the resulting
+            artifacts when you are ready.
           </p>
         </div>
 

@@ -10,8 +10,8 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className={`h-screen overflow-hidden ${rbcSurface.app}`}>
-      <div className="flex h-full flex-col">
+    <div className={`min-h-screen ${rbcSurface.app}`}>
+      <div className="flex min-h-screen flex-col">
         <Topbar />
 
         <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[312px_minmax(0,1fr)] xl:grid-cols-[312px_minmax(0,1fr)_372px]">
@@ -20,14 +20,14 @@ export function AppShell({ children }: AppShellProps) {
           <main
             id="main-content"
             tabIndex={-1}
-            className="min-h-0 min-w-0 overflow-hidden outline-none"
+            className="min-w-0 outline-none"
           >
             {children}
           </main>
 
           <aside
             aria-label="Right inspector"
-            className="hidden min-h-0 overflow-y-auto border-l border-slate-200/80 bg-white/80 p-3 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/82 xl:block"
+            className="hidden min-h-0 border-l border-slate-200/80 bg-white/80 p-3 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/82 xl:block"
           >
             <PropertiesPanel />
           </aside>

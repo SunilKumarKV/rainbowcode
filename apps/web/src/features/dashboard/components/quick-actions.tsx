@@ -1,4 +1,5 @@
-import { quickActions } from "@/features/dashboard/data/studio-home-data";
+import Link from "next/link";
+import { studioNavItems } from "@/lib/navigation/studio-nav";
 
 export function QuickActions() {
   return (
@@ -9,30 +10,30 @@ export function QuickActions() {
       <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.22em] text-indigo-300">
-            Command Center
+            Studios
           </p>
           <h2 className="mt-2 text-2xl font-black tracking-tight">
-            Start faster with one action.
+            Jump into the workspace you need.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Create a brand kit, open the canvas, import work, or export
-            production-ready code.
+            Each studio updates the same local workspace, so brand, theme,
+            components, canvas, and exports stay aligned.
           </p>
         </div>
 
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {quickActions.map((action, index) => (
-            <button
-              key={action}
-              type="button"
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {studioNavItems.slice(1).map((item, index) => (
+            <Link
+              key={item.href}
+              href={item.href}
               className={`rounded-2xl px-4 py-3 text-left text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
                 index === 0
                   ? "bg-white text-slate-950 hover:bg-slate-200"
                   : "border border-white/10 bg-white/5 text-white hover:bg-white/10"
               }`}
             >
-              {action}
-            </button>
+              {item.label}
+            </Link>
           ))}
         </div>
       </div>

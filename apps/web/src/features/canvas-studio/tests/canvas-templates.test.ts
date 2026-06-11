@@ -12,14 +12,14 @@ describe("canvasTemplates", () => {
   it("returns hero template", () => {
     const template = getCanvasTemplate("hero");
 
-    expect(template.name).toBe("Hero Section");
+    expect(template.name).toBe("Feature Intro");
     expect(template.nodes.length).toBeGreaterThan(0);
   });
 
   it("returns pricing card template", () => {
     const template = getCanvasTemplate("pricing-card");
 
-    expect(template.name).toBe("Pricing Card");
+    expect(template.name).toBe("Detail Card");
     expect(template.nodes.length).toBeGreaterThan(0);
   });
 });
