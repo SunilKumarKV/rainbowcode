@@ -2,6 +2,7 @@
 
 import { ComponentStudioPanel } from "@/features/component-studio/components/component-studio-panel";
 import { ThemeStudioPanel } from "@/features/theme-studio/components/theme-studio-panel";
+import { BrandStudioPanel } from "@/features/brand-studio/components/brand-studio-panel";
 
 export function PropertiesPanel() {
   return (
@@ -23,6 +24,7 @@ export function PropertiesPanel() {
         </div>
       </section>
 
+      <BrandStudioPanel />
       <ThemeStudioPanel />
       <ComponentStudioPanel />
     </div>

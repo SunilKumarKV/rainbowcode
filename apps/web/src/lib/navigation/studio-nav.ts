@@ -6,10 +6,10 @@ export type StudioNavItem = {
 
 export const studioNavItems: readonly StudioNavItem[] = [
   {
-    label: "Brand Studio",
-    href: "/studio/brand",
-    description: "Create logos, colors, typography, and brand kits.",
-  },
+  label: "Brand Studio",
+  href: "/studio",
+  description: "Create brand kits, logo direction, colors, and typography.",
+},
   {
     label: "Theme Studio",
     href: "/studio/theme",
