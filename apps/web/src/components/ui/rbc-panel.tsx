@@ -20,13 +20,13 @@ export function RbcPanel({
       {...props}
     >
       {eyebrow === undefined ? null : (
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-300">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-primary)]">
           {eyebrow}
         </p>
       )}
 
       {title === undefined ? null : (
-        <h2 className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
+        <h2 className="mt-1 text-sm font-semibold text-[var(--surface-foreground)]">
           {title}
         </h2>
       )}

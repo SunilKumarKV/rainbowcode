@@ -29,17 +29,17 @@ export function BadgePreview() {
   return (
     <section
       aria-label="Badge component preview"
-      className="w-full max-w-xl rounded-[var(--radius-xl)] border border-slate-200 bg-white p-8 text-center shadow-xl dark:border-slate-800 dark:bg-slate-950"
+      className="w-full max-w-xl rounded-[var(--radius-xl)] rbc-surface-card p-8 text-center"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--theme-text-subtle)]">
         Badge Preview
       </p>
 
-      <h2 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">
+      <h2 className="mt-2 text-2xl font-bold text-[var(--surface-foreground)]">
         Badge Builder
       </h2>
 
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+      <p className="mt-2 text-sm text-[var(--theme-text-muted)]">
         Theme-token powered status and label badges.
       </p>
 

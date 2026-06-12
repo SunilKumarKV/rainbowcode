@@ -1,5 +1,6 @@
 "use client";
 
+import { rbcField } from "@/lib/design-system/ui-tokens";
 import type { ThemeColorKey } from "@/features/theme-engine/types/theme-token";
 
 type ColorTokenControlProps = {
@@ -16,7 +17,7 @@ export function ColorTokenControl({
   onChange,
 }: ColorTokenControlProps) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+    <div className="rounded-2xl rbc-surface-muted p-3">
       <div className="flex items-center justify-between gap-3">
         <label
           htmlFor={`color-token-${tokenKey}`}
@@ -34,7 +35,7 @@ export function ColorTokenControl({
           type="color"
           value={value}
           onChange={(event) => onChange(tokenKey, event.currentTarget.value)}
-          className="size-11 cursor-pointer rounded-2xl border border-slate-200 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+          className="size-11 cursor-pointer rounded-2xl border border-[var(--theme-border-soft)] bg-[var(--surface-panel-strong)] p-1 shadow-sm"
         />
 
         <input
@@ -42,7 +43,7 @@ export function ColorTokenControl({
           value={value}
           aria-label={`${label} hex value`}
           onChange={(event) => onChange(tokenKey, event.currentTarget.value)}
-          className="h-11 min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-3 font-mono text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+          className={`min-w-0 flex-1 font-mono ${rbcField}`}
         />
       </div>
     </div>

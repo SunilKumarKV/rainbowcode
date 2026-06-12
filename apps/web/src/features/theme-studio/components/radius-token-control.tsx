@@ -1,5 +1,6 @@
 "use client";
 
+import { rbcField } from "@/lib/design-system/ui-tokens";
 import type { ThemeTokens } from "@/features/theme-engine/types/theme-token";
 
 type RadiusKey = keyof ThemeTokens["radius"];
@@ -20,7 +21,7 @@ export function RadiusTokenControl({
   const numericValue = Number.parseFloat(value.replace("rem", ""));
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+    <div className="rounded-2xl rbc-surface-muted p-3">
       <div className="flex items-center justify-between gap-3">
         <label
           htmlFor={`radius-token-${tokenKey}`}
@@ -43,7 +44,7 @@ export function RadiusTokenControl({
           onChange={(event) =>
             onChange(tokenKey, `${event.currentTarget.value}rem`)
           }
-          className="min-w-0 flex-1 accent-indigo-600 dark:accent-indigo-300"
+          className="min-w-0 flex-1 accent-[var(--color-primary)]"
         />
 
         <input
@@ -51,7 +52,7 @@ export function RadiusTokenControl({
           value={value}
           aria-label={`${label} rem value`}
           onChange={(event) => onChange(tokenKey, event.currentTarget.value)}
-          className="h-11 w-24 rounded-2xl border border-slate-200 bg-white px-3 font-mono text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+          className={`w-24 font-mono ${rbcField}`}
         />
       </div>
     </div>

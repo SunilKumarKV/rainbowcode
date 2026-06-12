@@ -40,14 +40,14 @@ export function InputPreview() {
   return (
     <section
       aria-label="Input component preview"
-      className="w-full max-w-xl rounded-[var(--radius-xl)] border border-slate-200 bg-white p-8 shadow-xl dark:border-slate-800 dark:bg-slate-950"
+      className="w-full max-w-xl rounded-[var(--radius-xl)] rbc-surface-card p-8"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--theme-text-subtle)]">
         Input Preview
       </p>
 
       <label className="mt-6 block">
-        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+        <span className="text-sm font-medium text-[var(--surface-foreground)]">
           {label}
         </span>
 
@@ -58,7 +58,7 @@ export function InputPreview() {
           className={`mt-2 w-full rounded-[var(--radius-${inputDefinition.radius})] outline-none transition focus:ring-2 focus:ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60 ${inputSizeClassMap[inputDefinition.size]} ${inputVariantClassMap[inputDefinition.variant]}`}
         />
 
-        <span className="mt-2 block text-xs text-slate-500">
+        <span className="mt-2 block text-xs text-[var(--theme-text-muted)]">
           {helperText}
         </span>
       </label>

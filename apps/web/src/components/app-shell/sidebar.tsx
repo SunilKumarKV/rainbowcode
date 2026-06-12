@@ -46,14 +46,14 @@ export function Sidebar() {
   return (
     <aside
       aria-label="Left editor sidebar"
-      className={`min-h-0 border-r border-slate-200/80 bg-white/86 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/86 ${
+      className={`min-h-0 border-r border-[var(--theme-border-soft)] bg-[var(--surface-panel)] backdrop-blur-2xl ${
         isSidebarOpen ? "block" : "hidden lg:block"
       }`}
     >
       <div className="grid h-full min-h-0 grid-cols-[56px_minmax(0,1fr)]">
         <nav
           aria-label="Primary editor modes"
-          className="flex flex-col items-center gap-2 border-r border-slate-200/80 bg-slate-50/90 p-2 dark:border-slate-800 dark:bg-slate-900/80"
+          className="flex flex-col items-center gap-2 border-r border-[var(--theme-border-soft)] bg-[var(--surface-muted)] p-2"
         >
           {studioNavItems.slice(1).map((item) => {
             const active = pathname === item.href;
@@ -73,10 +73,10 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 aria-label={item.label}
-                className={`grid size-10 place-items-center rounded-2xl text-xs font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                className={`grid size-10 place-items-center rounded-2xl text-xs font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-focus-ring)] ${
                   active
-                    ? "bg-slate-950 text-white shadow-lg shadow-slate-950/15 dark:bg-white dark:text-slate-950"
-                    : "text-slate-500 hover:bg-white hover:text-slate-950 dark:hover:bg-slate-800 dark:hover:text-white"
+                    ? "bg-[var(--color-primary)] text-[var(--surface-on-primary)] shadow-[var(--shadow-soft)]"
+                    : "text-[var(--theme-text-muted)] hover:bg-[var(--surface-panel-strong)] hover:text-[var(--surface-foreground)]"
                 }`}
               >
                 {icon}
@@ -86,16 +86,16 @@ export function Sidebar() {
         </nav>
 
         <div className="flex min-h-0 flex-col p-3">
-          <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <section className="rounded-2xl rbc-surface-panel p-3 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[var(--color-primary)]">
                   Workspace
                 </p>
-                <h2 className="mt-2 truncate text-sm font-black text-slate-950 dark:text-white">
+                <h2 className="mt-2 truncate text-sm font-black text-[var(--surface-foreground)]">
                   {brand.name.trim().length > 0 ? brand.name : "Unnamed workspace"}
                 </h2>
-                <p className="mt-1 text-xs text-slate-500">{brand.slogan}</p>
+                <p className="mt-1 text-xs text-[var(--theme-text-muted)]">{brand.slogan}</p>
               </div>
 
               <RbcBadge variant={nodeCount > 0 ? "success" : "neutral"}>
@@ -105,7 +105,7 @@ export function Sidebar() {
           </section>
 
           <section className="mt-3 min-h-0 flex-1 overflow-y-auto">
-            <p className="px-1 text-[10px] font-black uppercase tracking-[0.22em] text-slate-500">
+            <p className="px-1 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--theme-text-subtle)]">
               Studios
             </p>
 
@@ -117,30 +117,30 @@ export function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`block rounded-2xl border px-3 py-2.5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                    className={`block rounded-2xl border px-3 py-2.5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-focus-ring)] ${
                       active
-                        ? "border-indigo-200 bg-indigo-50 text-indigo-950 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-200"
-                        : "border-transparent text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900"
+                        ? "border-[var(--color-primary)] bg-[var(--surface-accent-soft)] text-[var(--color-primary)]"
+                        : "border-transparent text-[var(--surface-foreground)] hover:bg-[var(--surface-muted)]"
                     }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="min-w-0">
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="min-w-0">
                         <span className="block truncate text-sm font-black">
                           {item.label}
                         </span>
                         <span className="mt-0.5 block truncate text-xs opacity-70">
                           {item.description}
-                          </span>
                         </span>
-                        {active ? <RbcBadge variant="info">Open</RbcBadge> : null}
-                      </div>
+                      </span>
+                      {active ? <RbcBadge variant="info">Open</RbcBadge> : null}
+                    </div>
                   </Link>
                 );
               })}
             </div>
 
             <div className="mt-4">
-              <p className="px-1 text-[10px] font-black uppercase tracking-[0.22em] text-slate-500">
+              <p className="px-1 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--theme-text-subtle)]">
                 Current State
               </p>
 
@@ -148,10 +148,10 @@ export function Sidebar() {
                 {studioSummary.map((item) => (
                   <div
                     key={item.label}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-600 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300"
+                    className="flex items-center justify-between gap-3 rounded-xl rbc-surface-muted px-3 py-2 text-xs font-bold"
                   >
                     <span>{item.label}</span>
-                    <span className="truncate text-slate-500 dark:text-slate-400">
+                    <span className="truncate text-[var(--theme-text-muted)]">
                       {item.value}
                     </span>
                   </div>

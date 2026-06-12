@@ -13,9 +13,9 @@ describe("RainbowCode UI tokens", () => {
   });
 
   it("exposes shared surface classes", () => {
-    expect(rbcSurface.app).toContain("bg-[radial-gradient");
-    expect(rbcSurface.card).toContain("backdrop-blur");
-    expect(rbcSurface.panel).toContain("border");
+    expect(rbcSurface.app).toContain("text-[var(--surface-foreground)]");
+    expect(rbcSurface.card).toContain("rbc-surface-card");
+    expect(rbcSurface.panel).toContain("rbc-surface-panel");
   });
 
   it("exposes shared text classes", () => {
@@ -24,12 +24,13 @@ describe("RainbowCode UI tokens", () => {
   });
 
   it("exposes button variants", () => {
-    expect(rbcButton.primary).toContain("bg-slate-950");
+    expect(rbcButton.primary).toContain("bg-[var(--color-primary)]");
+    expect(rbcButton.primary).toContain("text-[var(--surface-on-primary)]");
     expect(rbcButton.secondary).toContain("border");
   });
 
   it("exposes badge variants", () => {
-    expect(rbcBadge.success).toContain("emerald");
-    expect(rbcBadge.info).toContain("indigo");
+    expect(rbcBadge.success).toContain("var(--surface-success-soft)");
+    expect(rbcBadge.info).toContain("var(--surface-accent-soft)");
   });
 });

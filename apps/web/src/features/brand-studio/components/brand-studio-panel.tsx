@@ -2,6 +2,7 @@
 
 import { RbcBadge } from "@/components/ui/rbc-badge";
 import { RbcButton } from "@/components/ui/rbc-button";
+import { rbcField } from "@/lib/design-system/ui-tokens";
 import { exportBrandJson } from "@/features/brand-studio/exporters/export-brand-json";
 import { useBrandStore } from "@/features/brand-studio/store/brand-store";
 import { downloadFile } from "@/features/theme-engine/exporters/download-file";
@@ -27,8 +28,8 @@ export function BrandStudioPanel() {
   }
 
   return (
-    <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
-      <div className="relative overflow-hidden border-b border-slate-200/70 p-4 dark:border-slate-800">
+    <section className="overflow-hidden rounded-[28px] rbc-surface-card">
+      <div className="relative overflow-hidden border-b border-[var(--theme-border-soft)] p-4">
         <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-cyan-400/20 blur-2xl" />
 
         <div className="relative z-10 flex items-start justify-between gap-3">
@@ -38,11 +39,11 @@ export function BrandStudioPanel() {
               <RbcBadge variant="success">Foundation</RbcBadge>
             </div>
 
-            <h3 className="mt-3 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+            <h3 className="mt-3 text-lg font-black tracking-tight text-[var(--surface-foreground)]">
               Brand kit builder
             </h3>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-xs leading-5 text-[var(--theme-text-muted)]">
               Define the core identity that will power logos, themes,
               components, templates, and exports.
             </p>
@@ -55,7 +56,7 @@ export function BrandStudioPanel() {
       </div>
 
       <div className="space-y-4 p-4">
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+        <div className="rounded-3xl rbc-surface-muted p-4">
           <div className="flex items-center gap-4">
             <div
               className="grid size-16 shrink-0 place-items-center rounded-3xl text-sm font-black text-white shadow-xl"
@@ -67,10 +68,10 @@ export function BrandStudioPanel() {
             </div>
 
             <div className="min-w-0">
-              <h4 className="truncate text-lg font-black text-slate-950 dark:text-white">
+              <h4 className="truncate text-lg font-black text-[var(--surface-foreground)]">
                 {brand.name}
               </h4>
-              <p className="mt-1 text-sm leading-5 text-slate-500">
+              <p className="mt-1 text-sm leading-5 text-[var(--theme-text-muted)]">
                 {brand.slogan}
               </p>
             </div>
@@ -81,7 +82,7 @@ export function BrandStudioPanel() {
           <div>
             <label
               htmlFor="brand-name"
-              className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500"
+              className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
             >
               Brand Name
             </label>
@@ -90,14 +91,14 @@ export function BrandStudioPanel() {
               type="text"
               value={brand.name}
               onChange={(event) => updateBrandName(event.currentTarget.value)}
-              className="mt-1 h-11 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+              className={`mt-1 w-full ${rbcField}`}
             />
           </div>
 
           <div>
             <label
               htmlFor="brand-slogan"
-              className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500"
+              className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
             >
               Slogan
             </label>
@@ -108,14 +109,14 @@ export function BrandStudioPanel() {
               onChange={(event) =>
                 updateBrandSlogan(event.currentTarget.value)
               }
-              className="mt-1 h-11 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+              className={`mt-1 w-full ${rbcField}`}
             />
           </div>
 
           <div>
             <label
               htmlFor="brand-logo-text"
-              className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500"
+              className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
             >
               Logo Text
             </label>
@@ -125,14 +126,14 @@ export function BrandStudioPanel() {
               value={brand.logoText}
               maxLength={6}
               onChange={(event) => updateLogoText(event.currentTarget.value)}
-              className="mt-1 h-11 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+              className={`mt-1 w-full ${rbcField}`}
             />
           </div>
         </div>
 
         <div>
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]">
               Palette
             </p>
             <RbcBadge variant="neutral">{brand.palette.length} colors</RbcBadge>
@@ -142,16 +143,16 @@ export function BrandStudioPanel() {
             {brand.palette.map((color) => (
               <div
                 key={color.id}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/70"
+                className="rounded-2xl rbc-surface-muted p-3"
               >
                 <div className="flex items-center justify-between gap-3">
                   <label
                     htmlFor={`brand-color-${color.id}`}
-                    className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+                    className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
                   >
                     {color.name}
                   </label>
-                  <span className="font-mono text-xs text-slate-500">
+                  <span className="font-mono text-xs text-[var(--theme-text-muted)]">
                     {color.value}
                   </span>
                 </div>
@@ -164,7 +165,7 @@ export function BrandStudioPanel() {
                     onChange={(event) =>
                       updatePaletteColor(color.id, event.currentTarget.value)
                     }
-                    className="size-11 cursor-pointer rounded-2xl border border-slate-200 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                    className="size-11 cursor-pointer rounded-2xl border border-[var(--theme-border-soft)] bg-[var(--surface-panel-strong)] p-1 shadow-sm"
                   />
 
                   <input
@@ -174,7 +175,7 @@ export function BrandStudioPanel() {
                     onChange={(event) =>
                       updatePaletteColor(color.id, event.currentTarget.value)
                     }
-                    className="h-11 min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white px-3 font-mono text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
+                    className={`min-w-0 flex-1 font-mono ${rbcField}`}
                   />
                 </div>
               </div>
@@ -183,11 +184,11 @@ export function BrandStudioPanel() {
         </div>
 
         <RbcButton variant="primary" onClick={exportBrand} className="w-full">
-  Export Brand Kit JSON
-</RbcButton>
+          Export Brand Kit JSON
+        </RbcButton>
 
-<LogoBuilderPanel />
-<TypographySystemPanel />
+        <LogoBuilderPanel />
+        <TypographySystemPanel />
       </div>
     </section>
   );

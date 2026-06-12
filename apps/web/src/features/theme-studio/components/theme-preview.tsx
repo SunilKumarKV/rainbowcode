@@ -10,9 +10,9 @@ export function ThemePreview() {
   return (
     <section
       aria-label="Live theme preview"
-      className="w-full rounded-[28px] border border-white/70 bg-white/84 p-6 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76"
+      className="w-full rounded-[28px] rbc-surface-card p-6"
     >
-      <p className="text-xs font-black uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-300">
+      <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--color-primary)]">
         Live preview
       </p>
 
@@ -28,16 +28,16 @@ export function ThemePreview() {
         Theme tokens applied through CSS variables
       </h2>
 
-      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+      <p className="mt-3 text-sm leading-6 text-[var(--theme-text-muted)]">
         Editing the token panel updates this surface immediately, so exported
         CSS and Tailwind values match what you see in the studio.
       </p>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-        <div className="rounded-[24px] border border-slate-200 bg-[var(--color-background)] p-5 shadow-sm dark:border-slate-800">
+        <div className="rounded-[24px] rbc-surface-panel p-5 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--theme-text-subtle)]">
                 Surface
               </p>
               <h3
@@ -81,8 +81,8 @@ export function ThemePreview() {
           </div>
         </div>
 
-        <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+        <div className="rounded-[24px] rbc-surface-muted p-4">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--theme-text-subtle)]">
             Quick swap
           </p>
 
@@ -92,7 +92,7 @@ export function ThemePreview() {
                 key={color}
                 type="button"
                 aria-label={`Set primary color to ${color}`}
-                className="size-10 rounded-full border border-slate-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 dark:border-slate-700"
+                className="size-10 rounded-full border border-[var(--theme-border-soft)] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-focus-ring)]"
                 style={{ backgroundColor: color }}
                 onClick={() => updateColor("primary", color)}
               />

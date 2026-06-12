@@ -27,7 +27,7 @@ export function AppShell({ children }: AppShellProps) {
 
           <aside
             aria-label="Right inspector"
-            className="hidden min-h-0 border-l border-slate-200/80 bg-white/80 p-3 backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-950/82 xl:block"
+            className="hidden min-h-0 border-l border-[var(--theme-border-soft)] bg-[var(--surface-panel)] p-3 backdrop-blur-2xl xl:block"
           >
             <PropertiesPanel />
           </aside>
