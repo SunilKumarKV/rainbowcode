@@ -3,28 +3,28 @@
 import { rbcField } from "@/lib/design-system/ui-tokens";
 import type { ThemeTokens } from "@/features/theme-engine/types/theme-token";
 
-type RadiusKey = keyof ThemeTokens["radius"];
+type SpacingKey = keyof ThemeTokens["spacing"];
 
-type RadiusTokenControlProps = {
+type SpacingTokenControlProps = {
   readonly label: string;
-  readonly tokenKey: RadiusKey;
+  readonly tokenKey: SpacingKey;
   readonly value: string;
-  readonly onChange: (key: RadiusKey, value: string) => void;
+  readonly onChange: (key: SpacingKey, value: string) => void;
 };
 
-export function RadiusTokenControl({
+export function SpacingTokenControl({
   label,
   tokenKey,
   value,
   onChange,
-}: RadiusTokenControlProps) {
+}: SpacingTokenControlProps) {
   const numericValue = Number.parseFloat(value.replace("rem", ""));
 
   return (
     <div className="rounded-2xl rbc-surface-muted p-3">
       <div className="flex items-center justify-between gap-3">
         <label
-          htmlFor={`radius-token-${tokenKey}`}
+          htmlFor={`spacing-token-${tokenKey}`}
           className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
         >
           {label}
@@ -35,10 +35,10 @@ export function RadiusTokenControl({
 
       <div className="mt-3 flex items-center gap-3">
         <input
-          id={`radius-token-${tokenKey}`}
+          id={`spacing-token-${tokenKey}`}
           type="range"
           min="0"
-          max="2"
+          max="3"
           step="0.125"
           value={Number.isFinite(numericValue) ? numericValue : 0}
           onChange={(event) =>
@@ -50,7 +50,7 @@ export function RadiusTokenControl({
         <input
           type="text"
           value={value}
-          aria-label={`${label} rem value`}
+          aria-label={`${label} spacing value`}
           onChange={(event) => onChange(tokenKey, event.currentTarget.value)}
           className={`w-24 font-mono ${rbcField}`}
         />

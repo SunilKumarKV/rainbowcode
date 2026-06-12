@@ -2,5 +2,7 @@ import { generateTailwindTheme } from "@/features/theme-engine/generators/tailwi
 import type { ThemeTokens } from "@/features/theme-engine/types/theme-token";
 
 export function exportTailwindTheme(theme: ThemeTokens): string {
-  return JSON.stringify(generateTailwindTheme(theme), null, 2);
+  const tailwindTheme = JSON.stringify(generateTailwindTheme(theme), null, 2);
+
+  return `export const tailwindTokens = ${tailwindTheme} as const;\n\nexport default tailwindTokens;\n`;
 }

@@ -10,11 +10,11 @@ const sizeClassMap = {
 
 const variantClassMap = {
   primary:
-    "bg-[var(--color-primary)] text-white hover:opacity-90 focus-visible:ring-[var(--color-primary)]",
+    "bg-[var(--color-primary)] text-[var(--surface-on-primary)] hover:opacity-90 focus-visible:ring-[var(--color-primary)]",
   secondary:
-    "bg-[var(--color-secondary)] text-white hover:opacity-90 focus-visible:ring-[var(--color-secondary)]",
+    "bg-[var(--color-secondary)] text-[var(--surface-on-secondary)] hover:opacity-90 focus-visible:ring-[var(--color-secondary)]",
   outline:
-    "border border-[var(--color-primary)] bg-transparent text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white focus-visible:ring-[var(--color-primary)]",
+    "border border-[var(--color-primary)] bg-transparent text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-[var(--surface-on-primary)] focus-visible:ring-[var(--color-primary)]",
 } as const;
 
 export function ButtonPreview() {
