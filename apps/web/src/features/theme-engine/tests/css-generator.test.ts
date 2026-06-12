@@ -25,4 +25,13 @@ describe("generateCssVariables", () => {
     expect(css).toContain("--font-size-base: 1rem;");
     expect(css).toContain("--line-height-base: 1.5;");
   });
+
+  it("generates derived semantic variables for shared UI", () => {
+    const css = generateCssVariables(defaultTheme);
+
+    expect(css).toContain("--surface-panel: rgba(255, 255, 255, 0.84);");
+    expect(css).toContain("--surface-card: rgba(255, 255, 255, 0.78);");
+    expect(css).toContain("--theme-focus-ring: #2563eb;");
+    expect(css).toContain("--surface-on-primary: #ffffff;");
+  });
 });

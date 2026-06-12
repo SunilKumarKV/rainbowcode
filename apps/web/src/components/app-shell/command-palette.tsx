@@ -222,10 +222,10 @@ export function CommandPalette() {
       <button
         type="button"
         onClick={openCommandPalette}
-        className="fixed bottom-5 left-1/2 z-40 hidden -translate-x-1/2 items-center gap-3 rounded-2xl border border-slate-200 bg-white/92 px-4 py-2 text-xs font-bold text-slate-700 shadow-2xl backdrop-blur-2xl transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:border-slate-800 dark:bg-slate-950/92 dark:text-slate-200 lg:flex"
+        className="fixed bottom-5 left-1/2 z-40 hidden -translate-x-1/2 items-center gap-3 rounded-2xl border border-[var(--theme-border-soft)] bg-[var(--surface-panel)] px-4 py-2 text-xs font-bold text-[var(--surface-foreground)] shadow-[var(--shadow-medium)] backdrop-blur-2xl transition hover:-translate-y-0.5 hover:bg-[var(--surface-panel-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-focus-ring)] lg:flex"
       >
-        <span className="text-slate-500">Command Palette</span>
-        <span className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 font-black dark:border-slate-800 dark:bg-slate-900">
+        <span className="text-[var(--theme-text-muted)]">Command Palette</span>
+        <span className="rounded-lg border border-[var(--theme-border-soft)] bg-[var(--surface-muted)] px-2 py-1 font-black">
           ⌘K
         </span>
       </button>
@@ -235,15 +235,15 @@ export function CommandPalette() {
           role="dialog"
           aria-modal="true"
           aria-label="RainbowCode command palette"
-          className="fixed inset-0 z-[100] grid place-items-start bg-slate-950/48 px-4 py-20 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] grid place-items-start bg-[rgba(2,6,23,0.48)] px-4 py-20 backdrop-blur-sm"
           onMouseDown={(event) => {
             if (event.currentTarget === event.target) {
               closeCommandPalette();
             }
           }}
         >
-          <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_34px_140px_rgba(0,0,0,0.35)] dark:bg-slate-950">
-            <div className="border-b border-slate-200 p-4 dark:border-slate-800">
+          <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-[28px] border border-[var(--theme-border-soft)] bg-[var(--surface-panel-strong)] shadow-[var(--shadow-strong)]">
+            <div className="border-b border-[var(--theme-border-soft)] p-4">
               <label htmlFor="command-palette-search" className="sr-only">
                 Search RainbowCode commands
               </label>
@@ -262,17 +262,17 @@ export function CommandPalette() {
                   }
                 }}
                 placeholder="Search commands, templates, actions..."
-                className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+                className="rbc-field h-12 w-full rounded-2xl px-4 text-sm font-semibold outline-none transition placeholder:text-[var(--theme-text-subtle)]"
               />
             </div>
 
             <div className="max-h-[460px] overflow-y-auto p-2">
               {filteredCommands.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-sm font-black text-slate-950 dark:text-white">
+                  <p className="text-sm font-black text-[var(--surface-foreground)]">
                     No commands found
                   </p>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-[var(--theme-text-muted)]">
                     Try searching for template, zoom, group, or export.
                   </p>
                 </div>
@@ -282,19 +282,19 @@ export function CommandPalette() {
                     key={command.id}
                     type="button"
                     onClick={() => runCommand(command)}
-                    className="flex w-full items-center justify-between gap-4 rounded-2xl px-4 py-3 text-left transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-900"
+                    className="flex w-full items-center justify-between gap-4 rounded-2xl px-4 py-3 text-left transition hover:bg-[var(--surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-focus-ring)]"
                   >
                     <span className="min-w-0">
-                      <span className="block truncate text-sm font-black text-slate-950 dark:text-white">
+                      <span className="block truncate text-sm font-black text-[var(--surface-foreground)]">
                         {command.title}
                       </span>
-                      <span className="mt-0.5 block truncate text-xs text-slate-500">
+                      <span className="mt-0.5 block truncate text-xs text-[var(--theme-text-muted)]">
                         {command.description}
                       </span>
                     </span>
 
                     {command.shortcut === undefined ? null : (
-                      <span className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-black text-slate-500 dark:border-slate-800 dark:bg-slate-900">
+                      <span className="shrink-0 rounded-lg border border-[var(--theme-border-soft)] bg-[var(--surface-muted)] px-2 py-1 text-xs font-black text-[var(--theme-text-muted)]">
                         {command.shortcut}
                       </span>
                     )}

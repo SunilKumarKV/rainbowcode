@@ -79,9 +79,9 @@ export function CanvasStudioPanel() {
   return (
     <section
       aria-label="Canvas Studio"
-      className="space-y-5 rounded-[34px] border border-white/70 bg-white/58 p-4 shadow-[0_24px_100px_rgba(15,23,42,0.10)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/58"
+      className="space-y-5 rounded-[34px] rbc-surface-card p-4"
     >
-      <div className="overflow-hidden rounded-[30px] border border-white/70 bg-slate-950 text-white shadow-[0_24px_90px_rgba(15,23,42,0.18)] dark:border-white/10">
+      <div className="overflow-hidden rounded-[30px] rbc-surface-editor">
         <div className="relative overflow-hidden p-5 sm:p-6">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.45),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.28),transparent_32%)]" />
 
@@ -161,11 +161,8 @@ export function CanvasStudioPanel() {
         </div>
       </div>
 
-      <section
-        aria-label="Generated canvas code"
-        className="overflow-hidden rounded-[30px] border border-white/10 bg-slate-950 text-white shadow-[0_24px_90px_rgba(15,23,42,0.18)]"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-white/[0.03] px-5 py-4">
+      <section aria-label="Generated canvas code" className="overflow-hidden rounded-[30px] rbc-surface-editor">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--theme-border-strong)] bg-[var(--surface-editor-muted)] px-5 py-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-sm font-bold">Generated Canvas Code</h3>

@@ -1,5 +1,6 @@
 "use client";
 
+import { rbcField } from "@/lib/design-system/ui-tokens";
 import type {
   LogoFontFamily,
   LogoGradientDirection,
@@ -25,7 +26,7 @@ const gradientDirections: readonly {
 ];
 
 function fieldClass(): string {
-  return "mt-1 h-11 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white";
+  return `mt-1 w-full ${rbcField}`;
 }
 
 export function LogoControls() {
@@ -195,10 +196,7 @@ export function LogoControls() {
             onChange: updateBackgroundColor,
           },
         ].map((field) => (
-          <div
-            key={field.id}
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/70"
-          >
+          <div key={field.id} className="rounded-2xl rbc-surface-muted p-3">
             <label
               htmlFor={field.id}
               className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
@@ -212,7 +210,7 @@ export function LogoControls() {
                 type="color"
                 value={field.value}
                 onChange={(event) => field.onChange(event.currentTarget.value)}
-                className="size-11 cursor-pointer rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-950"
+                className="size-11 cursor-pointer rounded-2xl border border-[var(--theme-border-soft)] bg-[var(--surface-panel-strong)] p-1"
               />
               <input
                 type="text"
@@ -240,7 +238,7 @@ export function LogoControls() {
           max={72}
           value={logo.radius}
           onChange={(event) => updateRadius(Number(event.currentTarget.value))}
-          className="mt-3 w-full accent-indigo-600"
+          className="mt-3 w-full accent-[var(--color-primary)]"
         />
       </div>
     </div>

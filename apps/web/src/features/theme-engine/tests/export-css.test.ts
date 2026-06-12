@@ -9,5 +9,7 @@ describe("exportCssTheme", () => {
     expect(output).toContain(":root");
     expect(output).toContain("--color-primary: #2563eb;");
     expect(output).toContain("--radius-md: 0.75rem;");
+    expect(output).toContain("--surface-panel: rgba(255, 255, 255, 0.84);");
+    expect(output).toContain("--theme-focus-ring: #2563eb;");
   });
 });

@@ -32,14 +32,14 @@ export function ThemeExportPanel() {
   }
 
   return (
-    <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
-      <div className="border-b border-slate-200/70 px-4 py-4 dark:border-slate-800">
+    <section className="overflow-hidden rounded-[28px] rbc-surface-card">
+      <div className="border-b border-[var(--theme-border-soft)] px-4 py-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-primary)]">
               Export
             </p>
-            <h3 className="mt-1 text-sm font-black text-slate-950 dark:text-white">
+            <h3 className="mt-1 text-sm font-black text-[var(--surface-foreground)]">
               Theme Output
             </h3>
           </div>
@@ -47,7 +47,7 @@ export function ThemeExportPanel() {
           <RbcBadge variant="info">Ready</RbcBadge>
         </div>
 
-        <p className="mt-2 text-xs leading-5 text-slate-500">
+        <p className="mt-2 text-xs leading-5 text-[var(--theme-text-muted)]">
           Export production tokens for CSS, JSON, and Tailwind.
         </p>
       </div>

@@ -54,8 +54,8 @@ export function ThemeStudioPanel() {
 
   return (
     <div className="space-y-4">
-      <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
-        <div className="relative overflow-hidden border-b border-slate-200/70 p-4 dark:border-slate-800">
+      <section className="overflow-hidden rounded-[28px] rbc-surface-card">
+        <div className="relative overflow-hidden border-b border-[var(--theme-border-soft)] p-4">
           <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-indigo-400/20 blur-2xl" />
 
           <div className="relative z-10 flex items-start justify-between gap-3">
@@ -65,11 +65,11 @@ export function ThemeStudioPanel() {
                 <RbcBadge variant="success">Live Tokens</RbcBadge>
               </div>
 
-              <h3 className="mt-3 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+              <h3 className="mt-3 text-lg font-black tracking-tight text-[var(--surface-foreground)]">
                 Brand color system
               </h3>
 
-              <p className="mt-1 text-xs leading-5 text-slate-500">
+              <p className="mt-1 text-xs leading-5 text-[var(--theme-text-muted)]">
                 Tune the global theme used by components, canvas, and exports.
               </p>
             </div>
@@ -81,7 +81,7 @@ export function ThemeStudioPanel() {
         </div>
 
         <div className="grid gap-3 p-4">
-          <div className="grid grid-cols-4 overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800">
+          <div className="grid grid-cols-4 overflow-hidden rounded-3xl border border-[var(--theme-border-soft)]">
             <div
               className="h-12"
               style={{ backgroundColor: theme.colors.primary }}
@@ -112,14 +112,14 @@ export function ThemeStudioPanel() {
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
-        <div className="border-b border-slate-200/70 px-4 py-4 dark:border-slate-800">
+      <section className="overflow-hidden rounded-[28px] rbc-surface-card">
+        <div className="border-b border-[var(--theme-border-soft)] px-4 py-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-primary)]">
                 Radius
               </p>
-              <h3 className="mt-1 text-sm font-black text-slate-950 dark:text-white">
+              <h3 className="mt-1 text-sm font-black text-[var(--surface-foreground)]">
                 Shape Language
               </h3>
             </div>
@@ -127,7 +127,7 @@ export function ThemeStudioPanel() {
             <RbcBadge variant="neutral">4 tokens</RbcBadge>
           </div>
 
-          <p className="mt-2 text-xs leading-5 text-slate-500">
+          <p className="mt-2 text-xs leading-5 text-[var(--theme-text-muted)]">
             Control the roundness system used across generated UI.
           </p>
         </div>

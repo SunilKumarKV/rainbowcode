@@ -2,6 +2,7 @@
 
 import { RbcBadge } from "@/components/ui/rbc-badge";
 import { RbcButton } from "@/components/ui/rbc-button";
+import { rbcField } from "@/lib/design-system/ui-tokens";
 import { exportTypographyCss } from "@/features/brand-studio/exporters/export-typography-css";
 import { useTypographyStore } from "@/features/brand-studio/store/typography-store";
 import type {
@@ -30,8 +31,7 @@ const scaleTokens: readonly (keyof BrandTypographySystem["scale"])[] = [
   "4xl",
 ];
 
-const fieldClass =
-  "mt-1 h-11 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:bg-slate-950 dark:text-white";
+const fieldClass = `mt-1 w-full ${rbcField}`;
 
 export function TypographySystemPanel() {
   const typography = useTypographyStore((state) => state.typography);
@@ -67,8 +67,8 @@ export function TypographySystemPanel() {
   }
 
   return (
-    <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/78 shadow-[0_18px_70px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/76">
-      <div className="relative overflow-hidden border-b border-slate-200/70 p-4 dark:border-slate-800">
+    <section className="overflow-hidden rounded-[28px] rbc-surface-card">
+      <div className="relative overflow-hidden border-b border-[var(--theme-border-soft)] p-4">
         <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-indigo-400/20 blur-2xl" />
 
         <div className="relative z-10 flex items-start justify-between gap-3">
@@ -78,11 +78,11 @@ export function TypographySystemPanel() {
               <RbcBadge variant="success">CSS Export</RbcBadge>
             </div>
 
-            <h3 className="mt-3 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+            <h3 className="mt-3 text-lg font-black tracking-tight text-[var(--surface-foreground)]">
               Brand typography system
             </h3>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-xs leading-5 text-[var(--theme-text-muted)]">
               Define the font system used by brand kits, themes, components,
               and generated code.
             </p>
@@ -95,13 +95,13 @@ export function TypographySystemPanel() {
       </div>
 
       <div className="grid gap-5 p-4 2xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/70">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
+        <div className="rounded-[28px] rbc-surface-muted p-5">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--theme-text-subtle)]">
             Preview
           </p>
 
           <h4
-            className="mt-4 text-4xl font-black tracking-tight text-slate-950 dark:text-white"
+            className="mt-4 text-4xl font-black tracking-tight text-[var(--surface-foreground)]"
             style={{
               fontFamily: typography.headingFont,
               fontWeight: typography.headingWeight,
@@ -113,7 +113,7 @@ export function TypographySystemPanel() {
           </h4>
 
           <p
-            className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-400"
+            className="mt-4 text-base leading-7 text-[var(--theme-text-muted)]"
             style={{
               fontFamily: typography.bodyFont,
               fontWeight: typography.bodyWeight,
@@ -128,11 +128,11 @@ export function TypographySystemPanel() {
             {scaleTokens.map((token) => (
               <div
                 key={token}
-                className="rounded-2xl border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-950"
+                className="rounded-2xl rbc-surface-panel p-3"
               >
-                <p className="text-xs font-bold text-slate-500">{token}</p>
+                <p className="text-xs font-bold text-[var(--theme-text-subtle)]">{token}</p>
                 <p
-                  className="mt-1 font-black text-slate-950 dark:text-white"
+                  className="mt-1 font-black text-[var(--surface-foreground)]"
                   style={{
                     fontSize: typography.scale[token],
                     fontFamily: typography.headingFont,
@@ -149,7 +149,7 @@ export function TypographySystemPanel() {
           <div>
             <label
               htmlFor="typography-heading-font"
-              className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+              className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
             >
               Heading Font
             </label>
@@ -172,7 +172,7 @@ export function TypographySystemPanel() {
           <div>
             <label
               htmlFor="typography-body-font"
-              className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+              className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
             >
               Body Font
             </label>
@@ -196,7 +196,7 @@ export function TypographySystemPanel() {
             <div>
               <label
                 htmlFor="typography-heading-weight"
-                className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+                className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
               >
                 Heading Weight
               </label>
@@ -217,7 +217,7 @@ export function TypographySystemPanel() {
             <div>
               <label
                 htmlFor="typography-body-weight"
-                className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+                className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
               >
                 Body Weight
               </label>
@@ -240,7 +240,7 @@ export function TypographySystemPanel() {
             <div>
               <label
                 htmlFor="typography-line-height"
-                className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+                className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
               >
                 Line Height
               </label>
@@ -261,7 +261,7 @@ export function TypographySystemPanel() {
             <div>
               <label
                 htmlFor="typography-letter-spacing"
-                className="text-xs font-black uppercase tracking-[0.14em] text-slate-500"
+                className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
               >
                 Letter Spacing
               </label>
@@ -281,7 +281,7 @@ export function TypographySystemPanel() {
           </div>
 
           <div className="grid gap-3">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]">
               Type Scale
             </p>
 
@@ -289,7 +289,7 @@ export function TypographySystemPanel() {
               <div key={token}>
                 <label
                   htmlFor={`typography-scale-${token}`}
-                  className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500"
+                  className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--theme-text-subtle)]"
                 >
                   {token}
                 </label>
