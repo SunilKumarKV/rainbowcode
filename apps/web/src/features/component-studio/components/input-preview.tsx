@@ -10,11 +10,11 @@ const inputSizeClassMap = {
 
 const inputVariantClassMap = {
   default:
-    "border border-slate-300 bg-white text-slate-950 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white",
+    "border border-[var(--theme-border-soft)] bg-[var(--surface-panel-strong)] text-[var(--surface-foreground)] placeholder:text-[var(--theme-text-subtle)]",
   filled:
-    "border border-transparent bg-slate-100 text-slate-950 placeholder:text-slate-500 dark:bg-slate-900 dark:text-white",
+    "border border-transparent bg-[var(--surface-muted)] text-[var(--surface-foreground)] placeholder:text-[var(--theme-text-muted)]",
   outline:
-    "border border-[var(--color-primary)] bg-transparent text-slate-950 placeholder:text-slate-400 dark:text-white",
+    "border border-[var(--color-primary)] bg-transparent text-[var(--surface-foreground)] placeholder:text-[var(--theme-text-subtle)]",
 } as const;
 
 export function InputPreview() {
@@ -55,7 +55,7 @@ export function InputPreview() {
           type="text"
           placeholder={placeholder}
           disabled={inputDefinition.disabled}
-          className={`mt-2 w-full rounded-[var(--radius-${inputDefinition.radius})] outline-none transition focus:ring-2 focus:ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60 ${inputSizeClassMap[inputDefinition.size]} ${inputVariantClassMap[inputDefinition.variant]}`}
+          className={`mt-2 w-full rounded-[var(--radius-${inputDefinition.radius})] outline-none transition focus:ring-2 focus:ring-[var(--theme-focus-ring)] disabled:cursor-not-allowed disabled:opacity-60 ${inputSizeClassMap[inputDefinition.size]} ${inputVariantClassMap[inputDefinition.variant]}`}
         />
 
         <span className="mt-2 block text-xs text-[var(--theme-text-muted)]">

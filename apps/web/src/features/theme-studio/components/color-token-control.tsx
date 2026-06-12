@@ -21,12 +21,12 @@ export function ColorTokenControl({
       <div className="flex items-center justify-between gap-3">
         <label
           htmlFor={`color-token-${tokenKey}`}
-          className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500"
+          className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--theme-text-subtle)]"
         >
           {label}
         </label>
 
-        <span className="font-mono text-xs text-slate-500">{value}</span>
+        <span className="font-mono text-xs text-[var(--theme-text-muted)]">{value}</span>
       </div>
 
       <div className="mt-3 flex items-center gap-3">
